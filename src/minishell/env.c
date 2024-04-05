@@ -6,7 +6,17 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 12:45:36 by scely             #+#    #+#             */
-/*   Updated: 2024/04/05 12:45:39 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/05 16:48:34 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
+
+void	ft_env(t_env *env)
+{
+	while (env != NULL)
+	{
+		printf("%s=%s\n",env->cle, env->params);
+		env = env->next;
+	}
+}

@@ -23,7 +23,7 @@ LIBFT			= ft_atoi.c ft_isprint.c ft_lstmap_bonus.c ft_putchar_fd.c ft_strjoin.c 
 					ft_isdigit.c ft_lstlast_bonus.c ft_memset.c ft_striteri.c ft_strrchr.c\
 
 MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
-MINISHELL		= main.c init_env.c\
+MINISHELL		= main.c init_env.c unset.c\
 
 INCLUDE			= include/minishell.h include/libft.h
 				

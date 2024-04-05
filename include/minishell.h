@@ -26,7 +26,12 @@ typedef struct s_env
 t_env	*ft_lstnew_env(char *str1, char *str2);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env	*init_env(char **envp);
-t_env	*ft_lstlast_env(t_env *lst);
+void	ft_free_env(t_env *env);
+
+
+//built-in
+void	ft_unset(t_env *env, char *str);
+void	ft_env(t_env *env);
 
 
 

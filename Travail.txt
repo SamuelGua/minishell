@@ -1,0 +1,4 @@
+05/04/2024
+	- ENV
+J'ai fait une copie des environements
+Comprendre ce qu'il se passe lorsque l'environement est mise a NULL;	 	

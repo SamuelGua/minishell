@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 12:57:54 by scely             #+#    #+#             */
-/*   Updated: 2024/04/05 16:12:43 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/05 16:33:36 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,9 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 	tmp = *lst;
 	if (*lst)
 	{
-		printf("ok\n");
 		while (tmp->next != NULL)
 			tmp = tmp->next;
 		tmp->next = new;
-		printf("no\n");
-
 	}
 	else
 		*lst = new;
@@ -44,6 +41,20 @@ t_env	*ft_lstnew_env(char *str1, char *str2)
 		return (free(new->cle), free(new), NULL);
 	new->next = NULL;
 	return (new);
+}
+
+void	ft_free_env(t_env *env)
+{
+	t_env *tmp ;
+
+	while (!env)
+	{
+		tmp = env->next;
+		free(env->next);
+		free(env->params);
+		free(env);
+		env = tmp;
+	}
 }
 
 t_env	*init_env(char **envp)
@@ -67,11 +78,10 @@ t_env	*init_env(char **envp)
 		envp[i][j] = '\0';
 		tmp = ft_lstnew_env(envp[i],&envp[i][j+1]);
 		// si le noeuds est NULL, free tout ce qu'il y a avant et return NULL
+		if (!tmp)
+			return (ft_free_env(env), NULL);
 		ft_lstadd_back_env(&env, tmp);
 		i++;
 	}
-	if (env != NULL)
-		printf("NE FONCTIONNE PAS\n");
-	printf("%s=%s\n",env->cle, env->params);
 	return (env);
 }
