@@ -30,7 +30,7 @@ void	ft_free_env(t_env *env);
 
 
 //built-in
-void	ft_unset(t_env *env, char *str);
+void	ft_unset(t_env *env, char **variables);
 void	ft_env(t_env *env);
 
 

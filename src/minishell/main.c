@@ -21,10 +21,15 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		prompt = readline("> ");
+		if (!prompt)
+			return (999); // le dernier exit status
 		if (ft_strncmp(prompt, "env", 4) == 0)
 			ft_env(env);
 		if (ft_strncmp(prompt, "unset", 5) == 0)
-			ft_unset(env, prompt);
+		{
+			char **variables = ft_split(prompt + 5, ' '); 
+			ft_unset(env, variables);
+		}
 		printf("%s, readline\n", prompt);
 	}
 	return (0);

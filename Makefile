@@ -39,7 +39,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 		@$(CC) -lreadline $(OBJS) -o $(NAME) 
-		@echo "$(COLOR_GREEN)$(COLOR_BOLD)Compilation fini 👍 $(COLOR_RESET)"
+		@echo "$(COLOR_GREEN)$(COLOR_BOLD)Compilation finie 👍 $(COLOR_RESET)"
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDE)
