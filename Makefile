@@ -23,7 +23,7 @@ LIBFT			= ft_atoi.c ft_isprint.c ft_lstmap_bonus.c ft_putchar_fd.c ft_strjoin.c 
 					ft_isdigit.c ft_lstlast_bonus.c ft_memset.c ft_striteri.c ft_strrchr.c\
 
 MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
-MINISHELL		= main.c init_env.c unset.c\
+MINISHELL		= main.c init_env.c unset.c echo.c\
 
 INCLUDE			= include/minishell.h include/libft.h
 				
@@ -31,6 +31,7 @@ OBJS			:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 CFLAGS			:= -Wall -Wextra -Werror -g3
 CCFLAGS			:= -I include
+READLINE		:= -lreadline
 
 RM				:= rm -rf
 DIR_DUP			= mkdir -p $(@D)
@@ -38,7 +39,7 @@ DIR_DUP			= mkdir -p $(@D)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		@$(CC) -lreadline $(OBJS) -o $(NAME) 
+		@$(CC) $(OBJS) -o $(NAME) $(READLINE)
 		@echo "$(COLOR_GREEN)$(COLOR_BOLD)Compilation finie 👍 $(COLOR_RESET)"
 
 

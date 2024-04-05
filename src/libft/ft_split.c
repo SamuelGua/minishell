@@ -79,7 +79,7 @@ char	**ft_split(char const *s, char c)
 	if (s == NULL)
 		return (NULL);
 	new = ft_malloc(s, c, count_words(s, c));
-	if (!new)
+	if (!new || count_words(s, c) == 0)
 		return (NULL);
 	j = 0;
 	i = 0;

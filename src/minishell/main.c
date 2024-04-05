@@ -23,14 +23,20 @@ int main(int ac, char **av, char **envp)
 		prompt = readline("> ");
 		if (!prompt)
 			return (999); // le dernier exit status
-		if (ft_strncmp(prompt, "env", 4) == 0)
+		else if (ft_strncmp(prompt, "env", 4) == 0)
 			ft_env(env);
-		if (ft_strncmp(prompt, "unset", 5) == 0)
+		else if (ft_strncmp(prompt, "unset", 5) == 0)
 		{
-			char **variables = ft_split(prompt + 5, ' '); 
-			ft_unset(env, variables);
+			char **unset_value = ft_split(prompt + 5, ' '); 
+			ft_unset(&env, unset_value);
 		}
-		printf("%s, readline\n", prompt);
+		else if (ft_strncmp(prompt, "echo", 4) == 0)
+		{
+			char **echo_value = ft_split(prompt + 4, ' ');
+			
+			ft_echo(echo_value);
+		}
+		printf("prompt %s, readline\n", prompt);
 	}
 	return (0);
 }
