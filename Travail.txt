@@ -2,3 +2,8 @@
 	- ENV
 J'ai fait une copie des environements
 Comprendre ce qu'il se passe lorsque l'environement est mise a NULL;	 	
+
+
+
+MODIFIER LA FONCTION ECHO pour ne pas prendre en compte $
+EXPAND directement de le parsing, cela permet d'eviter de le faire dans chaque appel des built-in et dans l'exec

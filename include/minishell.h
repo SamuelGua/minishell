@@ -32,7 +32,8 @@ void	ft_free_env(t_env *env);
 //built-in
 void	ft_unset(t_env **env, char **str);
 void	ft_env(t_env *env);
-void	ft_echo(char **str);
+void	ft_echo(t_env *env, char **str); // retirer le $
+void 	ft_export(t_env **env, char **str);
 
 
 

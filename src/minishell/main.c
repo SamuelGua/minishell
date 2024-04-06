@@ -32,9 +32,13 @@ int main(int ac, char **av, char **envp)
 		}
 		else if (ft_strncmp(prompt, "echo", 4) == 0)
 		{
-			char **echo_value = ft_split(prompt + 4, ' ');
-			
-			ft_echo(echo_value);
+			char **echo_value = ft_split(prompt + 4, ' ');	
+			ft_echo(env, echo_value);
+		}
+		else if (ft_strncmp(prompt, "export", 6) == 0)
+		{
+			char **export_value = ft_split(prompt + 6, ' ');	
+			ft_export(&env, export_value);
 		}
 		printf("prompt %s, readline\n", prompt);
 	}

@@ -6,13 +6,14 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 16:48:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/05 19:16:35 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/06 10:55:26 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// La derniere variables est _ on peut l'unset mais cela sera juste recree derriere
+// Doit on recreer la varaibles _  qui comporte le dernier executable
+// Peut-on tout unset
 
 
 static int	is_head(t_env **env, char *str)
