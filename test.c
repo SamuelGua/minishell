@@ -1,7 +1,3 @@
-#ifndef MINISHELL_H
-# define MINISHELL_H
-
-# include "libft.h"
 # include <stdio.h>				// printf, perror
 # include <stdlib.h>			// malloc, free, exit, getenv
 # include <unistd.h>			// write, access, read, close, fork, chdir, getcwd, isatty, ttyname, ttyslot, dup, dup2, pipe, execve, tcsetattr, tcgetattr
@@ -13,29 +9,23 @@
 # include <string.h>			// strerror
 # include <termios.h>			// ioctl
 # include <readline/readline.h>	// readline, rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
-# include <curses.h>			// tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
+# include <curses.h>
 
-// fonction list env
-typedef struct s_env
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	char			*cle; 
-	char			*params;
-	struct s_env	*next;
-} t_env;
+	unsigned int	diff;
+	size_t			i;
 
-t_env	*ft_lstnew_env(char *str1, char *str2);
-void	ft_lstadd_back_env(t_env **lst, t_env *new);
-t_env	*init_env(char **envp);
-void	ft_free_env(t_env *env);
-
-
-//built-in
-void	ft_unset(t_env **env, char **str);
-void	ft_env(t_env *env);
-void	ft_echo(t_env *env, char **str); // retirer le $
-void 	ft_export(t_env **env, char **str);
-void	ft_pwd(void);
-
-
-
-#endif
+	i = 0;
+	if (n == 0)
+		return (0);
+	while ((unsigned char)s1[i] && (unsigned char)s2[i]
+		&& i < n - 1 && (unsigned char)s1[i] == (unsigned char)s2[i])
+		i++;
+	diff = (unsigned char)s1[i] - (unsigned char)s2[i];
+	return (diff);
+}
+int main()
+{
+	printf("%d\n",ft_strncmp("HOME", "HOME", 12));
+}

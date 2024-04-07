@@ -23,7 +23,7 @@ int main(int ac, char **av, char **envp)
 		prompt = readline("> ");
 		if (!prompt)
 			return (999); // le dernier exit status
-		else if (ft_strncmp(prompt, "env", 4) == 0)
+		else if (ft_strncmp(prompt, "env", 3) == 0)
 			ft_env(env);
 		else if (ft_strncmp(prompt, "unset", 5) == 0)
 		{
@@ -40,6 +40,8 @@ int main(int ac, char **av, char **envp)
 			char **export_value = ft_split(prompt + 6, ' ');	
 			ft_export(&env, export_value);
 		}
+		else if (ft_strncmp(prompt, "pwd", 3) == 0)	
+			ft_pwd();
 		printf("prompt %s, readline\n", prompt);
 	}
 	return (0);
