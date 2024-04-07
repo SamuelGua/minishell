@@ -14,6 +14,39 @@
 
 //doit ton le triee par ordre alphabetique
 
+static void sort_env(t_env **export)
+{
+	if (!export || !(*export)->next)
+		return;
+	t_env *swap;
+	t_env *tmp;
+	int	i = 100;
+	int k; t_env *head;
+
+	head = (*export);
+	while (i--)
+	{
+		tmp = head;
+		k = 0;
+		while (tmp->next)
+		{
+			if (ft_strncmp(tmp->cle, tmp->next->cle, 100) > 0)
+			{
+				swap = tmp->next;
+				tmp->next = swap->next;
+				swap->next = tmp;
+				if (k == 0)
+				{
+					head = tmp;
+					k++;
+				}
+			}
+			tmp = tmp->next;
+		}
+	}
+	*export = head;
+}
+
 static int is_existing(t_env *env, char *str)
 {
 	int j;
@@ -24,25 +57,41 @@ static int is_existing(t_env *env, char *str)
 	j++;
 	if (!str[j])
 		return (1);
-	printf("str %s str[i] %s\n", str, &str[j]);
 	while (env && ft_strncmp(env->cle, str, j - 1) != 0)
 		env = env->next;
 	if (!env)
 		return (1);
-	printf("ok\n");
-	printf("PARAMS %s\n",env->params);
 	free(env->params);
 	env->params = ft_strdup(&str[j]);
 	return (0);
 }
 
-static void print_export(t_env *env)
+static int print_export(t_env *env)
 {
-	while (env)
+	t_env *export;
+	t_env *tmp;
+
+	export = NULL;
+	while(env)
 	{
-		printf("export %s=\"%s\"\n",env->cle, env->params);
+		tmp = ft_lstnew_env(env->cle, env->params);
+		if (!tmp)
+		{
+			printf("Error malloc\n");
+			return (ft_free_env(export), 1);
+		}
+		ft_lstadd_back_env(&export, tmp);
 		env = env->next;
 	}
+	sort_env(&export);
+	tmp = export;
+	while (export)
+	{
+		printf("export %s=\"%s\"\n",export->cle, export->params);
+		export = export->next;
+	}
+	ft_free_env(tmp);
+	return (1);
 }
 
 void ft_export(t_env **env, char **str)
@@ -52,11 +101,8 @@ void ft_export(t_env **env, char **str)
 	int		j;
 
 	i = 0;
-	if (!str)
-	{
-		print_export(*env);
+	if (!str && print_export(*env))
 		return ;
-	}
 	while (str[i])
 	{
 		if (is_existing(*env, str[i]))
