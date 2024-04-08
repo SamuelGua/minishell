@@ -31,7 +31,7 @@ t_env	*ft_lstnew_env(char *str1, char *str2)
 {
 	t_env	*new;
 
-	new = malloc(sizeof(t_list));
+	new = malloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
 	new->cle = ft_strdup(str1);
@@ -85,3 +85,5 @@ t_env	*init_env(char **envp)
 	}
 	return (env);
 }
+
+

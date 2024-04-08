@@ -15,8 +15,13 @@
 //condition au cas si on lui donne un arguments, si cela est un fichier ou un elements inconnu
 // si l'arguments est un executable il execute
 // dans la correction il dise de gere env sans arguments et sans option. Dans le cas ou il y en un je print quand meme mon env
-void	ft_env(t_env *env)
+void	ft_env(t_env *env, char **str)
 {
+	if (str)
+	{
+		printf("no arguments required\n");
+		return ;
+	}
 	while (env)
 	{
 		printf("%s=%s\n", env->cle, env->params);

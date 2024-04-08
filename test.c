@@ -44,14 +44,21 @@ void	print_list(t_env *list)
 	if (list->droite != NULL)
 		print_list(list->droite);
 }
+void	free_lst(t_env *list)
+{
+	if (list)
+	{
+		free_lst(list->droite);
+		free_lst(list->gauche);
+		free(list);
+	}
+}
 
 int main()
 {
 	int tab[] = {10 , 5 , 15, 45, 100, 1, 6, 23};
 	t_env *list = NULL;
 	t_env *node = NULL;
-	t_env *tmp = NULL;
-	t_env *tmp2 = NULL;
 	int i = 0;
 	int len = sizeof(tab) / sizeof(int);
 
@@ -62,26 +69,5 @@ int main()
 		i++;
 	}
 	print_list(list);
-	// head = list;
-	// i++;
-	// while (i < len)
-	// {
-	// 	list = head;
-	// 	tmp = ft_lstnew(tab[i]);
-	// 	while (list)
-	// 	{
-	// 		if (list->cle < tab[i])
-	// 			list = list->droite;
-	// 		else if (list->cle > tab[i])
-	// 			list = list->gauche;
-	// 		if (list)
-	// 			tmp2 = list;
-	// 	}
-	// 	if (tmp2->cle < tab[i])
-	// 		tmp2->droite = tmp;
-	// 	else if (tmp2->cle > tab[i])
-	// 		tmp2->gauche = tmp;
-	// 	i++;
-	// }
-
+	free_lst(list);
 }

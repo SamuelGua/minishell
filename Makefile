@@ -26,7 +26,7 @@ MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
 MINISHELL		= main.c init_env.c\
 
 BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
-BUILT-IN		= unset.c echo.c export.c pwd.c exit.c env.c\
+BUILT-IN		= unset.c echo.c export.c export_2.c pwd.c exit.c env.c\
 
 INCLUDE			= include/minishell.h include/libft.h
 				

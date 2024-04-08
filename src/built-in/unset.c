@@ -42,7 +42,7 @@ static int	is_body(t_env *env, char *str)
 	return (0);
 }
 
-void	ft_unset(t_env **env, char **str)
+void	ft_unset(t_export **export, t_env **env, char **str)
 {
 	t_env	*tmp;
 	t_env	*env_temp;
@@ -64,4 +64,6 @@ void	ft_unset(t_env **env, char **str)
 		}
 		i++;
 	}
+	free_export(*export);
+	*export = init_export(*env);
 }

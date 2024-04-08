@@ -15,39 +15,23 @@
 // doit ton le triee par ordre alphabetique
 // si on export sans la sans la valeur ""
 
-static void sort_env(t_env **export)
-{
-	if (!export || !(*export)->next)
-		return;
-	t_env *swap;
-	t_env *tmp;
-	int	i = 100;
-	int k; t_env *head;
 
-	head = (*export);
-	while (i--)
-	{
-		tmp = head;
-		k = 0;
-		while (tmp->next)
-		{
-			if (ft_strncmp(tmp->cle, tmp->next->cle, 100) > 0)
-			{
-				swap = tmp->next;
-				tmp->next = swap->next;
-				swap->next = tmp;
-				if (k == 0)
-				{
-					head = tmp;
-					k++;
-				}
-			}
-			tmp = tmp->next;
-		}
-	}
-	*export = head;
+
+int	print_list(t_export *list)
+{
+	if (list == NULL)
+		return (1);
+	if (list->left != NULL)
+		print_list(list->left);
+	printf("export %s=\"%s\"\n", list->cle, list->params);
+	if (list->right != NULL)
+		print_list(list->right);
+	return (1);
+	
 }
 
+
+//================================================================
 static int is_existing(t_env *env, char *str)
 {
 	int j;
@@ -66,47 +50,35 @@ static int is_existing(t_env *env, char *str)
 	env->params = ft_strdup(&str[j]);
 	return (0);
 }
-
-static int print_export(t_env *env)
+int is_valid(char *str)
 {
-	t_env *export;
-	t_env *tmp;
+	int i;
 
-	export = NULL;
-	while(env)
+	i = 0;
+	while(str[i] != '=' && str[i])
 	{
-		tmp = ft_lstnew_env(env->cle, env->params);
-		if (!tmp)
+		if (ft_isalnum(str[i]) == 0)
 		{
-			printf("Error malloc\n");
-			return (ft_free_env(export), 1);
+			printf("arguments pas valide a mettre en anglais\n");
+			return (0);
 		}
-		ft_lstadd_back_env(&export, tmp);
-		env = env->next;
+		i++;
 	}
-	sort_env(&export);
-	tmp = export;
-	while (export)
-	{
-		printf("export %s=\"%s\"\n",export->cle, export->params);
-		export = export->next;
-	}
-	ft_free_env(tmp);
 	return (1);
 }
 
-void ft_export(t_env **env, char **str)
+void ft_export(t_export **export, t_env **env, char **str)
 {
 	t_env	*tmp;
 	int		i;
 	int		j;
 
 	i = 0;
-	if (!str && print_export(*env))
-		return ;
+	if (!str && print_list(*export))
+	 	return ;
 	while (str[i])
 	{
-		if (is_existing(*env, str[i]))
+		if (str[i] && is_valid(str[i]) && is_existing(*env, str[i]))
 		{
 			j = 0;
 			while(str[i][j] != '=' && str[i][j])
@@ -119,6 +91,7 @@ void ft_export(t_env **env, char **str)
 				return ;
 			ft_lstadd_back_env(env, tmp);
 		}
-		i++;
+			i++;
 	}
+	(free_export(*export), *export = init_export(*env));
 }

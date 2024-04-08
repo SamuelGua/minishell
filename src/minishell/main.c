@@ -5,8 +5,10 @@ int main(int ac, char **av, char **envp)
 	char *prompt;
 	(void)ac;
 	(void)av;
-	t_env *env = NULL;
+	t_env 		*env = NULL;
+	t_export 	*export = NULL;
 	env = init_env(envp);
+	export = init_export(env);
 	if (env == NULL)
 		return (printf("Erreur malloc\n"), 2);
 	while (1)
@@ -15,11 +17,14 @@ int main(int ac, char **av, char **envp)
 		if (!prompt)
 			return (999); // le dernier exit status
 		else if (ft_strncmp(prompt, "env", 3) == 0)
-			ft_env(env);
+		{
+			char **env_value = ft_split(prompt + 3, ' '); 
+			ft_env(env, env_value);
+		}
 		else if (ft_strncmp(prompt, "unset", 5) == 0)
 		{
 			char **unset_value = ft_split(prompt + 5, ' '); 
-			ft_unset(&env, unset_value);
+			ft_unset(&export, &env, unset_value);
 		}
 		else if (ft_strncmp(prompt, "echo", 4) == 0)
 		{
@@ -29,7 +34,7 @@ int main(int ac, char **av, char **envp)
 		else if (ft_strncmp(prompt, "export", 6) == 0)
 		{
 			char **export_value = ft_split(prompt + 6, ' ');	
-			ft_export(&env, export_value);
+			ft_export(&export, &env, export_value);
 		}
 		else if (ft_strncmp(prompt, "pwd", 3) == 0)	
 			ft_pwd();
