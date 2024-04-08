@@ -1,14 +1,5 @@
 #include "minishell.h"
 
-void	ft_env(t_env *env)
-{
-	while (env != NULL)
-	{
-		printf("%s=%s\n",env->cle, env->params);
-		env = env->next;
-	}
-}
-
 int main(int ac, char **av, char **envp)
 {
 	char *prompt;
@@ -33,7 +24,7 @@ int main(int ac, char **av, char **envp)
 		else if (ft_strncmp(prompt, "echo", 4) == 0)
 		{
 			char **echo_value = ft_split(prompt + 4, ' ');	
-			ft_echo(env, echo_value);
+			ft_echo(echo_value);
 		}
 		else if (ft_strncmp(prompt, "export", 6) == 0)
 		{
@@ -42,6 +33,11 @@ int main(int ac, char **av, char **envp)
 		}
 		else if (ft_strncmp(prompt, "pwd", 3) == 0)	
 			ft_pwd();
+		else if (ft_strncmp(prompt, "exit", 4) == 0)	
+		{
+			char **exit_value = ft_split(prompt + 5, ' ');	
+			ft_exit(exit_value);
+		}
 		printf("prompt %s, readline\n", prompt);
 	}
 	return (0);

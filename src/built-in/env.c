@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/04/06 15:38:06 by scely            ###   ########.fr       */
+/*   Created: 2024/04/05 12:45:36 by scely             #+#    #+#             */
+/*   Updated: 2024/04/08 16:32:06 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//retour d'erreur minishell ou bash
-void ft_exit(t_env **env, char **str)
+//condition au cas si on lui donne un arguments, si cela est un fichier ou un elements inconnu
+// si l'arguments est un executable il execute
+// dans la correction il dise de gere env sans arguments et sans option. Dans le cas ou il y en un je print quand meme mon env
+void	ft_env(t_env *env)
 {
-	int	i;
-
-	i = 0;
-	if (str == NULL)
-		exit(0);
-	while (str[i])
-		i++;
-	if (i > 1)
+	while (env)
 	{
-		printf("bash: exit: too many arguments\n");
-		return ;
+		printf("%s=%s\n", env->cle, env->params);
+		env = env->next;
 	}
-	i = 0;
-	while (str[0][i])
-	{
-		if (ft_isdigit(str[0][i]) == 0)
-			exit(2);
-		i++;
-	}
-	exit()
-	
 }

@@ -3,94 +3,85 @@
 
 typedef struct s_env
 {
-    int nombre;
-    struct s_env *next;
-} t_env;
+	int				cle;
+	struct s_env	*droite;
+	struct s_env	*gauche;
+}	t_env;
 
-// Fonction pour insérer un élément dans la liste triée
-void inserer_tri(t_env **tete, t_env *nouveau) {
-    t_env *courant;
-    
-    // Si la liste est vide ou si le nouvel élément est inférieur à la tête
-    if (*tete == NULL || (*tete)->nombre >= nouveau->nombre) {
-        nouveau->next = *tete;
-        *tete = nouveau;
-    } else {
-        // Trouver l'endroit où insérer le nouvel élément
-        courant = *tete;
-        while (courant->next != NULL && courant->next->nombre < nouveau->nombre) {
-            courant = courant->next;
-        }
-        nouveau->next = courant->next;
-        courant->next = nouveau;
-    }
+t_env	*ft_lstnew(int content)
+{
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->cle = content;
+	new->droite = NULL;
+	new->gauche = NULL;
+	return (new);
 }
 
-// Fonction pour trier la liste chaînée
-void trier_liste(t_env **tete) {
-    t_env *nouveau_tete = NULL; // Liste triée
-    
-    t_env *courant = *tete;
-    while (courant != NULL) {
-        t_env *suivant = courant->next;
-        inserer_tri(&nouveau_tete, courant);
-        courant = suivant;
-    }
-    
-    *tete = nouveau_tete; // Mettre à jour la tête de la liste
+void	insert(t_env **list, t_env *node)
+{
+	if (*list == NULL)
+	{
+		*list = node;
+		return ;
+	}
+	if ((*list)->cle > node->cle)
+		insert(&(*list)->gauche, node);
+	else
+		insert(&(*list)->droite, node);
 }
 
-// Fonction pour ajouter un élément à la liste
-void ajouter_element(t_env **tete, int nombre) {
-    t_env *nouveau = malloc(sizeof(t_env));
-    if (nouveau == NULL) {
-        fprintf(stderr, "Erreur: Impossible d'allouer de la mémoire.\n");
-        exit(EXIT_FAILURE);
-    }
-    nouveau->nombre = nombre;
-    nouveau->next = NULL;
-
-    if (*tete == NULL) {
-        *tete = nouveau;
-    } else {
-        t_env *courant = *tete;
-        while (courant->next != NULL) {
-            courant = courant->next;
-        }
-        courant->next = nouveau;
-    }
+void	print_list(t_env *list)
+{
+	if (list == NULL)
+		return ;
+	if (list->gauche != NULL)
+		print_list(list->gauche);
+	printf("Node : %d\n", list->cle);
+	if (list->droite != NULL)
+		print_list(list->droite);
 }
 
-// Fonction pour afficher la liste chaînée
-void afficher_liste(t_env *tete) {
-    printf("Liste triee :\n");
-    t_env *courant = tete;
-    while (courant != NULL) {
-        printf("%d ", courant->nombre);
-        courant = courant->next;
-    }
-    printf("\n");
-}
+int main()
+{
+	int tab[] = {10 , 5 , 15, 45, 100, 1, 6, 23};
+	t_env *list = NULL;
+	t_env *node = NULL;
+	t_env *tmp = NULL;
+	t_env *tmp2 = NULL;
+	int i = 0;
+	int len = sizeof(tab) / sizeof(int);
 
-int main() {
-    t_env *tete = NULL; // Initialiser la liste
+	while (i < len)
+	{
+		node = ft_lstnew(tab[i]);
+		insert(&list, node);
+		i++;
+	}
+	print_list(list);
+	// head = list;
+	// i++;
+	// while (i < len)
+	// {
+	// 	list = head;
+	// 	tmp = ft_lstnew(tab[i]);
+	// 	while (list)
+	// 	{
+	// 		if (list->cle < tab[i])
+	// 			list = list->droite;
+	// 		else if (list->cle > tab[i])
+	// 			list = list->gauche;
+	// 		if (list)
+	// 			tmp2 = list;
+	// 	}
+	// 	if (tmp2->cle < tab[i])
+	// 		tmp2->droite = tmp;
+	// 	else if (tmp2->cle > tab[i])
+	// 		tmp2->gauche = tmp;
+	// 	i++;
+	// }
 
-    // Ajouter des éléments à la liste
-    ajouter_element(&tete, 5);
-    ajouter_element(&tete, 3);
-    ajouter_element(&tete, 8);
-    ajouter_element(&tete, 1);
-    ajouter_element(&tete, 9);
-    ajouter_element(&tete, 6);
-    ajouter_element(&tete, 2);
-    ajouter_element(&tete, 4);
-    ajouter_element(&tete, 7);
-
-    // Trier la liste
-    trier_liste(&tete);
-
-    // Afficher la liste triée
-    afficher_liste(tete);
-
-    return 0;
 }

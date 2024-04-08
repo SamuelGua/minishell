@@ -6,13 +6,14 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/06 15:14:57 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/08 16:56:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//doit ton le triee par ordre alphabetique
+// doit ton le triee par ordre alphabetique
+// si on export sans la sans la valeur ""
 
 static void sort_env(t_env **export)
 {

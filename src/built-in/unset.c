@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 16:48:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/06 10:55:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/08 09:16:48 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 // Doit on recreer la varaibles _  qui comporte le dernier executable
 // Peut-on tout unset
-
-
 static int	is_head(t_env **env, char *str)
 {
 	t_env	*tmp;

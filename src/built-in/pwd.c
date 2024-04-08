@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/05 12:45:36 by scely             #+#    #+#             */
-/*   Updated: 2024/04/05 16:48:34 by scely            ###   ########.fr       */
+/*   Created: 2024/04/08 09:33:59 by scely             #+#    #+#             */
+/*   Updated: 2024/04/08 09:34:19 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_env *env)
+void	ft_pwd(void)
 {
-	while (env != NULL)
+	char	*path_name;
+
+	path_name = getcwd(NULL, 0);
+	if (!path_name)
 	{
-		printf("%s=%s\n",env->cle, env->params);
-		env = env->next;
+		printf("Error malloc\n");
+		return ;
 	}
+	printf("%s\n", path_name);
 }
