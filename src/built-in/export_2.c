@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/09 09:40:50 by scely             #+#    #+#             */
+/*   Updated: 2024/04/09 09:42:58 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	free_export(t_export *export)
@@ -12,13 +24,13 @@ void	free_export(t_export *export)
 	}
 }
 
-static t_export *ft_lstnew_export(char *cle, char *params)
+static	t_export	*ft_lstnew_export(char *cle, char *params)
 {
 	t_export	*new;
 
 	new = malloc(sizeof(t_export));
 	new->cle = ft_strdup(cle);
-	if(!new->cle)
+	if (!new->cle)
 		return (free(new), NULL);
 	new->params = ft_strdup(params);
 	if (!new->params)
@@ -27,7 +39,8 @@ static t_export *ft_lstnew_export(char *cle, char *params)
 	new->right = NULL;
 	return (new);
 }
-static void	insert_export(t_export **list, t_export *node)
+
+static	void	insert_export(t_export **list, t_export *node)
 {
 	if (*list == NULL)
 	{
@@ -40,11 +53,11 @@ static void	insert_export(t_export **list, t_export *node)
 		insert_export(&(*list)->right, node);
 }
 
-t_export *init_export(t_env *env)
+t_export	*init_export(t_env *env)
 {
-	t_export *tmp;
-	t_export *export;
-	
+	t_export	*tmp;
+	t_export	*export;
+
 	export = NULL;
 	if (env == NULL)
 		return (NULL);

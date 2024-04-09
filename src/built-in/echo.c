@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/08 09:35:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/09 16:28:55 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,45 @@ static void	print_echo(char **str)
 	}
 }
 
-void	ft_echo(char **str)
+char	**check_flag(char **str)
 {
 	int	i;
+	int	j;
+
+	i = -1;
+	while (str[++i])
+	{
+		j = 0;
+		if (str[i][0] == '-')
+			j++;
+		else
+			return (&str[i]);
+		while (str[i][j] && str[i][j] == 'n')
+			j++;
+		if (str[i][j] != '\0')
+			return (&str[i]);
+	}
+	return (&str[i]);
+}
+
+int	dash_n(char *str)
+{
+	int	i;
+
+	i = 1;
+	if (str[0] != '-')
+		return (0);
+	while (str[i] == 'n' && str[i])
+		i++;
+	if (str[i] != '\0')
+		return (0);
+	return (1);
+}
+
+void	ft_echo(char **str)
+{
+	int		i;
+	char	**test;
 
 	i = 0;
 	if (str == NULL)
@@ -45,11 +81,12 @@ void	ft_echo(char **str)
 		printf("\n");
 		return ;
 	}
-	if (ft_strncmp(str[i], "-n", 2) == 0)
+	test = check_flag(str);
+	if (dash_n(str[0]))
 	{
-		print_echo(&str[i + 1]);
+		print_echo(test);
 		return ;
 	}
-	print_echo(str);
+	print_echo(test);
 	printf("\n");
 }

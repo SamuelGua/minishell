@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/08 16:56:21 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/09 10:16:30 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 // doit ton le triee par ordre alphabetique
 // si on export sans la sans la valeur ""
-
-
 
 int	print_list(t_export *list)
 {
@@ -27,14 +25,11 @@ int	print_list(t_export *list)
 	if (list->right != NULL)
 		print_list(list->right);
 	return (1);
-	
 }
 
-
-//================================================================
-static int is_existing(t_env *env, char *str)
+static int	is_existing(t_env *env, char *str)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (str[j] != '=' && str[j])
@@ -50,16 +45,24 @@ static int is_existing(t_env *env, char *str)
 	env->params = ft_strdup(&str[j]);
 	return (0);
 }
-int is_valid(char *str)
+
+int	is_valid(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i] != '=' && str[i])
+	if (ft_isalpha(str[0]) == 1 || str[0] == '_')
+		i++;
+	else
+	{
+		printf("bash: export: `%s': not a valid identifier\n", str);
+		return (0);
+	}
+	while (str[i] != '=' && str[i])
 	{
 		if (ft_isalnum(str[i]) == 0)
 		{
-			printf("arguments pas valide a mettre en anglais\n");
+			printf("bash: export: `%s': not a valid identifier\n", str);
 			return (0);
 		}
 		i++;
@@ -67,7 +70,7 @@ int is_valid(char *str)
 	return (1);
 }
 
-void ft_export(t_export **export, t_env **env, char **str)
+void	ft_export(t_export **export, t_env **env, char **str)
 {
 	t_env	*tmp;
 	int		i;
@@ -75,16 +78,16 @@ void ft_export(t_export **export, t_env **env, char **str)
 
 	i = 0;
 	if (!str && print_list(*export))
-	 	return ;
+		return ;
 	while (str[i])
 	{
 		if (str[i] && is_valid(str[i]) && is_existing(*env, str[i]))
 		{
 			j = 0;
-			while(str[i][j] != '=' && str[i][j])
+			while (str[i][j] != '=' && str[i][j])
 				j++;
 			if (!str[i][j])
-				break;
+				break ;
 			str[i][j] = '\0';
 			tmp = ft_lstnew_env(str[i], &str[i][j + 1]);
 			if (!tmp)

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/04/08 15:30:52 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/09 16:27:37 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@
 // bash-5.1$ exit +920368547758072
 //
 
-
-// si je fait exit sans arguments qui precede un commade qui a rate, je dois retourner se nombre
-static long long int ft_atoll(char *str)
+// si je fait exit sans arguments qui precede un 
+//       commade qui a rate, je dois retourner se nombre
+static long long int	ft_atoll(char *str)
 {
 	int				i;
 	long long int	nbrs;
@@ -60,20 +60,19 @@ static long long int ft_atoll(char *str)
 	nbrs = 0;
 	if (str[i] == '-' || str[i] == '+')
 		i++;
-	while(str[i])
+	while (str[i])
 	{
 		nbrs = nbrs * 10 + str[i] - '0';
-		i++; 
+		i++;
 	}
 	if (str[0] == '-')
 		nbrs *= -1;
 	return (nbrs);
 }
 
-
-static int size_nbrs(char *str)
+static int	size_nbrs(char *str)
 {
-	int i;
+	int	i;
 	int	j;
 
 	j = 0;
@@ -82,18 +81,18 @@ static int size_nbrs(char *str)
 		j++;
 	while (ft_isdigit(str[i + j]))
 		i++;
-	if (str[i + j] == '\0') 
+	if (str[i + j] == '\0')
 		i--;
-	if (i == 0 || ft_isdigit(str[i + j]) == 0 || i >= 19)
+	if (ft_isdigit(str[i + j]) == 0 || i >= 19)
 	{
 		printf("exit\n");
-		printf("bash: exit: %s: numeric argument required", str);
+		printf("bash: exit: %s: numeric argument required\n", str);
 		exit (2);
 	}
 	return (1);
 }
 
-int ft_exit(char **str)
+int	ft_exit(char **str)
 {
 	int	i;
 

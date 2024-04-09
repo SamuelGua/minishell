@@ -43,7 +43,7 @@ int main(int ac, char **av, char **envp)
 			char **exit_value = ft_split(prompt + 5, ' ');	
 			ft_exit(exit_value);
 		}
-		printf("prompt %s, readline\n", prompt);
+		//printf("prompt %s, readline\n", prompt);
 	}
 	return (0);
 }
