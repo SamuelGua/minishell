@@ -86,7 +86,7 @@ static int	size_nbrs(char *str)
 	if (ft_isdigit(str[i + j]) == 0 || i >= 19)
 	{
 		printf("exit\n");
-		printf("bash: exit: %s: numeric argument required\n", str);
+		printf("minishell: exit: %s: numeric argument required\n", str);
 		exit (2);
 	}
 	return (1);
@@ -107,7 +107,7 @@ int	ft_exit(char **str)
 	if (i > 1)
 	{
 		printf("exit\n");
-		return (printf("bash: exit: too many arguments\n"), 1);
+		return (printf("minishell: exit: too many arguments\n"), 1);
 	}
 	printf("exit\n");
 	exit(ft_atoll(str[0]));

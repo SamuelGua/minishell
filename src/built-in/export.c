@@ -55,14 +55,14 @@ int	is_valid(char *str)
 		i++;
 	else
 	{
-		printf("bash: export: `%s': not a valid identifier\n", str);
+		printf("minishell: export: `%s': not a valid identifier\n", str);
 		return (0);
 	}
 	while (str[i] != '=' && str[i])
 	{
 		if (ft_isalnum(str[i]) == 0)
 		{
-			printf("bash: export: `%s': not a valid identifier\n", str);
+			printf("minishell: export: `%s': not a valid identifier\n", str);
 			return (0);
 		}
 		i++;

@@ -13,7 +13,8 @@ int main(int ac, char **av, char **envp)
 		return (printf("Erreur malloc\n"), 2);
 	while (1)
 	{
-		prompt = readline("> ");
+		prompt = readline("\e[1;34mMinishell > \e[0m");
+		add_history(prompt);
 		if (!prompt)
 			return (999); // le dernier exit status
 		else if (ft_strncmp(prompt, "env", 3) == 0)
@@ -43,7 +44,11 @@ int main(int ac, char **av, char **envp)
 			char **exit_value = ft_split(prompt + 5, ' ');	
 			ft_exit(exit_value);
 		}
-		//printf("prompt %s, readline\n", prompt);
+		else if (ft_strncmp(prompt, "cd", 2) == 0)	
+		{
+			char **cd_value = ft_split(prompt + 2, ' ');	
+			ft_cd(env, cd_value);
+		}
 	}
 	return (0);
 }

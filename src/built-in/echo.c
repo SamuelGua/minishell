@@ -72,10 +72,8 @@ int	dash_n(char *str)
 
 void	ft_echo(char **str)
 {
-	int		i;
 	char	**test;
 
-	i = 0;
 	if (str == NULL)
 	{
 		printf("\n");
