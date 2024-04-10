@@ -9,8 +9,8 @@ int main(int ac, char **av, char **envp)
 	t_export 	*export = NULL;
 	env = init_env(envp);
  	export = init_export(env);
-	if (env == NULL)
-		return (printf("Erreur malloc\n"), 2);
+	// if (env == NULL)
+	// 	return (printf("Erreur malloc\n"), 2);
 	while (1)
 	{
 		prompt = readline("minishell > ");

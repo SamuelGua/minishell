@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 12:57:54 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 17:04:17 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/10 17:37:57 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_env	*init_env(char **envp)
 {
 	t_env	*env;
 	t_env	*tmp;
+	char save = 0;
 	int		i;
 	int		j;
 
@@ -77,12 +78,15 @@ t_env	*init_env(char **envp)
 		j = 0;
 		while (envp[i][j] != '=' && envp[i])
 			j++;
+		save = envp[i][j];
 		envp[i][j] = '\0';
 		tmp = ft_lstnew_env(envp[i], &envp[i][j + 1]);
 		if (!tmp)
 			return (ft_free_env(env), NULL);
 		ft_lstadd_back_env(&env, tmp);
+		envp[i][j] = save;
 		i++;
 	}
+	// printf("%d\n",i);
 	return (env);
 }
