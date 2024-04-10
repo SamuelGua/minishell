@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 16:48:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/09 09:40:42 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/10 15:29:29 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void	ft_unset(t_export **export, t_env **env, char **str)
 
 	i = 0;
 	if (str == NULL)
+	{
+		ft_free(str);
 		return ;
+	}
 	while (str[i])
 	{
 		is_head(env, str[i]);
@@ -64,6 +67,7 @@ void	ft_unset(t_export **export, t_env **env, char **str)
 		}
 		i++;
 	}
+	ft_free(str);
 	free_export(*export);
 	*export = init_export(*env);
 }

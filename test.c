@@ -1,10 +1,25 @@
-int main()
-{
-	int len;
-	len = 0;
-	if ((len = 5) > 9)
-		printf("ok 1\n");
-	if ((len = 10) > 9)
-		printf("ok 2\n");
-	printf("%d\n",len);
+#include <stdio.h>
+#include "include/minishell.h"
+#include <stdlib.h>
+#include <string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+int main() {
+    char* input;
+
+	char *tout_casser;
+	tout_casser = malloc(52 * sizeof(t_env));
+	char *redit;
+	int i = 100;
+	while (--i)
+		redit = strdup("1000000000000000000");
+    while ((input = readline("minishell > ")) != NULL) {
+		add_history(input);
+
+        printf("Vous avez saisi : %s\n", input);
+        free(input);
+    }
+
+    return 0;
 }

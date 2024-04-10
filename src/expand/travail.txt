@@ -1,0 +1,8 @@
+bash-5.1$ echo "$HOME"
+/home/scely
+bash-5.1$ echo '$HOME'
+$HOME
+bash-5.1$ echo $HOME
+/home/scely
+
+quand il faut expand ou pas 

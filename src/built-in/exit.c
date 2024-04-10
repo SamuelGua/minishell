@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/04/09 16:27:37 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/10 15:28:59 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@
 
 // si je fait exit sans arguments qui precede un 
 //       commade qui a rate, je dois retourner se nombre
+void free_env_export(t_env *env, t_export *export)
+{
+	free_export(export);
+	ft_free_env(env);
+}
+
 static long long int	ft_atoll(char *str)
 {
 	int				i;
@@ -70,7 +76,7 @@ static long long int	ft_atoll(char *str)
 	return (nbrs);
 }
 
-static int	size_nbrs(char *str)
+static int	size_nbrs(t_env *env, t_export *export, char *str)
 {
 	int	i;
 	int	j;
@@ -87,22 +93,24 @@ static int	size_nbrs(char *str)
 	{
 		printf("exit\n");
 		printf("minishell: exit: %s: numeric argument required\n", str);
+		free_env_export(env, export);
 		exit (2);
 	}
 	return (1);
 }
 
-int	ft_exit(char **str)
+int	ft_exit(t_env *env, t_export *export, char **str)
 {
 	int	i;
 
 	i = 0;
 	if (str == NULL)
 	{
+		free_env_export(env, export);
 		printf("exit\n");
 		exit(0);
 	}
-	while (str[i] && size_nbrs(str[i]))
+	while (str[i] && size_nbrs(env, export, str[i]))
 		i++;
 	if (i > 1)
 	{
@@ -110,5 +118,7 @@ int	ft_exit(char **str)
 		return (printf("minishell: exit: too many arguments\n"), 1);
 	}
 	printf("exit\n");
+	free_env_export(env, export);
+	ft_free(str);
 	exit(ft_atoll(str[0]));
 }

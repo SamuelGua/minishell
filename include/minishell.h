@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/08 13:16:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/10 15:26:16 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	ft_env(t_env *env, char **str);
 void	ft_echo(char **str); // retirer le $
 void	ft_export(t_export **export, t_env **env, char **str);
 void	ft_pwd(void);
-int		ft_exit(char **str);
+int		ft_exit(t_env *env, t_export *export, char **str);
 void	ft_cd(t_env *env, char **str);
 
 

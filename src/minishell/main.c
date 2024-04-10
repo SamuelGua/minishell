@@ -8,16 +8,17 @@ int main(int ac, char **av, char **envp)
 	t_env 		*env = NULL;
 	t_export 	*export = NULL;
 	env = init_env(envp);
-	export = init_export(env);
+ 	export = init_export(env);
 	if (env == NULL)
 		return (printf("Erreur malloc\n"), 2);
 	while (1)
 	{
-		prompt = readline("\e[1;34mMinishell > \e[0m");
-		add_history(prompt);
+		prompt = readline("minishell > ");
 		if (!prompt)
-			return (999); // le dernier exit status
-		else if (ft_strncmp(prompt, "env", 3) == 0)
+			return (2);
+		add_history(prompt);
+
+		if (ft_strncmp(prompt, "env", 3) == 0)
 		{
 			char **env_value = ft_split(prompt + 3, ' '); 
 			ft_env(env, env_value);
@@ -42,7 +43,7 @@ int main(int ac, char **av, char **envp)
 		else if (ft_strncmp(prompt, "exit", 4) == 0)	
 		{
 			char **exit_value = ft_split(prompt + 5, ' ');	
-			ft_exit(exit_value);
+			ft_exit(env, export, exit_value);
 		}
 		else if (ft_strncmp(prompt, "cd", 2) == 0)	
 		{

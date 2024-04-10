@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 12:57:54 by scely             #+#    #+#             */
-/*   Updated: 2024/04/09 09:39:56 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/10 17:04:17 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ t_env	*init_env(char **envp)
 	int		j;
 
 	i = 0;
+	env = NULL;
 	if (envp == NULL)
 	{
 		printf("NO environement\n");

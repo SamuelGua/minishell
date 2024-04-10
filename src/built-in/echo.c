@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/09 16:28:55 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/10 16:41:27 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,10 @@ void	ft_echo(char **str)
 	if (dash_n(str[0]))
 	{
 		print_echo(test);
+		ft_free(str);
 		return ;
 	}
 	print_echo(test);
 	printf("\n");
+	ft_free(str);
 }
