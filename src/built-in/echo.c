@@ -6,22 +6,19 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 16:41:27 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/11 09:25:05 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//echo "maman je t'aime"
-//echo "maman "je" t'aime"
-//echo 'maman 'je' t'aime'
-// = maman je taime
+// => les deux commandes s'expandent
+// echo $PWD
+// echo "$PWD"
 
-//echo "maman 'je' t'aime"
-// = maman 'je' taime
+// => ca ne s'expande pas 
+// echo '$PWD'
 
-//echo $PATH => /usr/bin...
-//echo $path => 
 static void	print_echo(char **str)
 {
 	int	i;

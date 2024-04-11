@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 15:26:16 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/11 17:37:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,22 @@
 # include <readline/history.h>	
 # include <curses.h>
 
-// fonction list env
+//TOKEN
+#define WORD 1
+#define OPERATOR 2
+#define QUOTED 1
+#define UNQUOTED 2
+#define GREAT 3
+#define DGREAT 4
+#define LESS 5
+#define HERE_DOC 6
+#define PIPE 7
+#define AND_IF 8
+#define OR_IF 9
+#define LBRAKET 10
+#define	RBRAKET 11
+
+// Structure env et export
 typedef struct s_env
 {
 	char			*cle;
@@ -63,6 +78,28 @@ void	ft_export(t_export **export, t_env **env, char **str);
 void	ft_pwd(void);
 int		ft_exit(t_env *env, t_export *export, char **str);
 void	ft_cd(t_env *env, char **str);
+
+//// PARSING
+// Structure
+typedef struct s_token
+{
+	char			*str;
+	int				type;
+	int				token;
+	struct t_token	*next;
+}	t_token;
+
+typedef struct s_operateur
+{
+	int	quoted;
+	int	d_quoted;
+	int	lbraket;
+	int	rbraket;
+	
+}	t_operateur;
+
+
+// init struct
 
 
 #endif
