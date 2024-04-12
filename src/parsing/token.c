@@ -6,15 +6,21 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/12 12:57:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/12 17:05:25 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_operator(char c)
+#define NO_QUOTE 0
+#define QUOTE 1
+#define D_QUOTE 2
+
+int	is_operator(char c, int stats)
 {
-	if (c == '>' || c == '<' || c == '&' || c == '|')
+	if (stats)
+		return (0);
+	if (c == '>' || c == '<' || c == '&' || c == '|'|| c == '('|| c == ')')
 		return (1);
 	return (0);
 }
@@ -63,14 +69,15 @@ t_token	*init_token(char *prompt)
 	int	len;
 	t_token *token = NULL;
 	t_token *node = NULL;
+	int		quoted = NO_QUOTE;
 
 	i = 0;
-	while(prompt[i])
+	while(prompt[i] && prompt[i] != '#')
 	{
 		len = 0;
 		while (prompt[i] == ' ')
 			i++;
-		if (prompt[i] && is_operator(prompt[i]))
+		if (prompt[i] && is_operator(prompt[i], quoted))
 		{
 			if (check_operator(&prompt[i], &len))
 			{
@@ -80,27 +87,41 @@ t_token	*init_token(char *prompt)
 			}
 		}
 		else if (prompt[i] == '\'')
-		{
+		{	//single quoted
+			quoted = QUOTE;
 			(len++, i++); // 1er quote
-			while (prompt[i] && prompt[i] != '\'')
+			while (prompt[i] && is_operator(prompt[i], quoted) == 0)
+			{
+				if ( prompt[i] == '\'')
+					quoted = NO_QUOTE;
 				(len++, i++);
-			(len++, i++);// 2eme quote
-			printf("len %d, i %d (%d)\n", len, i, i-len);
+				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
+					break;
+			}
+			(len++, i++); // 2eme quote
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
 		}
 		else if (prompt[i] == '\"')
-		{
+		{	//double quoted
 			(len++, i++);
-			while (prompt[i] && prompt[i] != '\"')
+			quoted = D_QUOTE;
+			while (prompt[i] && is_operator(prompt[i], quoted) == 0)
+			{
+				if (prompt[i] == '\"')
+					quoted = NO_QUOTE;
 				(len++, i++);
+				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
+					break;
+			}
 			(len++, i++);
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
 		}
 		else 
 		{
-			while (prompt[i] && is_operator(prompt[i]) == 0 && prompt[i] != ' ')
+			if (prompt[i] == '#')
+				break;
+			while (prompt[i] && is_operator(prompt[i], quoted) == 0 && prompt[i] != ' ')
 				(len++, i++);
-			printf("len %d, i %i\n", len, i);
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, UNQUOTED);
 			if (prompt[i] == ' ')
 				i++;
