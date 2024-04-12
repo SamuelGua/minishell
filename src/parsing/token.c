@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/12 17:05:25 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/12 17:45:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,29 @@ void free_token(t_token *token)
 	}
 }
 
+int value_operator(char *str)
+{
+	if (ft_strncmp(str, ">>", 2) == 0)
+		return (DGREAT);
+	else if (ft_strncmp(str, "<<", 2) == 0)
+		return (HERE_DOC);
+	else if (ft_strncmp(str, "||", 2) == 0)
+		return (OR_IF);
+	else if (ft_strncmp(str, "&&", 2) == 0)
+		return (AND_IF);
+	else if (ft_strncmp(str, "|", 1) == 0)
+		return (PIPE);
+	else if (ft_strncmp(str, "<", 1) == 0)
+		return (LESS);
+	else if (ft_strncmp(str, ">", 1) == 0)
+		return (GREAT);
+	else if (ft_strncmp(str, "(", 1) == 0)
+		return (LBRAKET);
+	else if (ft_strncmp(str, ")", 1) == 0)
+		return (RBRAKET);
+	return (666);
+}
+
 t_token	*init_token(char *prompt)
 {
 	int	i;
@@ -82,7 +105,7 @@ t_token	*init_token(char *prompt)
 			if (check_operator(&prompt[i], &len))
 			{
 				i += len;
-				node = ft_lstnew_token(&prompt[i - len], len, OPERATOR, 0);
+				node = ft_lstnew_token(&prompt[i - len], len, OPERATOR, value_operator((&prompt[i - len])));
 				//token operator
 			}
 		}
@@ -98,7 +121,6 @@ t_token	*init_token(char *prompt)
 				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
 					break;
 			}
-			(len++, i++); // 2eme quote
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
 		}
 		else if (prompt[i] == '\"')
@@ -112,19 +134,24 @@ t_token	*init_token(char *prompt)
 				(len++, i++);
 				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
 					break;
+				printf("quoted = %d prompt = %c len = %d\n",quoted, prompt[i], len);
 			}
-			(len++, i++);
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
 		}
 		else 
 		{
 			if (prompt[i] == '#')
 				break;
-			while (prompt[i] && is_operator(prompt[i], quoted) == 0 && prompt[i] != ' ')
+			while (prompt[i] && is_operator(prompt[i + 1], quoted) == 0 && prompt[i] != ' ')
 				(len++, i++);
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, UNQUOTED);
 			if (prompt[i] == ' ')
 				i++;
+		}
+		if (quoted)
+		{
+			printf("Prompt mal ecris\n");
+			return (NULL);
 		}
 		ft_lstadd_back_token(&token, node);
 	}
