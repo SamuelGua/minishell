@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:33:59 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 10:36:23 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/12 17:53:17 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	ft_pwd(void)
 	path_name = getcwd(NULL, 0);
 	if (!path_name)
 	{
-		
 		perror(PWD_ERROR PWD_ERROR2);
 		return ;
 	}

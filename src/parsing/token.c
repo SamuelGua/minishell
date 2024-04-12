@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/12 17:45:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/12 18:00:28 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ t_token	*init_token(char *prompt)
 				(len++, i++);
 				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
 					break;
-				printf("quoted = %d prompt = %c len = %d\n",quoted, prompt[i], len);
 			}
 			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
 		}
@@ -148,11 +147,11 @@ t_token	*init_token(char *prompt)
 			if (prompt[i] == ' ')
 				i++;
 		}
-		if (quoted)
-		{
-			printf("Prompt mal ecris\n");
-			return (NULL);
-		}
+		// if (quoted)
+		// {
+		// 	printf("Prompt mal ecris\n");
+		// 	return (NULL);
+		// }
 		ft_lstadd_back_token(&token, node);
 	}
 	return (token);
