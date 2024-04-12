@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/11 17:37:21 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/12 12:26:17 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 # include <curses.h>
 
 //TOKEN
-#define WORD 1
-#define OPERATOR 2
+#define WORD 10
+#define OPERATOR 20
 #define QUOTED 1
 #define UNQUOTED 2
 #define GREAT 3
@@ -62,7 +62,7 @@ typedef struct s_export
 //// INITIALISATION
 // init env
 t_env	*ft_lstnew_env(char *str1, char *str2);
-void	ft_lstadd_back_env(t_env **lst, t_env *new);
+void	ft_lstadd_back_env(t_env **lst, t_env *node);
 t_env	*init_env(char **envp);
 void	ft_free_env(t_env *env);
 
@@ -86,8 +86,14 @@ typedef struct s_token
 	char			*str;
 	int				type;
 	int				token;
-	struct t_token	*next;
+	struct s_token	*next;
 }	t_token;
+
+t_token	*ft_lstnew_token(char *str, int len, int type, int token);
+void	ft_lstadd_back_token(t_token **token, t_token *node);
+t_token	*init_token(char *prompt);
+void	print_token(t_token *token);
+void free_token(t_token *token);
 
 typedef struct s_operateur
 {

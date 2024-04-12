@@ -6,13 +6,13 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 12:57:54 by scely             #+#    #+#             */
-/*   Updated: 2024/04/11 09:27:56 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/12 10:46:35 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lstadd_back_env(t_env **lst, t_env *new)
+void	ft_lstadd_back_env(t_env **lst, t_env *node)
 {
 	t_env	*tmp;
 
@@ -21,10 +21,10 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 	{
 		while (tmp->next)
 			tmp = tmp->next;
-		tmp->next = new;
+		tmp->next = node;
 	}
 	else
-		*lst = new;
+		*lst = node;
 }
 
 t_env	*ft_lstnew_env(char *str1, char *str2)

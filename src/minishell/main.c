@@ -7,6 +7,7 @@ int main(int ac, char **av, char **envp)
 	(void)av;
 	t_env 		*env = NULL;
 	t_export 	*export = NULL;
+	t_token 	*token = NULL;
 	env = init_env(envp);
  	export = init_export(env);
 	// if (env == NULL)
@@ -16,6 +17,9 @@ int main(int ac, char **av, char **envp)
 		prompt = readline("minishell > ");
 		if (!prompt)
 			return (2);
+		token = init_token(prompt);
+		print_token(token);
+		free_token(token);
 		add_history(prompt);
 
 		if (ft_strncmp(prompt, "env", 3) == 0)
