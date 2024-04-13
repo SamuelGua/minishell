@@ -97,6 +97,8 @@ t_token *init_token(char *prompt)
 
 	while (1)
 	{
+		while ( type_token == 0 && quoted == NO_QUOTE && prompt[i] == 32)
+			i++;
 		if (prompt[i] == '\0')
 		{
 			// regle 1
@@ -105,6 +107,7 @@ t_token *init_token(char *prompt)
 				printf("delimeter 1\n");
 				node = ft_lstnew_token(&prompt[start_token], len, type_token, 999);
 				ft_lstadd_back_token(&token, node);
+				type_token = 0;
 				sous_type = 1;
 			}
 			break ;
@@ -123,6 +126,7 @@ t_token *init_token(char *prompt)
 			ft_lstadd_back_token(&token, node);
 			sous_type = 1;
 			start_token = 0;
+			type_token = 0;
 			len = 1;
 			i--;
 		}
@@ -160,18 +164,21 @@ t_token *init_token(char *prompt)
 				printf("delimeter 6\n");
 				node = ft_lstnew_token(&prompt[start_token], len, type_token, 999);
 				ft_lstadd_back_token(&token, node);
+				type_token = 0;
 				sous_type = 1;
 			}
 			type_token = OPERATOR;
 			start_token = i;
-			len = 1;
+			len = 2;
 		}
-		else if (prompt[i] == ' ' && quoted == 0)
+		else if (prompt[i] == ' ' && quoted == NO_QUOTE)
 		{
-			//rergle 7
+			// regle 7
 			node = ft_lstnew_token(&prompt[start_token], len, type_token, 999);
 			printf("delimeter 7\n");
 			ft_lstadd_back_token(&token, node);
+			sous_type = 1;
+			type_token = 0;
 			start_token = i;
 			len = 1;
 		}
