@@ -20,7 +20,7 @@ t_token *ft_lstnew_token(char *str, int len, int type, int token)
 	if(!node)	
 		return (NULL);
 	node->str = malloc(sizeof(char) * len + 1);
-	ft_strlcpy(node->str, str, len + 1);
+	ft_strlcpy(node->str, str, len);
 	node->type  = type;
 	node->token = token;
 	node->next = NULL;

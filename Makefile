@@ -29,7 +29,7 @@ BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
 BUILT-IN		= unset.c echo.c export.c init_export.c pwd.c exit.c env.c cd.c\
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
-PARSING			= token_utils.c token.c\
+PARSING			= token_utils.c token_v2.c\
 
 INCLUDE			= include/minishell.h include/libft.h
 				
