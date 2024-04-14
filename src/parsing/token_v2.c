@@ -21,7 +21,7 @@ int	is_operator(char c, int stats)
 {
 	if (stats)
 		return (0);
-	if (c == '>' || c == '<' /*|| c == '&' */|| c == '|'|| c == '('|| c == ')')
+	if (c == '>' || c == '<' /*|| c == '&' */|| c == '|' /*|| c == '('|| c == ')'*/)
 		return (1);
 	return (0);
 }
@@ -75,10 +75,10 @@ int value_operator(char *str)
 		return (LESS);
 	else if (ft_strncmp(str, ">", 1) == 0)
 		return (GREAT);
-	else if (ft_strncmp(str, "(", 1) == 0)
+	/*else if (ft_strncmp(str, "(", 1) == 0)
 		return (LBRAKET);
 	else if (ft_strncmp(str, ")", 1) == 0)
-		return (RBRAKET);
+		return (RBRAKET);*/
 	return (666);
 }
 
@@ -130,28 +130,28 @@ t_token *init_token(char *prompt)
 			len = 1;
 			i--;
 		}
-		else if (prompt[i] == '\'' && sous_type)
+		else if (prompt[i] == '\'')
 		{
 			//relgle 4
 			len++;
 			if (quoted == NO_QUOTE)
 			{
 				quoted = QUOTE;
-				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\''))
+				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\'' && sous_type))
 					start_token = i;
 				type_token = WORD;
 			} 
 			else if (quoted == QUOTE)
 				quoted = NO_QUOTE;
 		}
-		else if (prompt[i] == '\"' && sous_type)
+		else if (prompt[i] == '\"' )
 		{
 			//relgle 4 bis
 			len++;
 			if (quoted == NO_QUOTE)
 			{
 				quoted = D_QUOTE;
-				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\''))
+				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\'' && sous_type))
 					start_token = i;
 				type_token = WORD;
 			} 
