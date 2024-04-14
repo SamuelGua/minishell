@@ -118,7 +118,7 @@ t_token *init_token(char *prompt)
 			// regle 2
 			len++;
 		}
-		else if (type_token == OPERATOR && check_operator(&prompt[start_token], len) != 0)
+		else if (type_token == OPERATOR && check_operator(&prompt[start_token], len) == 0)
 		{
 			// regle 3
 			printf("delimeter 3\n");
@@ -137,7 +137,8 @@ t_token *init_token(char *prompt)
 			if (quoted == NO_QUOTE)
 			{
 				quoted = QUOTE;
-				start_token = i;
+				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\''))
+					start_token = i;
 				type_token = WORD;
 			} 
 			else if (quoted == QUOTE)
@@ -150,7 +151,8 @@ t_token *init_token(char *prompt)
 			if (quoted == NO_QUOTE)
 			{
 				quoted = D_QUOTE;
-				start_token = i;
+				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\''))
+					start_token = i;
 				type_token = WORD;
 			} 
 			else if (quoted == D_QUOTE)
@@ -170,6 +172,7 @@ t_token *init_token(char *prompt)
 			type_token = OPERATOR;
 			start_token = i;
 			len = 2;
+		// len = 1;
 		}
 		else if (prompt[i] == ' ' && quoted == NO_QUOTE)
 		{
@@ -196,11 +199,6 @@ t_token *init_token(char *prompt)
 			len++;
 		}
 		i++;
-		if (i > (int)ft_strlen(prompt))
-		{
-			printf("segfaut while(1)");
-			break;
-		}
 	}
 	return (token);
 }
