@@ -46,7 +46,7 @@ void	print_token(t_token *token)
 	printf("token\ttype\tstr\n");
 	while (token)
 	{
-		printf("%d\t", token->type);
+		printf("%d\t",token->type);
 		printf("%d\t", token->token);
 		printf("%s\n", token->str);
 		token = token->next;
