@@ -1,6 +1,7 @@
 #include "minishell.h"
 
 //getenv
+// modifier les environements
 int	cd_home(t_env *env)
 {
 	while (env && ft_strncmp(env->cle, "HOME", 5) != 0)
@@ -33,4 +34,5 @@ void	ft_cd(t_env *env, char **str)
 	}
 	if (chdir(*str))
 		perror("bash: cd");
+	ft_free(str);
 }

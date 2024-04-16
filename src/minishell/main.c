@@ -47,7 +47,7 @@ int main(int ac, char **av, char **envp)
 		else if (ft_strncmp(prompt, "echo", 4) == 0)
 		{
 			char **echo_value = ft_split(prompt + 4, ' ');	
-			ft_echo(echo_value);
+			ft_echo(echo_value, env);
 		}
 		else if (ft_strncmp(prompt, "export", 6) == 0)
 		{

@@ -12,32 +12,23 @@
 
 #include "minishell.h"
 
-#define NO_QUOTE 0
-#define QUOTE 1
-#define D_QUOTE 2
-
 int	is_operator(char c, int stats)
 {
 	if (stats)
 		return (0);
-	if (c == '>' || c == '<' || c == '&' || c == '|'|| c == '('|| c == ')')
+	if (c == '>' || c == '<' /*|| c == '&' */|| c == '|' /*|| c == '('|| c == ')'*/)
 		return (1);
 	return (0);
 }
 
-int check_operator(char *str, int *len)
+int check_operator(char *str, int len)
 {
-	int i;
-
-	i = 0;
-	if (!ft_strncmp(str, ">>", 2) || !ft_strncmp(str, "<<", 2)
-		|| !ft_strncmp(str, "&&", 2) || !ft_strncmp(str, "||", 2) )
+	if (!ft_strncmp(str, ">>", len) || !ft_strncmp(str, "<<", len)
+		/*|| !ft_strncmp(str, "&&", len)*/ || !ft_strncmp(str, "||", len) )
 	{
-		*len = 2;
 		return (1);
 	}
-	*len = 1;
-	return (1);
+	return (0);
 
 }
 
@@ -46,7 +37,7 @@ void	print_token(t_token *token)
 	printf("token\ttype\tstr\n");
 	while (token)
 	{
-		printf("%d\t",token->type);
+		printf("%d\t", token->type);
 		printf("%d\t", token->token);
 		printf("%s\n", token->str);
 		token = token->next;
@@ -69,90 +60,158 @@ int value_operator(char *str)
 		return (DGREAT);
 	else if (ft_strncmp(str, "<<", 2) == 0)
 		return (HERE_DOC);
-	else if (ft_strncmp(str, "||", 2) == 0)
-		return (OR_IF);
-	else if (ft_strncmp(str, "&&", 2) == 0)
-		return (AND_IF);
+	// else if (ft_strncmp(str, "||", 2) == 0)
+	// 	return (OR_IF);
+	// else if (ft_strncmp(str, "&&", 2) == 0)
+	// 	return (AND_IF);
 	else if (ft_strncmp(str, "|", 1) == 0)
 		return (PIPE);
 	else if (ft_strncmp(str, "<", 1) == 0)
 		return (LESS);
 	else if (ft_strncmp(str, ">", 1) == 0)
 		return (GREAT);
-	else if (ft_strncmp(str, "(", 1) == 0)
+	/*else if (ft_strncmp(str, "(", 1) == 0)
 		return (LBRAKET);
 	else if (ft_strncmp(str, ")", 1) == 0)
-		return (RBRAKET);
+		return (RBRAKET);*/
 	return (666);
 }
 
-t_token	*init_token(char *prompt)
+// regle 5 pas prise en compte car elle sera traiter apres entre le parsing et l'execution
+// regle 9 ne sera pas traiter car la gestion du # n'est pas demande par le sujet
+t_token *init_token(char *prompt)
 {
-	int	i;
-	int	len;
+	int i = 0;
+	int quoted = NO_QUOTE;
+	int len = 1;
 	t_token *token = NULL;
 	t_token *node = NULL;
-	int		quoted = NO_QUOTE;
+	int type_token = 0;
+	int start_token = 0;
+	int sous_type = 1;
 
-	i = 0;
-	while(prompt[i] && prompt[i] != '#')
+	while (1)
 	{
-		len = 0;
-		while (prompt[i] == ' ')
+		while ( type_token == 0 && quoted == NO_QUOTE && prompt[i] == 32)
 			i++;
-		if (prompt[i] && is_operator(prompt[i], quoted))
+		if (prompt[i] == '\0')
 		{
-			if (check_operator(&prompt[i], &len))
+			// regle 1
+			if (type_token)
 			{
-				i += len;
-				node = ft_lstnew_token(&prompt[i - len], len, OPERATOR, value_operator((&prompt[i - len])));
-				//token operator
+				if (prompt[start_token] == '\'' || prompt[start_token] == '\"')
+					sous_type = QUOTED;
+				else if (is_operator(prompt[start_token], 0))
+					sous_type = value_operator(&prompt[start_token]);
+				else
+					sous_type = UNQUOTED;
+				printf("delimeter 1\n");
+				node = ft_lstnew_token(&prompt[start_token], len, type_token, sous_type);
+				ft_lstadd_back_token(&token, node);
+				type_token = 0;
+				sous_type = 1;
 			}
+			break ;
+		}
+		else if (type_token == OPERATOR && is_operator(prompt[i], quoted)
+				&& check_operator(&prompt[start_token], len))
+		{
+			// regle 2
+			len++;
+		}
+		else if (type_token == OPERATOR && check_operator(&prompt[start_token], len) == 0)
+		{
+			// regle 3
+			printf("delimeter 3\n");
+			node = ft_lstnew_token(&prompt[start_token], len, type_token, value_operator(&prompt[start_token]));
+			ft_lstadd_back_token(&token, node);
+			sous_type = 1;
+			start_token = 0;
+			type_token = 0;
+			len = 1;
+			i--;
 		}
 		else if (prompt[i] == '\'')
-		{	//single quoted
-			quoted = QUOTE;
-			(len++, i++); // 1er quote
-			while (prompt[i] && is_operator(prompt[i], quoted) == 0)
-			{
-				if ( prompt[i] == '\'')
-					quoted = NO_QUOTE;
-				(len++, i++);
-				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
-					break;
-			}
-			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
-		}
-		else if (prompt[i] == '\"')
-		{	//double quoted
-			(len++, i++);
-			quoted = D_QUOTE;
-			while (prompt[i] && is_operator(prompt[i], quoted) == 0)
-			{
-				if (prompt[i] == '\"')
-					quoted = NO_QUOTE;
-				(len++, i++);
-				if ( prompt[i] == ' ' && quoted == NO_QUOTE)
-					break;
-			}
-			node = ft_lstnew_token(&prompt[i - len], len, WORD, QUOTED);
-		}
-		else 
 		{
-			if (prompt[i] == '#')
-				break;
-			while (prompt[i] && is_operator(prompt[i + 1], quoted) == 0 && prompt[i] != ' ')
-				(len++, i++);
-			node = ft_lstnew_token(&prompt[i - len], len, WORD, UNQUOTED);
-			if (prompt[i] == ' ')
-				i++;
+			//relgle 4
+			len++;
+			if (quoted == NO_QUOTE)
+			{
+				quoted = S_QUOTE;
+				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\'' && sous_type))
+					start_token = i;
+				type_token = WORD;
+			} 
+			else if (quoted == S_QUOTE)
+				quoted = NO_QUOTE;
 		}
-		// if (quoted)
-		// {
-		// 	printf("Prompt mal ecris\n");
-		// 	return (NULL);
-		// }
-		ft_lstadd_back_token(&token, node);
+		else if (prompt[i] == '\"' )
+		{
+			//relgle 4 bis
+			len++;
+			if (quoted == NO_QUOTE)
+			{
+				quoted = D_QUOTE;
+				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\'' && sous_type))
+					start_token = i;
+				type_token = WORD;
+			} 
+			else if (quoted == D_QUOTE)
+				quoted = NO_QUOTE;
+		}
+		else if (is_operator(prompt[i], quoted))
+		{
+			// regle 6
+			if (type_token != NO_TOKEN)
+			{
+				if (prompt[start_token] == '\'' || prompt[start_token] == '\"')
+					sous_type = QUOTED;
+				else if (is_operator(prompt[start_token], 0))
+					sous_type = value_operator(&prompt[start_token]);
+				else
+					sous_type = UNQUOTED;
+				printf("delimeter 6\n");
+				node = ft_lstnew_token(&prompt[start_token], len, type_token, sous_type);
+				ft_lstadd_back_token(&token, node);
+				type_token = 0;
+				sous_type = 1;
+			}
+			type_token = OPERATOR;
+			start_token = i;
+			len = 2;
+		// len = 1;
+		}
+		else if (prompt[i] == ' ' && quoted == NO_QUOTE)
+		{
+			// regle 7
+			if (prompt[start_token] == '\'' || prompt[start_token] == '\"')
+				sous_type = QUOTED;
+			else if (is_operator(prompt[start_token], 0))
+				sous_type = value_operator(&prompt[start_token]);
+			else
+				sous_type = UNQUOTED;
+			node = ft_lstnew_token(&prompt[start_token], len, type_token, sous_type);
+			printf("delimeter 7\n");
+			ft_lstadd_back_token(&token, node);
+			sous_type = 1;
+			type_token = 0;
+			start_token = i;
+			len = 1;
+		}
+		else if (type_token == WORD)
+		{
+			// regle 8
+			len++;
+		}
+		else
+		{
+			//regle 10
+			sous_type = 0;
+			type_token = WORD;
+			start_token = i;
+			len++;
+		}
+		i++;
 	}
 	return (token);
 }

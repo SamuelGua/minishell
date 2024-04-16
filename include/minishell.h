@@ -73,13 +73,18 @@ void	free_export(t_export *export);
 //// BUILT-IIN
 void	ft_unset(t_export **export, t_env **env, char **str);
 void	ft_env(t_env *env, char **str);
-void	ft_echo(char **str); // retirer le $
+void	ft_echo(char **str, t_env *env); // retirer le $
 void	ft_export(t_export **export, t_env **env, char **str);
 void	ft_pwd(void);
 int		ft_exit(t_env *env, t_export *export, char **str);
 void	ft_cd(t_env *env, char **str);
 
 //// PARSING
+#define NO_QUOTE 0
+#define S_QUOTE 1
+#define D_QUOTE 2
+#define NO_TOKEN 0
+
 // Structure
 typedef struct s_token
 {
@@ -105,7 +110,8 @@ typedef struct s_operateur
 }	t_operateur;
 
 
-// init struct
-
+// EXPANSION
+char *expansion(char *str, t_env *env);
+int	is_quoted(int quoted, char c);
 
 #endif

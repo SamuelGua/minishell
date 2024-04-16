@@ -19,13 +19,16 @@
 // => ca ne s'expande pas 
 // echo '$PWD'
 
+// gerer les quotes
+
 static void	print_echo(char **str)
 {
 	int	i;
 
 	i = -1;
 	while (str[++i])
-	{	
+	{
+			
 		printf("%s", str[i]);
 		if (str[i + 1])
 			printf(" ");
@@ -67,14 +70,23 @@ int	dash_n(char *str)
 	return (1);
 }
 
-void	ft_echo(char **str)
+void	ft_echo(char **str, t_env *env)
 {
 	char	**test;
+	int		i;
+	(void)env;
 
+	i = 0;
 	if (str == NULL)
 	{
 		printf("\n");
 		return ;
+	}
+	//check ""
+	while (str[i])
+	{
+		str[i] = expansion(str[i], env);
+		i++;
 	}
 	test = check_flag(str);
 	if (dash_n(str[0]))

@@ -11,3 +11,16 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_quoted(int quoted, char c)
+{
+	if (quoted == 0 && c == '\'')
+		return (S_QUOTE);
+	else if (quoted == 0 && c == '\"')
+		return (D_QUOTE);
+	else if (quoted == S_QUOTE && c == '\'')
+		return (NO_QUOTE);
+	else if (quoted == D_QUOTE && c == '\"')
+		return (NO_QUOTE);
+	return (quoted);
+}

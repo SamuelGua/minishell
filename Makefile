@@ -10,7 +10,7 @@ NAME			:= minishell
 
 SRC_DIR			:= src
 OBJ_DIR			:= obj
-SRCS			= $(MINISHELL_PATH) $(LIBFT_PATH) $(BUILT-IN_PATH) $(PARSING_PATH)
+SRCS			= $(MINISHELL_PATH) $(LIBFT_PATH) $(BUILT-IN_PATH) $(PARSING_PATH) $(EXPAND_PATH)
 
 LIBFT_PATH		= $(LIBFT:%=src/libft/%)
 LIBFT			= ft_atoi.c ft_isprint.c ft_lstmap_bonus.c ft_putchar_fd.c ft_strjoin.c ft_strtrim.c\
@@ -19,17 +19,20 @@ LIBFT			= ft_atoi.c ft_isprint.c ft_lstmap_bonus.c ft_putchar_fd.c ft_strjoin.c 
 					ft_free.c ft_lstadd_front_bonus.c ft_memchr.c ft_putstr_fd.c ft_strlen.c ft_toupper.c\
 					ft_isalnum.c ft_lstclear_bonus.c ft_memcmp.c ft_split.c ft_strmapi.c get_next_line.c\
 					ft_isalpha.c ft_lstdelone_bonus.c ft_memcpy.c ft_strchr.c ft_strncmp.c ft_isascii.c\
-					ft_lstiter_bonus.c ft_memmove.c ft_strdup.c ft_strnstr.c\
+					ft_lstiter_bonus.c ft_memmove.c ft_strdup.c ft_strnstr.c ft_free_strjoin.c\
 					ft_isdigit.c ft_lstlast_bonus.c ft_memset.c ft_striteri.c ft_strrchr.c\
 
 MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
 MINISHELL		= main.c init_env.c\
 
 BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
-BUILT-IN		= unset.c echo.c export.c init_export.c pwd.c exit.c env.c cd.c\
+BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c\
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
-PARSING			= token_utils.c token_v2.c\
+PARSING			= token_utils.c token.c\
+
+EXPAND_PATH	= $(EXPAND:%=src/expand/%)
+EXPAND			= expansion.c\
 
 INCLUDE			= include/minishell.h include/libft.h
 				
