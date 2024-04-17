@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 08:59:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 17:06:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 17:17:32 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char	*dollar_dollar(char *str, t_env *env, int i, int *last_exp, char *new)
 	str[i] = '$';
 	return (new);
 }
+
 char	*expansion(char *str, t_env *env)
 {
 	int		i;
