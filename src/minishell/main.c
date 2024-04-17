@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 11:41:41 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 16:15:41 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int ac, char **av, char **envp)
 	t_env 		*env = NULL;
 	t_export 	*export = NULL;
 	t_token 	*token = NULL;
-	t_token 	*tmp = NULL;
+	//t_token 	*tmp = NULL;
 	env = init_env(envp);
  	export = init_export(env);
 	// if (env == NULL)
@@ -31,19 +31,19 @@ int main(int ac, char **av, char **envp)
 		if (!prompt)
 			return (2);
 		token = init_token(prompt);
-		if (is_valid_token(token))
-			printf ("FALSE TOKEN\n");
-		else
-		{
-			tmp = token;
-			while (tmp)
-			{
-				tmp->str = delete_quote(tmp->str);
-				tmp = tmp->next;
-			}
-			print_token(token);
-			free_token(token);
-		}
+		// if (is_valid_token(token))
+		// 	printf ("FALSE TOKEN\n");
+		// else
+		// {
+		// 	tmp = token;
+		// 	while (tmp)
+		// 	{
+		// 		tmp->str = delete_quote(tmp->str);
+		// 		tmp = tmp->next;
+		// 	}
+		print_token(token);
+		free_token(token);
+		// }
 		add_history(prompt);
 
 		if (ft_strncmp(prompt, "env", 3) == 0)

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 15:30:13 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 15:27:40 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,16 @@ int	is_valid(char *str)
 	int	i;
 
 	i = 0;
-	if (ft_isalpha(str[0]) == 1 || str[0] == '_')
-		i++;
-	else
-	{
-		printf("minishell: export: `%s': not a valid identifier\n", str);
-		return (0);
-	}
+	// if (ft_isalpha(str[0]) == 1 || str[0] == '_')
+	// 	i++;
+	// else
+	// {
+	// 	printf("minishell: export: `%s': not a valid identifier\n", str);
+	// 	return (0);
+	// }
 	while (str[i] != '=' && str[i])
 	{
-		if (ft_isalnum(str[i]) == 0)
+		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
 		{
 			printf("minishell: export: `%s': not a valid identifier\n", str);
 			return (0);

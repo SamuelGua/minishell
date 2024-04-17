@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 11:31:49 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 17:07:32 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,13 @@ int	value_operator(char *str)
 	return (666);
 }
 
+int check_whitespace(char c)
+{
+	if ((c >= 9 && 13 <= c) || c == 32)
+		return (1);
+	return (0);
+}
+
 // regle 5 pas prise en compte car elle sera traiter apres entre le parsing et l'execution
 // regle 9 ne sera pas traiter car la gestion du # n'est pas demande par le sujet
 t_token	*init_token(char *prompt)
@@ -61,7 +68,7 @@ t_token	*init_token(char *prompt)
 
 	while (1)
 	{
-		while (type_token == 0 && quoted == NO_QUOTE && prompt[i] == 32)
+		while (type_token == 0 && quoted == NO_QUOTE && /*check_whitespace(prompt[i])*/ prompt[i] == 32)
 			i++;
 		if (prompt[i] == '\0')
 		{
@@ -95,7 +102,7 @@ t_token	*init_token(char *prompt)
 			node = ft_lstnew_token(&prompt[start_token], len, type_token, value_operator(&prompt[start_token]));
 			ft_lstadd_back_token(&token, node);
 			sous_type = 1;
-			start_token = 0;
+			start_token = i-1;
 			type_token = 0;
 			len = 1;
 			i--;

@@ -2,9 +2,9 @@
 
 int	is_quoted(int quoted, char c)
 {
-	if (quoted == 0 && c == '\'')
+	if (quoted == NO_QUOTE && c == '\'')
 		return (S_QUOTE);
-	else if (quoted == 0 && c == '\"')
+	else if (quoted == NO_QUOTE && c == '\"')
 		return (D_QUOTE);
 	else if (quoted == S_QUOTE && c == '\'')
 		return (NO_QUOTE);
@@ -14,10 +14,10 @@ int	is_quoted(int quoted, char c)
 }
 char *clean_quote(char *str)
 {
-	int i;
-	int j;
-	int quoted;
-	char *new;
+	int		i;
+	int		j;
+	int		quoted;
+	char	*new;
 
 	i = 0;
 	j = 0;
@@ -25,14 +25,21 @@ char *clean_quote(char *str)
 	new = malloc(sizeof(str) + 1);
 	while(str[i])
 	{
-		quoted = is_quoted(quoted  ,str[i]);
-		if (!(quoted != NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
+		quoted = is_quoted(quoted, str[i]);
+		printf("c = %c \t| quoted = %d\n", str[i], quoted);
+		if (quoted != NO_QUOTE && (str[i] == '\'' || str[i] == '\"'))
+		{
+			i++;
+			continue ;
+		}
+		else
 		{
 			new[j] = str[i];
 			j++;
-		}
-		i++;
+			i++;
+		}			
 	}
+	new[j] = '\0';
 	free(str);
 	return (new);
 }
@@ -48,5 +55,5 @@ char	*delete_quote(char *str)
 			return (clean_quote(str));
 		i++;
 	}
-	return (str); 
+	return (str);
 }

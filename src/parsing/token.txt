@@ -7,3 +7,5 @@ minishell >
 
 
 pas bon
+
+"echo "he abc<'gg'|a"ls ">aa'<bc'|

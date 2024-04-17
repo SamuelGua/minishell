@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 11:20:53 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 16:15:13 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_echo(char **str, t_env *env)
 {
 	char	**test;
 	int		i;
+	(void)env;
 
 	i = 0;
 	if (str == NULL)
