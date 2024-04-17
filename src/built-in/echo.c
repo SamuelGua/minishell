@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/11 09:25:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 11:20:53 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ static void	print_echo(char **str)
 
 	i = -1;
 	while (str[++i])
-	{
-			
+	{	
 		printf("%s", str[i]);
 		if (str[i + 1])
 			printf(" ");
@@ -74,7 +73,6 @@ void	ft_echo(char **str, t_env *env)
 {
 	char	**test;
 	int		i;
-	(void)env;
 
 	i = 0;
 	if (str == NULL)

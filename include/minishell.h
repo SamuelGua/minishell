@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/12 12:26:17 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 11:41:23 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ void	ft_cd(t_env *env, char **str);
 typedef struct s_token
 {
 	char			*str;
-	int				type;
 	int				token;
+	int				type;
 	struct s_token	*next;
 }	t_token;
 
@@ -113,5 +113,7 @@ typedef struct s_operateur
 // EXPANSION
 char *expansion(char *str, t_env *env);
 int	is_quoted(int quoted, char c);
+int	is_valid_token(t_token *token);
+char	*delete_quote(char *str);
 
 #endif

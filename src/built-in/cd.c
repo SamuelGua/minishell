@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/17 08:56:41 by scely             #+#    #+#             */
+/*   Updated: 2024/04/17 11:19:34 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 //getenv
@@ -7,12 +19,11 @@ int	cd_home(t_env *env)
 	while (env && ft_strncmp(env->cle, "HOME", 5) != 0)
 		env = env->next;
 	if (!env)
-		return(printf("bash: cd: HOME not set\n"));
-	printf("%s\n",env->params);
+		return (printf("bash: cd: HOME not set\n"));
+	printf("%s\n", env->params);
 	if (chdir(env->params))
 		perror("bash: cd");
-	return 0;
-
+	return (0);
 }
 
 void	ft_cd(t_env *env, char **str)
@@ -29,8 +40,8 @@ void	ft_cd(t_env *env, char **str)
 		i++;
 	if (i > 1)
 	{
-		printf("bash: cd: too many arguments\n");	
-		return ; 
+		printf("bash: cd: too many arguments\n");
+		return ;
 	}
 	if (chdir(*str))
 		perror("bash: cd");

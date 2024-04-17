@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 15:28:59 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 08:56:28 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 
 // si je fait exit sans arguments qui precede un 
 //       commade qui a rate, je dois retourner se nombre
-void free_env_export(t_env *env, t_export *export)
+void	free_env_export(t_env *env, t_export *export)
 {
 	free_export(export);
 	ft_free_env(env);

@@ -26,7 +26,7 @@ char *clean_quote(char *str)
 	while(str[i])
 	{
 		quoted = is_quoted(quoted  ,str[i]);
-		if (!(quoted != NO_QUOTE && (str[i] == '\'' || str == '\"')))
+		if (!(quoted != NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
 		{
 			new[j] = str[i];
 			j++;
@@ -44,7 +44,7 @@ char	*delete_quote(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str == '\"')
+		if (str[i] == '\'' || str[i] == '\"')
 			return (clean_quote(str));
 		i++;
 	}

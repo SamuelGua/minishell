@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/12 18:00:28 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/17 11:31:49 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,83 +16,52 @@ int	is_operator(char c, int stats)
 {
 	if (stats)
 		return (0);
-	if (c == '>' || c == '<' /*|| c == '&' */|| c == '|' /*|| c == '('|| c == ')'*/)
+	if (c == '>' || c == '<' || c == '|')
 		return (1);
 	return (0);
 }
 
-int check_operator(char *str, int len)
+int	check_operator(char *str, int len)
 {
 	if (!ft_strncmp(str, ">>", len) || !ft_strncmp(str, "<<", len)
-		/*|| !ft_strncmp(str, "&&", len)*/ || !ft_strncmp(str, "||", len) )
+		|| !ft_strncmp(str, "||", len))
 	{
 		return (1);
 	}
 	return (0);
-
 }
 
-void	print_token(t_token *token)
-{
-	printf("token\ttype\tstr\n");
-	while (token)
-	{
-		printf("%d\t", token->type);
-		printf("%d\t", token->token);
-		printf("%s\n", token->str);
-		token = token->next;
-	}
-}
-void free_token(t_token *token)
-{
-	t_token *tmp;
-	while(token)
-	{
-		tmp = token;
-		token = token->next;
-		free(tmp);
-	}
-}
-
-int value_operator(char *str)
+int	value_operator(char *str)
 {
 	if (ft_strncmp(str, ">>", 2) == 0)
 		return (DGREAT);
 	else if (ft_strncmp(str, "<<", 2) == 0)
 		return (HERE_DOC);
-	// else if (ft_strncmp(str, "||", 2) == 0)
-	// 	return (OR_IF);
-	// else if (ft_strncmp(str, "&&", 2) == 0)
-	// 	return (AND_IF);
 	else if (ft_strncmp(str, "|", 1) == 0)
 		return (PIPE);
 	else if (ft_strncmp(str, "<", 1) == 0)
 		return (LESS);
 	else if (ft_strncmp(str, ">", 1) == 0)
 		return (GREAT);
-	/*else if (ft_strncmp(str, "(", 1) == 0)
-		return (LBRAKET);
-	else if (ft_strncmp(str, ")", 1) == 0)
-		return (RBRAKET);*/
 	return (666);
 }
 
 // regle 5 pas prise en compte car elle sera traiter apres entre le parsing et l'execution
 // regle 9 ne sera pas traiter car la gestion du # n'est pas demande par le sujet
-t_token *init_token(char *prompt)
+t_token	*init_token(char *prompt)
 {
-	int i = 0;
-	int quoted = NO_QUOTE;
-	int len = 1;
-	t_token *token = NULL;
-	t_token *node = NULL;
-	int type_token = 0;
-	int start_token = 0;
-	int sous_type = 1;
+	int		i = 0;
+	int		quoted = NO_QUOTE;
+	int		len = 1;
+	t_token	*token = NULL;
+	t_token	*node = NULL;
+	int		type_token = 0;
+	int		start_token = 0;
+	int		sous_type = 1;
 
 	while (1)
 	{
-		while ( type_token == 0 && quoted == NO_QUOTE && prompt[i] == 32)
+		while (type_token == 0 && quoted == NO_QUOTE && prompt[i] == 32)
 			i++;
 		if (prompt[i] == '\0')
 		{
@@ -114,7 +83,7 @@ t_token *init_token(char *prompt)
 			break ;
 		}
 		else if (type_token == OPERATOR && is_operator(prompt[i], quoted)
-				&& check_operator(&prompt[start_token], len))
+			&& check_operator(&prompt[start_token], len))
 		{
 			// regle 2
 			len++;
@@ -155,7 +124,7 @@ t_token *init_token(char *prompt)
 				if (i == 0 || (prompt[start_token] != '\"' && prompt[start_token] != '\'' && sous_type))
 					start_token = i;
 				type_token = WORD;
-			} 
+			}
 			else if (quoted == D_QUOTE)
 				quoted = NO_QUOTE;
 		}
