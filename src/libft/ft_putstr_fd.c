@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marie-evecely <marie-evecely@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 14:59:50 by scely             #+#    #+#             */
-/*   Updated: 2023/11/16 11:39:59 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/18 12:32:32 by marie-evece      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,7 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	int	i;
-
 	if (s == NULL)
 		return ((void) NULL);
-	i = 0;
-	while (s[i])
-	{
-		write(fd, &s[i], 1);
-		i++;
-	}
+	write(fd, s, ft_strlen(s));
 }
