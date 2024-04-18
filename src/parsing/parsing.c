@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+int check_whitespace(char c)
+{
+	if (c == 32 || (c >= 9 && c <= 13))
+		return (1);
+	return (0);
+}
+
 int	close_quoted(char *str)
 {
 	int	i;

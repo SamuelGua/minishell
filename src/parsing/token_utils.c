@@ -65,3 +65,13 @@ void	free_token(t_token *token)
 		free(tmp);
 	}
 }
+
+void value_pars_init(t_parsutils *utils_pars)
+{
+	utils_pars->i = 0;
+	utils_pars->quoted = NO_QUOTE;
+	utils_pars->len = 1;
+	utils_pars->type_token = 0;
+	utils_pars->start_token = 0;
+	utils_pars->sous_type = 1;
+}
