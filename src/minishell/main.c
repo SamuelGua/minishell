@@ -27,7 +27,7 @@ int main(int ac, char **av, char **envp)
 	// 	return (printf("Erreur malloc\n"), 2);
 	while (1)
 	{
-		prompt = readline("\033[1;32mminishell > \033[0m");
+		prompt = readline("minishell >  ");
 		if (!prompt)
 			return (2);
 		token = init_token(prompt);

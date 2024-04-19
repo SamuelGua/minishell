@@ -114,6 +114,9 @@ char	*expansion(char *str, t_env *env)
 	if (!new)
 		return (str);
 	else
+	{
+		printf("%s\n", &str[l_expd]);
 		new = ft_free_strjoin(new, &str[l_expd]);
+	}
 	return (new);
 }
