@@ -1,122 +1,81 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expansion.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 08:59:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 17:17:32 by scely            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-char	*variables_expand(char *str, t_env *env, int i, int *last_exp, char *new)
+typedef struct s_expand
 {
-	int	len;
+	int i;
+	char *new;
+	int l_exp;
+	int quoted;
+
+}	t_exutils;
+
+void add_expand(char *str, t_env *env, t_exutils *ex)
+{
+	int len;
 
 	len = 0;
-	str[i] = '\0';
-	i++;
-	while (str[i + len] && str[i + len] != 32 && str[i + len] != '$' && str[i + len] != '\'' && str[i + len] != '\"')
+	while (str[ex->i + len + 1] && check_whitespace(str[ex->i + len + 1]) != 1
+		&& str[ex->i + len + 1] != '\'' && str[ex->i + len + 1] != '\"' && str[ex->i + len + 1] != '$')
 		len++;
-	while (env && ft_strncmp(&str[i], env->cle, (int)ft_strlen(env->cle)))
+	str[ex->i] = '\0';
+	printf("len %i\n", len);
+	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
+	while (env && (ft_strncmp(&str[ex->i + 1], env->cle, len) != 0 || len != (int)ft_strlen(env->cle)))
 		env = env->next;
 	if (env)
-	{
-		if (!new)
-		{
-			new = ft_strdup(str);
-			new = ft_free_strjoin(new, env->params);
-		}
-		else
-		{
-			new = ft_free_strjoin(new, &str[*last_exp]);
-			new = ft_free_strjoin(new, env->params);
-		}
-	}
-	else
-	{
-		if (!new)
-			new = ft_strdup(str);
-		else
-			new = ft_free_strjoin(new, &str[*last_exp]);
-	}
-	*last_exp = i + len;
-	str[i] = '$';
-	return (new);
+		ex->new = ft_free_strjoin(ex->new, env->params);
+	str[ex->i] = '$';
+	ex->l_exp = ex->i + len + 1;
+	ex->i = ex->l_exp;
 }
 
-char	*dollar_dollar(char *str, t_env *env, int i, int *last_exp, char *new)
+void dollar_dollar(char *str, t_env *env, t_exutils *ex)
 {
-	char *dollar2;
+	char *sys;
 
-	dollar2 = "SYSTEMD_EXEC_PID";
-	str[i] = '\0';
-	i++;
-	while (env && ft_strncmp(dollar2, env->cle, (int)ft_strlen(env->cle)))
+	sys = "SYSTEMD_EXEC_PID";
+	str[ex->i] = '\0';
+	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
+	while (env && (ft_strncmp(sys, env->cle, 16) != 0 || 16 != (int)ft_strlen(env->cle)))
 		env = env->next;
 	if (env)
-	{
-		if (!new)
-		{
-			new = ft_strdup(str);
-			new = ft_free_strjoin(new, env->params);
-		}
-		else
-		{
-			new = ft_free_strjoin(new, &str[*last_exp]);
-			new = ft_free_strjoin(new, env->params);
-		}
-	}
-	else
-	{
-		if (!new)
-			new = ft_strdup(str);
-		else
-			new = ft_free_strjoin(new, &str[*last_exp]);
-	}
-	str[i] = '$';
-	return (new);
+		ex->new = ft_free_strjoin(ex->new, env->params);
+	str[ex->i] = '$';
+	ex->l_exp = ex->i + 1 + 1;
+	ex->i = ex->l_exp;
 }
 
 char	*expansion(char *str, t_env *env)
 {
-	int		i;
-	int		quoted;
-	char	*new;
-	int		l_expd;
+	t_exutils ex;
+	ex.i = 0;
+	ex.new = ft_calloc(1, 1);
+	ex.quoted = NO_QUOTE;
 
-	i = 0;
-	l_expd = 0;
-	new = NULL;
-	quoted = NO_QUOTE;
-	if (!str)
-		return (NULL);
-	while (str[i] != '\0')
+	while (str[ex.i] && str[ex.i] != '$' &&check_whitespace(str[ex.i + 1]) == 0 && ex.quoted != S_QUOTE)
 	{
-		quoted = is_quoted(quoted, str[i]);
-		if (str[i] == '$' && str[i + 1] == '$')
-		{
-			new =  dollar_dollar(str, env, i, &l_expd, new);
-			i += 2;
-			l_expd += 2;
-		}
-		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != 32 && quoted != S_QUOTE)
-		{
-			new = variables_expand(str, env, i, &l_expd, new);
-			i = l_expd;
-		}
+		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
+		ex.i++;
+	}
+	if (str[ex.i] && str[ex.i] == '$')
+	{
+		str[ex.i] = '\0';
+		ex.new = ft_strdup(str);
+		str[ex.i] = '$';
+	}
+	while (str[ex.i] && check_whitespace(str[ex.i]))
+		ex.i++;
+	ex.l_exp = ex.i;
+	while (str[ex.i])
+	{
+		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
+		if (str[ex.i] == '$' && str[ex.i + 1] == '$' && ex.quoted != S_QUOTE)
+			dollar_dollar(str, env, &ex);
+		else if (str[ex.i] == '$' && check_whitespace(str[ex.i + 1]) != 1 && str[ex.i + 1] != '\0'  && ex.quoted != S_QUOTE)
+			add_expand(str, env, &ex);
 		else
-			i++;
+			ex.i++;
 	}
-	if (!new)
-		return (str);
-	else
-	{
-		printf("%s\n", &str[l_expd]);
-		new = ft_free_strjoin(new, &str[l_expd]);
-	}
-	return (new);
+	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
+	return (ex.new);
 }

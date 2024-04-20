@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marie-evecely <marie-evecely@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 15:27:40 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/20 15:45:27 by marie-evece      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,6 @@ int	is_valid(char *str)
 	int	i;
 
 	i = 0;
-	// if (ft_isalpha(str[0]) == 1 || str[0] == '_')
-	// 	i++;
-	// else
-	// {
-	// 	printf("minishell: export: `%s': not a valid identifier\n", str);
-	// 	return (0);
-	// }
 	while (str[i] != '=' && str[i])
 	{
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
@@ -97,7 +90,7 @@ void	ft_export(t_export **export, t_env **env, char **str)
 			}
 			ft_lstadd_back_env(env, tmp);
 		}
-			i++;
+		i++;
 	}
 	ft_free(str);
 	(free_export(*export), *export = init_export(*env));

@@ -23,24 +23,23 @@ char *clean_quote(char *str)
 	j = 0;
 	quoted = NO_QUOTE;
 	new = malloc(sizeof(str) + 1);
+	if (!new)
+		return (NULL);
 	while(str[i])
 	{
 		quoted = is_quoted(quoted, str[i]);
 		printf("c = %c \t| quoted = %d\n", str[i], quoted);
-		if (quoted != NO_QUOTE && (str[i] == '\'' || str[i] == '\"'))
+		if ((quoted == NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
 		{
 			i++;
-			continue ;
 		}
 		else
 		{
 			new[j] = str[i];
-			j++;
-			i++;
+			(j++, i++);
 		}			
 	}
-	new[j] = '\0';
-	free(str);
+	(free(str), new[j] = '\0');
 	return (new);
 }
 
