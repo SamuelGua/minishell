@@ -5,6 +5,7 @@ typedef struct s_expand
 	int i;
 	char *new;
 	int l_exp;
+	int quoted;
 
 }	t_exutils;
 
@@ -26,7 +27,6 @@ void add_expand(char *str, t_env *env, t_exutils *ex)
 	str[ex->i] = '$';
 	ex->l_exp = ex->i + len + 1;
 	ex->i = ex->l_exp;
-	printf("%s\n", &str[ex->i]);
 }
 
 void dollar_dollar(char *str, t_env *env, t_exutils *ex)
@@ -50,9 +50,13 @@ char	*expansion(char *str, t_env *env)
 	t_exutils ex;
 	ex.i = 0;
 	ex.new = ft_calloc(1, 1);
+	ex.quoted = NO_QUOTE;
 
-	while (str[ex.i] && str[ex.i] != '$' &&check_whitespace(str[ex.i + 1]) == 0)
+	while (str[ex.i] && str[ex.i] != '$' &&check_whitespace(str[ex.i + 1]) == 0 && ex.quoted != S_QUOTE)
+	{
+		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
 		ex.i++;
+	}
 	if (str[ex.i] && str[ex.i] == '$')
 	{
 		str[ex.i] = '\0';
@@ -64,9 +68,10 @@ char	*expansion(char *str, t_env *env)
 	ex.l_exp = ex.i;
 	while (str[ex.i])
 	{
-		if (str[ex.i] == '$' && str[ex.i + 1] == '$')
+		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
+		if (str[ex.i] == '$' && str[ex.i + 1] == '$' && ex.quoted != S_QUOTE)
 			dollar_dollar(str, env, &ex);
-		else if (str[ex.i] == '$' && check_whitespace(str[ex.i + 1]) != 1 && str[ex.i + 1] != '\0')
+		else if (str[ex.i] == '$' && check_whitespace(str[ex.i + 1]) != 1 && str[ex.i + 1] != '\0'  && ex.quoted != S_QUOTE)
 			add_expand(str, env, &ex);
 		else
 			ex.i++;
