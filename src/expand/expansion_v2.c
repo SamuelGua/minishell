@@ -76,11 +76,6 @@ char	*expansion(char *str, t_env *env)
 		else
 			ex.i++;
 	}
-	if (ex.new[0])
-	{
-		ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
-		return (ex.new);
-	}
-	free(ex.new);
-	return (str);
+	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
+	return (ex.new);
 }
