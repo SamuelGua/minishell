@@ -12,36 +12,44 @@ int	is_quoted(int quoted, char c)
 		return (NO_QUOTE);
 	return (quoted);
 }
-char *clean_quote(char *str)
+
+void	quote_check(char *c, char stri)
 {
+	if (*c == '\0' && stri == '\'')
+		*c = '\'';
+	else if (*c == '\0' && stri == '\"')
+		*c = '\"';
+	else if (*c == stri && stri == '\'')
+		*c = '\0';
+	else if (*c == stri && stri == '\"')
+		*c = '\0';
+}
+
+char	*clean_quote(char *str)
+{
+	char	c;
+	char	*new;
 	int		i;
 	int		j;
-	int		quoted;
-	char	*new;
 
 	i = 0;
 	j = 0;
-	quoted = NO_QUOTE;
 	new = malloc(sizeof(str) + 1);
-	if (!new)
-		return (NULL);
+	c = '\0';
 	while(str[i])
 	{
-		quoted = is_quoted(quoted, str[i]);
-		printf("c = %c \t| quoted = %d\n", str[i], quoted);
-		if ((quoted == NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
+		if (c == str[i] || ((str[i] == '\'' || str[i] == '\"') && c == '\0'))
 		{
+			quote_check(&c, str[i]);
 			i++;
 		}
-		else
+		else 
 		{
-			// if ((quoted == NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
-			// 	continue;
 			new[j] = str[i];
 			(j++, i++);
-		}			
+		}
 	}
-	(free(str), new[j] = '\0');
+	new[j] = '\0';
 	return (new);
 }
 

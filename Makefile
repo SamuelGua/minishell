@@ -29,7 +29,7 @@ BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
 BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c\
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
-PARSING			= token_utils.c token.c parsing.c delete_quote.c rules_parsing.c\
+PARSING			= token_utils.c token.c parsing.c delete_quote_V2.c rules_parsing.c\
 
 EXPAND_PATH	= $(EXPAND:%=src/expand/%)
 EXPAND			= expansion.c\
