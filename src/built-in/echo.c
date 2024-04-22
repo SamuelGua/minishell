@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 16:15:13 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/22 09:10:49 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,14 @@ int	dash_n(char *str)
 void	ft_echo(char **str, t_env *env)
 {
 	char	**test;
-	int		i = 0;
-	(void)env;
+	int		i;
 
+	i = 0;
 	if (str == NULL)
 	{
 		printf("\n");
 		return ;
 	}
-	// check ""
 	while (str[i])
 	{
 		str[i] = expansion(str[i], env);

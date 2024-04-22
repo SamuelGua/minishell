@@ -6,13 +6,13 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:18:40 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 11:34:33 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/22 09:23:16 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_whitespace(char c)
+int	check_whitespace(char c)
 {
 	if (c == 32 || (c >= 9 && c <= 13))
 		return (1);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   delete_quote.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/22 09:23:31 by scely             #+#    #+#             */
+/*   Updated: 2024/04/22 09:25:20 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	is_quoted(int quoted, char c)
@@ -12,42 +24,51 @@ int	is_quoted(int quoted, char c)
 		return (NO_QUOTE);
 	return (quoted);
 }
-char *clean_quote(char *str)
+
+void	quote_check(char *c, char stri)
 {
+	if (*c == '\0' && stri == '\'')
+		*c = '\'';
+	else if (*c == '\0' && stri == '\"')
+		*c = '\"';
+	else if (*c == stri && stri == '\'')
+		*c = '\0';
+	else if (*c == stri && stri == '\"')
+		*c = '\0';
+}
+
+char	*clean_quote(char *str)
+{
+	char	c;
+	char	*new;
 	int		i;
 	int		j;
-	int		quoted;
-	char	*new;
 
 	i = 0;
 	j = 0;
-	quoted = NO_QUOTE;
 	new = malloc(sizeof(str) + 1);
-	if (!new)
-		return (NULL);
-	while(str[i])
+	c = '\0';
+	while (str[i])
 	{
-		quoted = is_quoted(quoted, str[i]);
-		printf("c = %c \t| quoted = %d\n", str[i], quoted);
-		if ((quoted == NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
+		if (c == str[i] || ((str[i] == '\'' || str[i] == '\"') && c == '\0'))
 		{
+			quote_check(&c, str[i]);
 			i++;
 		}
 		else
 		{
-			// if ((quoted == NO_QUOTE && (str[i] == '\'' || str[i] == '\"')))
-			// 	continue;
 			new[j] = str[i];
-			(j++, i++);
-		}			
+			j++;
+			i++;
+		}
 	}
-	(free(str), new[j] = '\0');
+	new[j] = '\0';
 	return (new);
 }
 
 char	*delete_quote(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])

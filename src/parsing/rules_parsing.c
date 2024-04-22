@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rules_parsing.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/22 09:19:14 by scely             #+#    #+#             */
+/*   Updated: 2024/04/22 09:22:47 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-void rules_one(t_token **token, t_parsutils *utils_pars, char *prompt)
+void	rules_one(t_token **token, t_parsutils *utils_pars, char *prompt)
 {
-	t_token	*node = NULL;
+	t_token	*node;
 
+	node = NULL;
 	if (utils_pars->type_token)
 	{
 		if (prompt[utils_pars->start_token] == '\'' || prompt[utils_pars->start_token] == '\"')
@@ -21,7 +33,7 @@ void rules_one(t_token **token, t_parsutils *utils_pars, char *prompt)
 	}
 }
 
-void rules_four(t_parsutils *utils_pars, char *prompt)
+void	rules_four(t_parsutils *utils_pars, char *prompt)
 {
 	if (prompt[utils_pars->i] == '\'')
 	{
@@ -38,7 +50,7 @@ void rules_four(t_parsutils *utils_pars, char *prompt)
 			utils_pars->quoted = NO_QUOTE;
 	}
 	if (utils_pars->i == 0 || (prompt[utils_pars->start_token] != '\"'
-		&& prompt[utils_pars->start_token] != '\'' && utils_pars->sous_type))
+			&& prompt[utils_pars->start_token] != '\'' && utils_pars->sous_type))
 	{
 		utils_pars->start_token = utils_pars->i;
 	}
@@ -48,13 +60,14 @@ void rules_four(t_parsutils *utils_pars, char *prompt)
 
 void	rules_three(t_token **token, t_parsutils *utils_pars, char *prompt)
 {
-	t_token	*node = NULL;
+	t_token	*node;
 
+	node = NULL;
 	printf("delimeter 3\n");
 	node = ft_lstnew_token(&prompt[utils_pars->start_token], utils_pars->len, utils_pars->type_token, value_operator(&prompt[utils_pars->start_token]));
 	ft_lstadd_back_token(token, node);
 	utils_pars->sous_type = 1;
-	utils_pars->start_token = utils_pars->i-1;
+	utils_pars->start_token = utils_pars->i - 1;
 	utils_pars->type_token = 0;
 	utils_pars->len = 1;
 	utils_pars->i--;
@@ -62,8 +75,9 @@ void	rules_three(t_token **token, t_parsutils *utils_pars, char *prompt)
 
 void	rules_six(t_token **token, t_parsutils *utils_pars, char *prompt)
 {
-	t_token	*node = NULL;
+	t_token	*node;
 
+	node = NULL;
 	if (utils_pars->type_token != NO_TOKEN)
 	{
 		if (prompt[utils_pars->start_token] == '\'' || prompt[utils_pars->start_token] == '\"')
@@ -85,8 +99,9 @@ void	rules_six(t_token **token, t_parsutils *utils_pars, char *prompt)
 
 void	rules_seven(t_token **token, t_parsutils *utils_pars, char *prompt)
 {
-	t_token	*node = NULL;
+	t_token	*node;
 
+	node = NULL;
 	if (prompt[utils_pars->start_token] == '\'' || prompt[utils_pars->start_token] == '\"')
 		utils_pars->sous_type = QUOTED;
 	else if (is_operator(prompt[utils_pars->start_token], 0))

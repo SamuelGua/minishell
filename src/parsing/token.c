@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 17:07:32 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/22 09:18:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	value_operator(char *str)
 	return (666);
 }
 
-void init_token_two(t_token **token, t_parsutils *utils_pars, char *prompt)
+void	init_token_two(t_token **token, t_parsutils *utils_pars, char *prompt)
 {
 	if (prompt[utils_pars->i] == '\'' || prompt[utils_pars->i] == '\"')
 		rules_four(utils_pars, prompt);
@@ -61,10 +61,11 @@ void init_token_two(t_token **token, t_parsutils *utils_pars, char *prompt)
 		utils_pars->len++;
 	}
 }
+
 t_token	*init_token(char *prompt)
 {
-	t_token	*token;
-	t_parsutils utils_pars;
+	t_token		*token;
+	t_parsutils	utils_pars;
 
 	(value_pars_init(&utils_pars), token = NULL);
 	while (1)
@@ -77,17 +78,14 @@ t_token	*init_token(char *prompt)
 			rules_one(&token, &utils_pars, prompt);
 			break ;
 		}
-		else if (utils_pars.type_token == OPERATOR &&
-			is_operator(prompt[utils_pars.i], utils_pars.quoted)
+		else if (utils_pars.type_token == OPERATOR && is_operator(prompt[utils_pars.i], utils_pars.quoted)
 			&& check_operator(&prompt[utils_pars.start_token], utils_pars.len))
 				utils_pars.len++;
-		else if (utils_pars.type_token == OPERATOR &&
-			check_operator(&prompt[utils_pars.start_token], utils_pars.len) == 0)
-				rules_three(&token, &utils_pars, prompt);
+		else if (utils_pars.type_token == OPERATOR && check_operator(&prompt[utils_pars.start_token], utils_pars.len) == 0)
+			rules_three(&token, &utils_pars, prompt);
 		else
 			init_token_two(&token, &utils_pars, prompt);
 		utils_pars.i++;
 	}
 	return (token);
 }
-

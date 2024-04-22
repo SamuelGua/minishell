@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:22:41 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 11:35:44 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/22 09:16:45 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	free_token(t_token *token)
 	}
 }
 
-void value_pars_init(t_parsutils *utils_pars)
+void	value_pars_init(t_parsutils *utils_pars)
 {
 	utils_pars->i = 0;
 	utils_pars->quoted = NO_QUOTE;
