@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marie-evecely <marie-evecely@student.42    +#+  +:+       +#+        */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/20 15:48:01 by marie-evece      ###   ########.fr       */
+/*   Updated: 2024/04/22 09:47:12 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,18 @@ int main(int ac, char **av, char **envp)
 		if (!prompt)
 			return (2);
 		token = init_token(prompt);
-		// if (is_valid_token(token))
-		// 	printf ("FALSE TOKEN\n");
-		// else
-		// {
-		tmp = token;
-		while (tmp)
+		if(is_valid_token(token) == 0)
 		{
-			tmp->str = delete_quote(tmp->str);
-			tmp = tmp->next;
+			tmp = token;
+			while (tmp)
+			{
+				tmp->str = delete_quote(tmp->str);
+				tmp = tmp->next;
+			}
+			print_token(token);
+			free_token(token);
+			add_history(prompt);
 		}
-		print_token(token);
-		free_token(token);
-		// }
-		add_history(prompt);
-
 		if (ft_strncmp(prompt, "env", 3) == 0)
 		{
 			char **env_value = ft_split(prompt + 3, ' '); 

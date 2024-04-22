@@ -10,7 +10,7 @@ NAME			:= minishell
 
 SRC_DIR			:= src
 OBJ_DIR			:= obj
-SRCS			= $(MINISHELL_PATH) $(LIBFT_PATH) $(BUILT-IN_PATH) $(PARSING_PATH) $(EXPAND_PATH)
+SRCS			= $(MINISHELL_PATH) $(LIBFT_PATH) $(BUILT-IN_PATH) $(PARSING_PATH)
 
 LIBFT_PATH		= $(LIBFT:%=src/libft/%)
 LIBFT			= ft_atoi.c ft_isprint.c ft_lstmap_bonus.c ft_putchar_fd.c ft_strjoin.c ft_strtrim.c\
@@ -29,12 +29,9 @@ BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
 BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c\
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
-PARSING			= token_utils.c token.c parsing.c delete_quote.c rules_parsing.c\
+PARSING			= token_utils.c token.c parsing.c delete_quote.c rules_parsing.c expansion.c\
 
-EXPAND_PATH	= $(EXPAND:%=src/expand/%)
-EXPAND			= expansion.c\
-
-INCLUDE			= include/minishell.h include/libft.h
+INCLUDE			= include/minishell.h include/libft.h include/parsing.h
 				
 OBJS			:= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
