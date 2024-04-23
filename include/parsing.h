@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:41:51 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 11:46:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 15:13:05 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ typedef struct s_parsing_utils
 typedef struct s_token
 {
 	char			*str;
-	int				token;
-	int				type;
+	int				token; // 1 2 3 4 5 6 7
+	int				type; // 10 20
 	struct s_token	*next;
 }	t_token;
 

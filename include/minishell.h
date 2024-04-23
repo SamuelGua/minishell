@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 11:50:57 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 17:29:55 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,23 @@ int			is_quoted(int quoted, char c);
 int			is_valid_token(t_token *token);
 char		*delete_quote(char *str);
 
-typedef struct  s_cmds
+typedef struct s_file
+{
+	char	*file;
+	int		redirec;
+	struct s_file *next;
+} t_file;
+
+typedef struct s_cmds
 {
 	char **cmd; // {"ls", "-al", "Makefile", NULL}
-
-	int 	fd_in;
-	char 	file_in;
-	int 	fd_out;
-	char	file_out;
-	int		type; // 0 built-in | 1 cmds | here-doc
-
+	struct s_file *file_in; // file avec redirection > >>
+	struct s_file *file_out; // file avec redirection < << 
+	int		type; // 0 built-in | 1 cmds
+	struct s_cmds *next;
 } t_cmds;
+
+t_cmds *build_cmd(t_token *token);
 
 
 #endif

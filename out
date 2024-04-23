@@ -1,0 +1,10 @@
+a.out
+ignore_readline.supp
+include
+Makefile
+minishell
+obj
+out
+src
+test.c
+val.sh

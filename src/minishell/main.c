@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 11:40:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 15:04:09 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,14 @@ int main(int ac, char **av, char **envp)
 	t_export 	*export = NULL;
 	t_token 	*token = NULL;
 	t_token 	*tmp = NULL;
+	t_cmds 		*cmd = NULL;
 	env = init_env(envp);
  	export = init_export(env);
 	// if (env == NULL)
 	// 	return (printf("Erreur malloc\n"), 2);
 	while (1)
 	{
-		prompt = readline("minishell >  ");
+		prompt = readline("minishell > ");
 		if (!prompt)
 			return (2);
 		token = init_token(prompt);
@@ -77,11 +78,12 @@ int main(int ac, char **av, char **envp)
 				tmp = tmp->next;
 			}
 			print_token(token);
+			cmd = build_cmd(token);
 			free_token(token);
 			add_history(prompt);
 		// }
 		builtin(prompt, &env, &export);
 		free(prompt);
 	}
-	return (0);    
+	return (0);
 }
