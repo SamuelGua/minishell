@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 09:10:49 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 10:37:19 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	ft_echo(char **str, t_env *env)
 	}
 	while (str[i])
 	{
+		printf("str[%d] = %s\n", i, str[i]);
 		str[i] = expansion(str[i], env);
 		i++;
 	}

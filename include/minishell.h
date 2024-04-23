@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 11:39:44 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 11:50:57 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,13 @@ char		*delete_quote(char *str);
 
 typedef struct  s_cmds
 {
-	char **cmd;
-	int	redirec;
-	int fd; // char *file
-	int type; // 0 built-in | 1 cmds | here-doc
+	char **cmd; // {"ls", "-al", "Makefile", NULL}
+
+	int 	fd_in;
+	char 	file_in;
+	int 	fd_out;
+	char	file_out;
+	int		type; // 0 built-in | 1 cmds | here-doc
 
 } t_cmds;
 

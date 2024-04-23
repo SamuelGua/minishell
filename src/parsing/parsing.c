@@ -6,15 +6,16 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:18:40 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 13:31:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/22 15:03:11 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// gerer les newline
 int	check_whitespace(char c)
 {
-	if (c == 32 || (c >= 9 && c <= 13) /*|| c == '\n'*/)
+	if (c == 32 || (c >= 9 && c <= 13))
 		return (1);
 	return (0);
 }

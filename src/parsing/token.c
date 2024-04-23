@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 09:18:58 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/22 14:51:50 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,27 +65,28 @@ void	init_token_two(t_token **token, t_parsutils *utils_pars, char *prompt)
 t_token	*init_token(char *prompt)
 {
 	t_token		*token;
-	t_parsutils	utils_pars;
+	t_parsutils	utils;
 
-	(value_pars_init(&utils_pars), token = NULL);
+	(value_pars_init(&utils), token = NULL);
 	while (1)
 	{
-		while (utils_pars.type_token == 0 && utils_pars.quoted == NO_QUOTE
-			&& check_whitespace(prompt[utils_pars.i]))
-				utils_pars.i++;
-		if (prompt[utils_pars.i] == '\0')
+		while (utils.type_token == 0 && utils.quoted == NO_QUOTE
+			&& check_whitespace(prompt[utils.i]))
+				utils.i++;
+		if (prompt[utils.i] == '\0')
 		{
-			rules_one(&token, &utils_pars, prompt);
+			rules_one(&token, &utils, prompt);
 			break ;
 		}
-		else if (utils_pars.type_token == OPERATOR && is_operator(prompt[utils_pars.i], utils_pars.quoted)
-			&& check_operator(&prompt[utils_pars.start_token], utils_pars.len))
-				utils_pars.len++;
-		else if (utils_pars.type_token == OPERATOR && check_operator(&prompt[utils_pars.start_token], utils_pars.len) == 0)
-			rules_three(&token, &utils_pars, prompt);
+		else if (utils.type_token == OPERATOR && is_operator(prompt[utils.i], utils.quoted)
+			&& check_operator(&prompt[utils.start_token], utils.len))
+				utils.len++;
+		else if (utils.type_token == OPERATOR
+			&& check_operator(&prompt[utils.start_token], utils.len) == 0)
+			rules_three(&token, &utils, prompt);
 		else
-			init_token_two(&token, &utils_pars, prompt);
-		utils_pars.i++;
+			init_token_two(&token, &utils, prompt);
+		utils.i++;
 	}
 	return (token);
 }

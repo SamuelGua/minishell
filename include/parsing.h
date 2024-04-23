@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:41:51 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 11:01:36 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 11:46:50 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 # define OPERATOR 20
 # define QUOTED 1
 # define UNQUOTED 2
-# define GREAT 3
-# define DGREAT 4
-# define LESS 5
-# define HERE_DOC 6
-# define PIPE 7
+# define GREAT 3 // >
+# define DGREAT 4 // >>
+# define LESS 5 // <
+# define HERE_DOC 6 // <<
+# define PIPE 7 // |
 
 //// PARSING
 # define NO_QUOTE 0

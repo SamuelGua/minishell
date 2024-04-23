@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 09:16:20 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 10:50:03 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	dollar_dollar(char *str, t_env *env, t_exutils *ex)
 char	*expansion(char *str, t_env *env)
 {
 	t_exutils	ex;
+	char		c;
 
 	ex.i = 0;
 	ex.new = ft_calloc(1, 1);
@@ -73,11 +74,13 @@ char	*expansion(char *str, t_env *env)
 		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
 		ex.i++;
 	}
-	if (str[ex.i] && str[ex.i] == '$')
+	if (str[ex.i] || str[ex.i] == '$')
 	{
+		c = str[ex.i];
 		str[ex.i] = '\0';
+		printf("expansion = %s && str = %s\n", &str[ex.i], str);
 		ex.new = ft_strdup(str);
-		str[ex.i] = '$';
+		str[ex.i] = c;
 	}
 	while (str[ex.i] && check_whitespace(str[ex.i]))
 		ex.i++;

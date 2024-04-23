@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 08:56:41 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 11:19:34 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/23 10:34:54 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	cd_home(t_env *env)
 		env = env->next;
 	if (!env)
 		return (printf("bash: cd: HOME not set\n"));
-	printf("%s\n", env->params);
 	if (chdir(env->params))
 		perror("bash: cd");
 	return (0);
