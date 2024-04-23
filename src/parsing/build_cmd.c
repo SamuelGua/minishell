@@ -101,13 +101,15 @@ void	ft_lstadd_back_file(t_file **lst, t_file *node)
 
 t_cmds *create_node(t_token *tmp)
 {
-	t_cmds *cmds;
-	t_file *tmp_in;
-	t_file *tmp_out;
+	t_cmds *cmds = NULL;
+	t_file *tmp_in =  NULL;
+	t_file *tmp_out =  NULL;
 	char *command = "\0";
 	char *separateur = "\a";
 
 	cmds = malloc(sizeof(t_cmds));
+	cmds->file_in = NULL;
+	cmds->file_out = NULL;
 	if (!cmds)
 		return (NULL);
 	// if (tmp == end)
@@ -143,7 +145,6 @@ t_cmds *build_cmd(t_token *token)
 {
 	t_cmds *cmds;
 
-	cmds = NULL;
 	cmds = create_node(token);
 	return (cmds);
 }

@@ -66,7 +66,11 @@ int main(int ac, char **av, char **envp)
 	{
 		prompt = readline("minishell > ");
 		if (!prompt)
+		{
+			ft_free_env(env);
+			free_export(export);
 			return (2);
+		}
 		if (ft_split(prompt, ' ') == NULL)
 			continue;
 		token = init_token(prompt);
@@ -77,7 +81,6 @@ int main(int ac, char **av, char **envp)
 			continue;
 		}
 		cmd = build_cmd(token);
-		printf("cmd = %s\n", cmd->cmd[0]);
 		while (cmd->file_out)
 		{
 			printf("file = %s | redirec = %d\n", cmd->file_out->file, cmd->file_out->redirec);
