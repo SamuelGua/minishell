@@ -70,51 +70,80 @@ t_cmds	*ft_lstnew_cmd(char **cmd, t_file *in, t_file *out)
 	return (new);
 }
 
+t_file *ft_lstnew_file(char *file, int redirec)
+{
+	t_file *new;
 
+	new = malloc(sizeof(t_file));
+	if (!new)
+		return (NULL);
+	new->file = ft_strdup(file);
+	if (!new->file)
+		return (free(new), NULL);
+	new->redirec = redirec;
+	return (new);
+}
 
+void	ft_lstadd_back_file(t_file **lst, t_file *node)
+{
+	t_file	*tmp;
 
+	tmp = *lst;
+	if (*lst)
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = node;
+	}
+	else
+		*lst = node;
+}
 
-
-
-t_cmds *create_node(t_token *tmp, t_token *end)
+t_cmds *create_node(t_token *tmp)
 {
 	t_cmds *cmds;
-	t_file *in;
-	t_file *out;
-	char *command;
+	t_file *tmp_in;
+	t_file *tmp_out;
+	char *command = "\0";
 	char *separateur = "\a";
 
-	if (tmp == end)
+	cmds = malloc(sizeof(t_cmds));
+	if (!cmds)
 		return (NULL);
-	while (tmp != end)
+	// if (tmp == end)
+	// 	return (NULL);
+	while (tmp)
 	{
-		if (tmp->token == WORD)
+		if (tmp->type == WORD)
 		{
 			command = ft_strjoin(command, tmp->str);
 			command = ft_strjoin(command, separateur);
 		}
-		else if (tmp->token == GREAT && tmp->token == DGREAT)
+		else if (tmp->token == GREAT || tmp->token == DGREAT)
 		{
-			out->file = tmp->str;
-			out->redirec = tmp->type;
-			// faire la suite
+			tmp_out = ft_lstnew_file(tmp->next->str, tmp->token);
+			ft_lstadd_back_file(&cmds->file_out, tmp_out);
+			tmp = tmp->next;
 		}
+		else if (tmp->token == LESS || tmp->token == HERE_DOC)
+		{
+			tmp_in = ft_lstnew_file(tmp->next->str, tmp->token);
+			ft_lstadd_back_file(&cmds->file_in, tmp_in);
+			tmp = tmp->next;	
+		}
+		tmp = tmp->next;
 	}
+	cmds->cmd = ft_split(command, *separateur);	
+	printf("cmd[0] = %s\n", cmds->cmd[0]);
+	printf("cmd[1] = %s\n", cmds->cmd[1]);
+	return (cmds);
 }
 
 t_cmds *build_cmd(t_token *token)
 {
 	t_cmds *cmds;
-	t_token *tmp;
 
 	cmds = NULL;
-	while (token)
-	{
-		tmp = token;
-		while (token && token->type != PIPE)
-			token = token->next;
-		cmds = create_node(tmp, token);
-		token = token->next;
-	}
+	cmds = create_node(token);
 	return (cmds);
 }

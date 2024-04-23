@@ -57,7 +57,6 @@ int main(int ac, char **av, char **envp)
 	t_env 		*env = NULL;
 	t_export 	*export = NULL;
 	t_token 	*token = NULL;
-	t_token 	*tmp = NULL;
 	t_cmds 		*cmd = NULL;
 	env = init_env(envp);
  	export = init_export(env);
@@ -68,20 +67,23 @@ int main(int ac, char **av, char **envp)
 		prompt = readline("minishell > ");
 		if (!prompt)
 			return (2);
+		if (ft_split(prompt, ' ') == NULL)
+			continue;
 		token = init_token(prompt);
-		// if(is_valid_token(token) == 0)
-		// {
-			tmp = token;
-			while (tmp)
-			{
-				tmp->str = delete_quote(tmp->str);
-				tmp = tmp->next;
-			}
-			print_token(token);
-			cmd = build_cmd(token);
-			free_token(token);
-			add_history(prompt);
-		// }
+		add_history(prompt);
+		if (is_valid_token(token))
+		{
+			free(prompt);
+			continue;
+		}
+		cmd = build_cmd(token);
+		printf("cmd = %s\n", cmd->cmd[0]);
+		while (cmd->file_out)
+		{
+			printf("file = %s | redirec = %d\n", cmd->file_out->file, cmd->file_out->redirec);
+			cmd->file_out = cmd->file_out->next;
+		}
+		free_token(token);
 		builtin(prompt, &env, &export);
 		free(prompt);
 	}

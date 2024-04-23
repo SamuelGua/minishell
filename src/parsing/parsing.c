@@ -44,17 +44,17 @@ int	good_operator(t_token *token)
 	else
 		return (1);
 }
-
+// error sortie 2 ou 1 || ft_putstr
 int	is_valid_token(t_token *token)
 {
 	if (token->type == PIPE)
-		return (printf("bash: syntax error near unexpected token"), 2);
+		return (printf("minishell: syntax error near unexpected token"), 2);
 	while (token)
 	{
 		if (close_quoted(token->str) || good_operator(token))
 		{
 			free_token(token);
-			return (printf("bash: syntax error near unexpected token\n"), 2);
+			return (printf("minishell: syntax error near unexpected token\n"), 2);
 		}
 		token = token->next;
 	}
