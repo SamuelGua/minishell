@@ -1,0 +1,43 @@
+if Z doesnt exist
+command				note	code d'erreur	message error	present		affiche		in env		in export	
+export				?
+export Z			OKL		0								both 		export 					Z	
+export Z=			OKL		0								both		both		Z=			Z=""
+export Z=""			OKL		0								both		both		Z= 		 	Z="" 	
+export Z="capart"	OK		0								both		both		Z=capart 	Z="capart"
+export Z=capart		OKL		0								both		both		Z=capart 	Z="capart" 
+export 9			OK
+export 9=pour		OK
+export _Z=			OK
+
+if Z=
+export Z			OK		0								both		both		Z= 			Z="" 												 								
+export Z=			OKL		0								both		both		Z=  		Z="" 															
+export Z=""			OKL		0								both		both		Z=capart 	Z="" 											
+export Z="capart"	OK		0								both		both		Z=capart 	Z="capart" 					
+export Z=capart		OKL		0								both		both		Z=capart 	Z="capart"															
+
+if Z=value
+export Z			OK		0								both		both		Z=value		Z="value"											 		 						
+export Z=			OKL		0								both		both		Z=			Z=""													
+export Z=""			OKL		0								both		both		Z=			Z=""														
+export Z="capart"	OK		0								both		both		Z=capart	Z="capart"										
+export Z=""capart""	OK		0								both		both		Z=capart	Z="capart"										
+export Z=capart		OKL		0								both		both		Z=capart	Z="capart"														
+
+if Z
+export Z			OKL		0								both		export					Z							 		 						
+export Z=			OKL		0								both		both		Z=			Z=""													
+export Z=""			OKL		0								both		both		Z=			Z=""													
+export Z=""""		OKL		0								both		both		Z=			Z=""													
+export Z="capart"	OKL		0								both		both		Z=capart	Z="capart"														
+export Z=capart		OKL		0								both		both		Z=capart	Z=""
+
+other
+export $d 			KO																					----> essaye d'export la var																		
+export Z="ca""part"	KO		0								both		both		Z=capart	Z="capart" 	est possible d'avoir ca en argument ? si bon parsing non
+export Z===			OKL		0								both		both		Z===		Z="===" 	
+export Ztest"cap"	KO		0								both		export					Ztestcap	tous les " ont l'air d'etre ignored
+						
+Z=test1iletaitunefois'a'
+Z=test1iletaitunefois'a'

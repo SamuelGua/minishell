@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 15:04:09 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/24 12:28:35 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,6 @@ int main(int ac, char **av, char **envp)
 			continue;
 		}
 		cmd = build_cmd(token);
-		while (cmd->file_out)
-		{
-			printf("file = %s | redirec = %d\n", cmd->file_out->file, cmd->file_out->redirec);
-			cmd->file_out = cmd->file_out->next;
-		}
 		free_token(token);
 		builtin(prompt, &env, &export);
 		free(prompt);
