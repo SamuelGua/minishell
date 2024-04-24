@@ -80,7 +80,8 @@ int main(int ac, char **av, char **envp)
 			free(prompt);
 			continue;
 		}
-		cmd = build_cmd(token);
+		cmd = build_cmd(token, env);
+		printf("{%s}\n", cmd->cmd[0]);
 		free_token(token);
 		builtin(prompt, &env, &export);
 		free(prompt);

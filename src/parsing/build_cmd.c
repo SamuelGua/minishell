@@ -14,19 +14,19 @@
 
 int	is_builtin(char **str)
 {
-	if (ft_strncmp(*str, "echo", (int)ft_strlen("echo")) == 0)
+	if (ft_strncmp(*str, "echo", (int)ft_strlen(*str)) == 0)
 		return (1);
-	else if (ft_strncmp(*str, "cd", (int)ft_strlen("cd")) == 0)
+	else if (ft_strncmp(*str, "cd", (int)ft_strlen(*str)) == 0)
 		return (1);
-	else if (ft_strncmp(*str, "env", (int)ft_strlen("env")) == 0)
+	else if (ft_strncmp(*str, "env", (int)ft_strlen(*str)) == 0)
 		return (1);
-	else if (ft_strncmp(*str, "exit", (int)ft_strlen("exit")) == 0)
+	else if (ft_strncmp(*str, "exit", (int)ft_strlen(*str)) == 0)
 		return (1);
-	else if (ft_strncmp(*str, "export", (int)ft_strlen("export")) == 0)
+	else if (ft_strncmp(*str, "export", (int)ft_strlen(*str)) == 0)
 		return (1);
-	else if (ft_strncmp(*str, "pwd", (int)ft_strlen("pwd")) == 0)
+	else if (ft_strncmp(*str, "pwd", (int)ft_strlen(*str)) == 0)
 		return (1);
-	else if (ft_strncmp(*str, "unset", (int)ft_strlen("unset")) == 0)
+	else if (ft_strncmp(*str, "unset", (int)ft_strlen(*str)) == 0)
 		return (1);
 	return (0);
 }
@@ -46,7 +46,7 @@ void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node)
 		*lst = node;
 }
 
-t_cmds	*ft_lstnew_cmd(char **cmd, t_file *in, t_file *out)
+t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file)
 {
 	t_cmds	*new;
 	int		i;
@@ -55,8 +55,7 @@ t_cmds	*ft_lstnew_cmd(char **cmd, t_file *in, t_file *out)
 	new = malloc(sizeof(t_cmds));
 	if (!new)
 		return (NULL);
-	new->file_in = in;
-	new->file_out = out;
+	new->file = file;
 	new->cmd = malloc(sizeof(cmd));
 	if (!new->cmd)
 		return (NULL);
@@ -106,90 +105,93 @@ void print_lst_cmd(t_cmds *cmd)
 	int i;
 
 	i = -1;
+	if (cmd->type == 0)
+		printf("commandes\n");
+	else
+		printf("built-in\n");
 	while (cmd->cmd[++i])
 		printf("cmd[%d] = %s\n", i, cmd->cmd[i]);
-	if (cmd->file_out)
+	if (cmd->file)
 		printf("\033[1;31mFile out [ \033[0m");
-	while (cmd->file_out)
+	while (cmd->file)
 	{
-		printf("file = %s ** redirec = %d\t", cmd->file_out->file, cmd->file_out->redirec);
-		cmd->file_out = cmd->file_out->next;
-		if (!cmd->file_out)
+		printf("file = %s ** redirec = %d\t", cmd->file->file, cmd->file->redirec);
+		if (cmd->file->redirec == PIPE)
+			printf("{%d}", cmd->file->pipe);
+		cmd->file = cmd->file->next;
+		if (!cmd->file)
 			printf("\033[1;31m]\n\033[0m");
-	}
-	if (cmd->file_in)
-		printf("\033[1;32mFile in  [ \033[0m");
-	while (cmd->file_in)
-	{
-		printf("file = %s ** redirec = %d\t", cmd->file_in->file, cmd->file_in->redirec);
-		cmd->file_in = cmd->file_in->next;
-		if (!cmd->file_in)
-			printf("\033[1;32m]\n\033[0m");
 	}
 }
 
 t_cmds *create_node(t_token *tmp, t_token *end)
 {
 	t_cmds *cmds = NULL;
-	t_file *tmp_in =  NULL;
-	t_file *tmp_out =  NULL;
+	t_file *tmp_file =  NULL;
 	char *command = "\0";
 	char *separateur = "\a";
 
 	cmds = malloc(sizeof(t_cmds));
-	cmds->file_in = NULL;
-	cmds->file_out = NULL;
 	if (!cmds)
 		return (NULL);
+	cmds->file = NULL;
 	if (end && end->token == PIPE)
 	{
-		tmp_out = ft_lstnew_file(end->next->str, end->token);
-		ft_lstadd_back_file(&cmds->file_out, tmp_out);
+		tmp_file = ft_lstnew_file(end->next->str, end->token);
+		tmp_file->pipe = 0;
+		ft_lstadd_back_file(&cmds->file, tmp_file);
 	}
-	else if (tmp && tmp->token == PIPE)
+	if (tmp && tmp->token == PIPE)
 	{
-		tmp_in = ft_lstnew_file(tmp->next->str, tmp->token);
-		ft_lstadd_back_file(&cmds->file_in, tmp_in);
+		tmp_file = ft_lstnew_file(tmp->str, tmp->token);
+		tmp_file->pipe = 1;
+		ft_lstadd_back_file(&cmds->file, tmp_file);
 		tmp = tmp->next;
 	}
-	while (tmp && tmp->token != PIPE)
+	while (tmp != end)
 	{
+		// delete quote et expand
 		if (tmp->type == WORD)
 		{
 			command = ft_strjoin(command, tmp->str);
 			command = ft_strjoin(command, separateur);
 		}
-		else if (tmp->token == GREAT || tmp->token == DGREAT)
+		else if (tmp->token >= GREAT || tmp->token < PIPE)
 		{
-			tmp_out = ft_lstnew_file(tmp->next->str, tmp->token);
-			ft_lstadd_back_file(&cmds->file_out, tmp_out);
+			tmp_file = ft_lstnew_file(tmp->next->str, tmp->token);
+			ft_lstadd_back_file(&cmds->file, tmp_file);
 			tmp = tmp->next;
-		}
-		else if (tmp->token == LESS || tmp->token == HERE_DOC)
-		{
-			tmp_in = ft_lstnew_file(tmp->next->str, tmp->token);
-			ft_lstadd_back_file(&cmds->file_in, tmp_in);
-			tmp = tmp->next;	
 		}
 		tmp = tmp->next;
 	}
 	cmds->cmd = ft_split(command, *separateur);
+	cmds->type = is_builtin(cmds->cmd);
 	cmds->next = NULL;
-	// t_cmds *test = cmds;
-	// while (test)
-	// {
-	// 	print_lst_cmd(test);	
-	// 	test = test->next;
-	// }
 	return (cmds);
 }
+void clean_token(t_token *token, t_env *env)
+{
+	(void)env;
 
-t_cmds *build_cmd(t_token *token)
+	t_token *tmp = token;
+	while (token)
+	{
+		token->str = expansion(token->str, env);
+		if (tmp->type != HERE_DOC)
+			token->str = delete_quote(token->str);
+		tmp = token;
+		token = token->next;
+	}
+}
+
+t_cmds *build_cmd(t_token *token, t_env *env)
 {
 	t_cmds *cmds_tmp;
 	t_cmds *cmds = NULL;
-	t_token *end ;
+	t_token *end;
+	(void)env;
 
+	clean_token(token, env);
 	while (token)
 	{
 		end = token->next;
@@ -202,3 +204,4 @@ t_cmds *build_cmd(t_token *token)
 	}
 	return (cmds);
 }
+// cd | echo | ls

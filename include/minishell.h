@@ -75,19 +75,19 @@ typedef struct s_file
 {
 	char	*file;
 	int		redirec;
+	int 	pipe; // 0 in && 1 out
 	struct s_file *next;
 } t_file;
 
 typedef struct s_cmds
 {
 	char **cmd; // {"ls", "-al", "Makefile", NULL}
-	struct s_file *file_in; // file avec redirection > >>
-	struct s_file *file_out; // file avec redirection < << 
+	struct s_file *file; // file avec redirection > >> << < |
 	int		type; // 0 built-in | 1 cmds
 	struct s_cmds *next;
 } t_cmds;
 
-t_cmds *build_cmd(t_token *token);
+t_cmds *build_cmd(t_token *token, t_env *env);
 
 
 #endif

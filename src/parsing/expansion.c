@@ -27,7 +27,7 @@ void	add_expand(char *str, t_env *env, t_exutils *ex)
 
 	len = 0;
 	while (str[ex->i + len + 1] && check_whitespace(str[ex->i + len + 1]) != 1
-		&& str[ex->i + len + 1] != '\''
+		&& str[ex->i + len + 1] != '\'' && str[ex->i + len + 1] != '\\'
 		&& str[ex->i + len + 1] != '\"' && str[ex->i + len + 1] != '$')
 		len++;
 	str[ex->i] = '\0';

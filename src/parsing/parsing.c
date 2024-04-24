@@ -35,11 +35,18 @@ int	close_quoted(char *str)
 	return (quoted);
 }
 
+// operateur de controle  peut etre suivi par un operateur
+// operateur suivi d'un mot
+// quote pas ferme
 int	good_operator(t_token *token)
 {
-	if (token->type == WORD || token->next)
+	if (token->type == WORD)
 		return (0);
-	if (token->type == PIPE && token->token == OPERATOR)
+	else if (token->token == PIPE && token->next && token->next->token != PIPE
+		&& (token->next->type == OPERATOR || token->next->type == WORD))
+		return (0);
+	else if (token->type == OPERATOR && token->next
+		&& token->next->type == WORD)
 		return (0);
 	else
 		return (1);
@@ -47,14 +54,19 @@ int	good_operator(t_token *token)
 // error sortie 2 ou 1 || ft_putstr
 int	is_valid_token(t_token *token)
 {
-	if (token->type == PIPE)
-		return (printf("minishell: syntax error near unexpected token"), 2);
+	if (token->token == PIPE)
+	{
+		printf("minishell: syntax error near unexpected token");
+		printf(" « %s »\n", token->str);
+		return (free_token(token), 2);
+	}
 	while (token)
 	{
 		if (close_quoted(token->str) || good_operator(token))
 		{
-			free_token(token);
-			return (printf("minishell: syntax error near unexpected token\n"), 2);
+			printf("minishell: syntax error near unexpected token");
+			printf(" « %s »\n", token->str);
+			return (free_token(token), 2);
 		}
 		token = token->next;
 	}

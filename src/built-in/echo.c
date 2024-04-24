@@ -72,19 +72,12 @@ int	dash_n(char *str)
 void	ft_echo(char **str, t_env *env)
 {
 	char	**test;
-	int		i;
+	(void)env;
 
-	i = 0;
 	if (str == NULL)
 	{
 		printf("\n");
 		return ;
-	}
-	while (str[i])
-	{
-		printf("str[%d] = %s\n", i, str[i]);
-		str[i] = expansion(str[i], env);
-		i++;
 	}
 	test = check_flag(str);
 	if (dash_n(str[0]))
