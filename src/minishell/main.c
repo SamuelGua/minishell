@@ -13,40 +13,22 @@
 #include "minishell.h"
 
 
-void builtin(char *prompt, t_env **env, t_export **export)
+void builtin(t_cmds *cmd, t_env **env, t_export **export)
 {
-		if (ft_strncmp(prompt, "env", 3) == 0)
-		{
-			char **env_value = ft_split(prompt + 3, ' '); 
-			ft_env(*env, env_value);
-		}
-		else if (ft_strncmp(prompt, "unset", 5) == 0)
-		{
-			char **unset_value = ft_split(prompt + 5, ' '); 
-			ft_unset(export, env, unset_value);
-		}
-		else if (ft_strncmp(prompt, "echo", 4) == 0)
-		{
-			char **echo_value = ft_split(prompt + 5, '+');	
-			ft_echo(echo_value);
-		}
-		else if (ft_strncmp(prompt, "export", 6) == 0)
-		{
-			char **export_value = ft_split(prompt + 6, ' ');	
-			ft_export(export, env, export_value, -1);
-		}
-		else if (ft_strncmp(prompt, "pwd", 3) == 0)	
+		if (ft_strncmp(cmd->cmd[0], "env", 3) == 0)
+			ft_env(*env, cmd->cmd);
+		else if (ft_strncmp(cmd->cmd[0], "unset", 5) == 0)
+			ft_unset(export, env, cmd->cmd);
+		else if (ft_strncmp(cmd->cmd[0], "echo", 4) == 0)
+			ft_echo(cmd->cmd++);
+		else if (ft_strncmp(cmd->cmd[0], "export", 6) == 0)
+			ft_export(export, env, cmd->cmd, 0);
+		else if (ft_strncmp(cmd->cmd[0], "pwd", 3) == 0)	
 			ft_pwd();
-		else if (ft_strncmp(prompt, "exit", 4) == 0)	
-		{
-			char **exit_value = ft_split(prompt + 5, ' ');	
-			ft_exit(*env, *export, exit_value);
-		}
-		else if (ft_strncmp(prompt, "cd", 2) == 0)	
-		{
-			char **cd_value = ft_split(prompt + 2, ' ');	
-			ft_cd(*env, cd_value);
-		}
+		else if (ft_strncmp(cmd->cmd[0], "exit", 4) == 0)	
+			ft_exit(*env, *export, cmd->cmd);
+		else if (ft_strncmp(cmd->cmd[0], "cd", 2) == 0)		
+			ft_cd(*env, cmd->cmd);
 }
 
 int main(int ac, char **av, char **envp)
@@ -81,9 +63,8 @@ int main(int ac, char **av, char **envp)
 			continue;
 		}
 		cmd = build_cmd(token, env);
-		printf("{%s}\n", cmd->cmd[0]);
 		free_token(token);
-		builtin(prompt, &env, &export);
+		builtin(cmd, &env, &export);
 		free(prompt);
 	}
 	return (0);

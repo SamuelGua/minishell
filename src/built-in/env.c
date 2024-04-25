@@ -14,7 +14,7 @@
 
 void	ft_env(t_env *env, char **str)
 {
-	if (str)
+	if (str[1])
 	{
 		printf("No arguments required\n");
 		return ;

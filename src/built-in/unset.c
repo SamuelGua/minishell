@@ -48,7 +48,7 @@ void	ft_unset(t_export **export, t_env **env, char **str)
 	t_env	*env_temp;
 	int		i;
 
-	i = 0;
+	i = 1;
 	if (str == NULL)
 		return ;
 	while (str[i])

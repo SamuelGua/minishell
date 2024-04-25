@@ -29,8 +29,8 @@ void	ft_cd(t_env *env, char **str)
 {
 	int		i;
 
-	i = 0;
-	if (!str)
+	i = 1;
+	if (!str[i])
 	{
 		cd_home(env);
 		return ;
