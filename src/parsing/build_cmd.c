@@ -6,103 +6,15 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 17:52:39 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 19:26:35 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_builtin(char **str)
+void	print_lst_cmd(t_cmds *cmd)
 {
-	if (ft_strncmp(*str, "echo", (int)ft_strlen(*str)) == 0)
-		return (1);
-	else if (ft_strncmp(*str, "cd", (int)ft_strlen(*str)) == 0)
-		return (1);
-	else if (ft_strncmp(*str, "env", (int)ft_strlen(*str)) == 0)
-		return (1);
-	else if (ft_strncmp(*str, "exit", (int)ft_strlen(*str)) == 0)
-		return (1);
-	else if (ft_strncmp(*str, "export", (int)ft_strlen(*str)) == 0)
-		return (1);
-	else if (ft_strncmp(*str, "pwd", (int)ft_strlen(*str)) == 0)
-		return (1);
-	else if (ft_strncmp(*str, "unset", (int)ft_strlen(*str)) == 0)
-		return (1);
-	return (0);
-}
-
-void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node)
-{
-	t_cmds	*tmp;
-
-	tmp = *lst;
-	if (*lst)
-	{
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = node;
-	}
-	else
-		*lst = node;
-}
-
-t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file)
-{
-	t_cmds	*new;
-	int		i;
-
-	i = 0;
-	new = malloc(sizeof(t_cmds));
-	if (!new)
-		return (NULL);
-	new->file = file;
-	new->cmd = malloc(sizeof(cmd));
-	if (!new->cmd)
-		return (NULL);
-	while (cmd[i])
-	{
-		new->cmd[i] = ft_strdup(cmd[i]);
-		if (!new->cmd)
-			return (NULL);
-		i++;
-	}
-	new->next = NULL;
-	return (new);
-}
-
-t_file *ft_lstnew_file(char *file, int redirec)
-{
-	t_file *new;
-
-	new = malloc(sizeof(t_file));
-	if (!new)
-		return (NULL);
-	new->file = ft_strdup(file);
-	if (!new->file)
-		return (free(new), NULL);
-	new->redirec = redirec;
-	new->next = NULL;
-	return (new);
-}
-
-void	ft_lstadd_back_file(t_file **lst, t_file *node)
-{
-	t_file	*tmp;
-
-	tmp = *lst;
-	if (*lst)
-	{
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = node;
-	}
-	else
-		*lst = node;
-}
-
-void print_lst_cmd(t_cmds *cmd)
-{
-	int i;
+	int	i;
 
 	i = -1;
 	if (cmd->type == 0)
@@ -124,37 +36,25 @@ void print_lst_cmd(t_cmds *cmd)
 	}
 }
 
-t_cmds *create_node(t_token *tmp, t_token *end)
+void	pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds, int i)
 {
-	t_cmds *cmds = NULL;
-	t_file *tmp_file =  NULL;
-	char *command = "\0";
-	char *separateur = "\a";
+	tmp_file = ft_lstnew_file(end->str, end->token);
+	tmp_file->pipe = i;
+	ft_lstadd_back_file(&cmds->file, tmp_file);
+}
 
-	cmds = malloc(sizeof(t_cmds));
-	if (!cmds)
-		return (NULL);
-	cmds->file = NULL;
-	if (end && end->token == PIPE)
-	{
-		tmp_file = ft_lstnew_file(end->str, end->token);
-		tmp_file->pipe = 0;
-		ft_lstadd_back_file(&cmds->file, tmp_file);
-	}
-	if (tmp && tmp->token == PIPE)
-	{
-		tmp_file = ft_lstnew_file(tmp->str, tmp->token);
-		tmp_file->pipe = 1;
-		ft_lstadd_back_file(&cmds->file, tmp_file);
-		tmp = tmp->next;
-	}
+char	*node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
+{
+	char	*command;
+
+	command = malloc(sizeof(char));
+	command[0] = '\0';
 	while (tmp != end)
 	{
-		// delete quote et expand
 		if (tmp->type == WORD)
 		{
-			command = ft_strjoin(command, tmp->str);
-			command = ft_strjoin(command, separateur);
+			command = ft_free_strjoin(command, tmp->str);
+			command = ft_free_strjoin(command, "\a");
 		}
 		else if (tmp->token >= GREAT || tmp->token < PIPE)
 		{
@@ -164,19 +64,39 @@ t_cmds *create_node(t_token *tmp, t_token *end)
 		}
 		tmp = tmp->next;
 	}
+	return (command);
+}
+
+t_cmds	*create_node(t_token *tmp, t_token *end)
+{
+	t_cmds	*cmds;
+	t_file	*tmp_file;
+	char	*command;
+
+	tmp_file = NULL;
+	cmds = malloc(sizeof(t_cmds));
+	if (!cmds)
+		return (NULL);
+	cmds->file = NULL;
+	if (end && end->token == PIPE)
+		pipe_init(tmp_file, end, cmds, 0);
+	if (tmp && tmp->token == PIPE)
+		(pipe_init(tmp_file, tmp, cmds, 1), tmp = tmp->next);
+	command = node_init(tmp, end, tmp_file, cmds);
 	if (command[0])
-		cmds->cmd = ft_split(command, *separateur);
+		cmds->cmd = ft_split(command, 7);
 	else
-		cmds->cmd = ft_split("none", *separateur);
+		cmds->cmd = ft_split("none", 7);
 	cmds->type = is_builtin(cmds->cmd);
 	cmds->next = NULL;
 	return (cmds);
 }
-void clean_token(t_token *token, t_env *env)
-{
-	(void)env;
 
-	t_token *tmp = token;
+void	clean_token(t_token *token, t_env *env)
+{
+	t_token	*tmp;
+
+	tmp = token;
 	while (token)
 	{
 		token->str = expansion(token->str, env);
@@ -187,13 +107,13 @@ void clean_token(t_token *token, t_env *env)
 	}
 }
 
-t_cmds *build_cmd(t_token *token, t_env *env)
+t_cmds	*build_cmd(t_token *token, t_env *env)
 {
-	t_cmds *cmds_tmp;
-	t_cmds *cmds = NULL;
-	t_token *end;
-	(void)env;
+	t_cmds	*cmds_tmp;
+	t_token	*end;
+	t_cmds	*cmds;
 
+	cmds = NULL;
 	clean_token(token, env);
 	while (token)
 	{
@@ -207,4 +127,3 @@ t_cmds *build_cmd(t_token *token, t_env *env)
 	}
 	return (cmds);
 }
-// cd | echo | ls

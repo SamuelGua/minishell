@@ -6,11 +6,30 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:18:40 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 15:03:11 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 19:20:19 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_builtin(char **str)
+{
+	if (ft_strncmp(*str, "echo", (int)ft_strlen(*str)) == 0)
+		return (1);
+	else if (ft_strncmp(*str, "cd", (int)ft_strlen(*str)) == 0)
+		return (1);
+	else if (ft_strncmp(*str, "env", (int)ft_strlen(*str)) == 0)
+		return (1);
+	else if (ft_strncmp(*str, "exit", (int)ft_strlen(*str)) == 0)
+		return (1);
+	else if (ft_strncmp(*str, "export", (int)ft_strlen(*str)) == 0)
+		return (1);
+	else if (ft_strncmp(*str, "pwd", (int)ft_strlen(*str)) == 0)
+		return (1);
+	else if (ft_strncmp(*str, "unset", (int)ft_strlen(*str)) == 0)
+		return (1);
+	return (0);
+}
 
 // gerer les newline
 int	check_whitespace(char c)
@@ -51,6 +70,7 @@ int	good_operator(t_token *token)
 	else
 		return (1);
 }
+
 // error sortie 2 ou 1 || ft_putstr
 int	is_valid_token(t_token *token)
 {

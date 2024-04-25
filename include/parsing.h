@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:41:51 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 15:13:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 19:27:23 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_token
 // token utils
 t_token	*ft_lstnew_token(char *str, int len, int type, int token);
 void	ft_lstadd_back_token(t_token **token, t_token *node);
-t_token	*init_token(char *prompt);
+t_token	*init_token(char *prompt, t_token *token);
 void	print_token(t_token *token);
 void	free_token(t_token *token);
 
@@ -70,5 +70,6 @@ int		is_operator(char c, int stats);
 int		check_operator(char *str, int len);
 int		value_operator(char *str);
 int		check_whitespace(char c);
+int		is_builtin(char **str);
 
 #endif

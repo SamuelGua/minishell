@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/24 12:26:54 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 18:31:38 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ void		free_export(t_export *export);
 //// BUILT-IIN
 void		ft_unset(t_export **export, t_env **env, char **str);
 void		ft_env(t_env *env, char **str);
-void		ft_echo(char **str, t_env *env); // retirer le $
-void		ft_export(t_export **export, t_env **env, char **str);
+void		ft_echo(char **str); // retirer le $
+void		ft_export(t_export **export, t_env **env, char **str, int i);
 void		ft_pwd(void);
 int			ft_exit(t_env *env, t_export *export, char **str);
 void		ft_cd(t_env *env, char **str);
@@ -88,6 +88,10 @@ typedef struct s_cmds
 } t_cmds;
 
 t_cmds *build_cmd(t_token *token, t_env *env);
+void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
+t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file);
+t_file	*ft_lstnew_file(char *file, int redirec);
+void	ft_lstadd_back_file(t_file **lst, t_file *node);
 
 
 #endif

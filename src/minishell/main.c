@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 09:39:41 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 19:25:20 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void builtin(char *prompt, t_env **env, t_export **export)
 		else if (ft_strncmp(prompt, "echo", 4) == 0)
 		{
 			char **echo_value = ft_split(prompt + 5, '+');	
-			ft_echo(echo_value, *env);
+			ft_echo(echo_value);
 		}
 		else if (ft_strncmp(prompt, "export", 6) == 0)
 		{
 			char **export_value = ft_split(prompt + 6, ' ');	
-			ft_export(export, env, export_value);
+			ft_export(export, env, export_value, -1);
 		}
 		else if (ft_strncmp(prompt, "pwd", 3) == 0)	
 			ft_pwd();
@@ -73,7 +73,7 @@ int main(int ac, char **av, char **envp)
 		}
 		if (ft_split(prompt, ' ') == NULL)
 			continue;
-		token = init_token(prompt);
+		token = init_token(prompt, token);
 		add_history(prompt);
 		if (is_valid_token(token))
 		{
@@ -83,7 +83,7 @@ int main(int ac, char **av, char **envp)
 		cmd = build_cmd(token, env);
 		printf("{%s}\n", cmd->cmd[0]);
 		free_token(token);
-		//builtin(prompt, &env, &export);
+		builtin(prompt, &env, &export);
 		free(prompt);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 14:51:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 19:24:55 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,8 @@ void	init_token_two(t_token **token, t_parsutils *utils_pars, char *prompt)
 	}
 }
 
-t_token	*init_token(char *prompt)
+t_token	*init_token(char *prompt, t_token *token)
 {
-	t_token		*token;
 	t_parsutils	utils;
 
 	(value_pars_init(&utils), token = NULL);
@@ -78,7 +77,8 @@ t_token	*init_token(char *prompt)
 			rules_one(&token, &utils, prompt);
 			break ;
 		}
-		else if (utils.type_token == OPERATOR && is_operator(prompt[utils.i], utils.quoted)
+		else if (utils.type_token == OPERATOR
+			&& is_operator(prompt[utils.i], utils.quoted)
 			&& check_operator(&prompt[utils.start_token], utils.len))
 				utils.len++;
 		else if (utils.type_token == OPERATOR

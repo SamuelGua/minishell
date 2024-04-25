@@ -6,13 +6,8 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 10:54:29 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 19:21:50 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_cmds	created_node(char **cmd, int fd_in, char *file_in, int fd_out, char file_out, int type)
-{
-
-}

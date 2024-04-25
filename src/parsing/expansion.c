@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 14:38:00 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 18:48:06 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,24 @@ void	dollar_dollar(char *str, t_env *env, t_exutils *ex)
 	ex->i = ex->l_exp;
 }
 
+void	expansion_two(t_exutils *ex, char *str, t_env *env)
+{
+	while (str[ex->i] && check_whitespace(str[ex->i]))
+		ex->i++;
+	ex->l_exp = ex->i;
+	while (str[ex->i])
+	{
+		ex->quoted = is_quoted(ex->quoted, str[ex->i]);
+		if (str[ex->i] == '$' && str[ex->i + 1] == '$' && ex->quoted != S_QUOTE)
+			dollar_dollar(str, env, ex);
+		else if (str[ex->i] == '$' && check_whitespace(str[ex->i + 1]) != 1
+			&& str[ex->i + 1] != '\0' && ex->quoted != S_QUOTE)
+			add_expand(str, env, ex);
+		else
+			ex->i++;
+	}
+}
+
 char	*expansion(char *str, t_env *env)
 {
 	t_exutils	ex;
@@ -80,25 +98,10 @@ char	*expansion(char *str, t_env *env)
 	{
 		c = str[ex.i];
 		str[ex.i] = '\0';
-		printf("expansion = %s && str = %s\n", &str[ex.i], str);
 		ex.new = ft_strdup(str);
 		str[ex.i] = c;
 	}
-	while (str[ex.i] && check_whitespace(str[ex.i]))
-		ex.i++;
-	ex.l_exp = ex.i;
-	while (str[ex.i])
-	{
-		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
-		if (str[ex.i] == '$' && str[ex.i + 1] == '$' && ex.quoted != S_QUOTE)
-			dollar_dollar(str, env, &ex);
-		else if (str[ex.i] == '$' && check_whitespace(str[ex.i + 1]) != 1
-			&& str[ex.i + 1] != '\0' && ex.quoted != S_QUOTE)
-			add_expand(str, env, &ex);
-		else
-			ex.i++;
-	}
+	expansion_two(&ex, str, env);
 	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
-	printf("expnsion = %s\n", ex.new);
 	return (ex.new);
 }

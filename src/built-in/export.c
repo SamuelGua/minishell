@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 09:12:46 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 18:30:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,11 @@ int	is_valid(char *str)
 	return (1);
 }
 
-void	ft_export(t_export **export, t_env **env, char **str)
+void	ft_export(t_export **export, t_env **env, char **str, int i)
 {
 	t_env	*tmp;
-	int		i;
 	int		j;
 
-	i = -1;
 	if (!str && print_list(*export))
 		return ;
 	while (str[++i])
