@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/04/23 10:50:03 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/25 14:38:00 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	add_expand(char *str, t_env *env, t_exutils *ex)
 
 	len = 0;
 	while (str[ex->i + len + 1] && check_whitespace(str[ex->i + len + 1]) != 1
-		&& str[ex->i + len + 1] != '\'' && str[ex->i + len + 1] != '\\'
+		&& str[ex->i + len + 1] != '\'' && str[ex->i + len + 1] != '/'
 		&& str[ex->i + len + 1] != '\"' && str[ex->i + len + 1] != '$')
 		len++;
 	str[ex->i] = '\0';
@@ -74,6 +74,8 @@ char	*expansion(char *str, t_env *env)
 		ex.quoted = is_quoted(ex.quoted, str[ex.i]);
 		ex.i++;
 	}
+	if (!str[ex.i])
+		return (str);
 	if (str[ex.i] || str[ex.i] == '$')
 	{
 		c = str[ex.i];
@@ -97,5 +99,6 @@ char	*expansion(char *str, t_env *env)
 			ex.i++;
 	}
 	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
+	printf("expnsion = %s\n", ex.new);
 	return (ex.new);
 }
