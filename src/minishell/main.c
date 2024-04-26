@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 19:25:20 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/26 09:06:30 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ int main(int ac, char **av, char **envp)
 		}
 		cmd = build_cmd(token, env);
 		free_token(token);
-		builtin(cmd, &env, &export);
+
+		if(cmd->type == 1)
+			builtin(cmd, &env, &export);
 		free(prompt);
 	}
 	return (0);
