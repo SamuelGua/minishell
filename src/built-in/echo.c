@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 18:27:18 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/27 19:06:27 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**check_flag(char **str)
 	while (str[++i])
 	{
 		j = 0;
-		if (str[i][0] == '-')
+		if (str[i][0] == '-' && str[i][1])
 			j++;
 		else
 			return (&str[i]);
@@ -61,6 +61,8 @@ int	dash_n(char *str)
 	int	i;
 
 	i = 1;
+	if (str[0] == '-' && !str[1])
+		return (0);
 	if (str[0] != '-')
 		return (0);
 	while (str[i] && str[i] == 'n')

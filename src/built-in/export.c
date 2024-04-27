@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 18:01:09 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/27 18:51:31 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,12 @@ static int	is_existing(t_env *env, char *str)
 	j = 0;
 	while (str[j] != '=' && str[j])
 		j++;
+	// if (!str[j])
+	// 	return (1);
 	j++;
-	if (!str[j])
-		return (1);
 	while (env && ft_strncmp(env->cle, str, j - 1) != 0)
 		env = env->next;
+//	printf("export %s\n", env->cle);
 	if (!env)
 		return (1);
 	free(env->params);
@@ -51,6 +52,12 @@ int	is_valid(char *str)
 	int	i;
 
 	i = 0;
+	if (str[i] != '_' && ft_isalpha(str[i]) == 0)
+	{
+		printf("minishell: export: `%s': not a valid identifier\n", str);
+		return (0);
+	}
+	i++;
 	while (str[i] != '=' && str[i])
 	{
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
