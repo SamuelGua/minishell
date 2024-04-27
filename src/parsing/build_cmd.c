@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 19:26:35 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/27 17:25:30 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,33 @@ void	pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds, int i)
 	tmp_file->pipe = i;
 	ft_lstadd_back_file(&cmds->file, tmp_file);
 }
-
-char	*node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
+int cmds_size(t_token *tmp, t_token *end)
 {
-	char	*command;
+	int	i;
 
-	command = malloc(sizeof(char));
-	command[0] = '\0';
+	i = 0;
+	while (tmp != end)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
+{
+	char	**command;
+	int i;
+	
+	i = cmds_size(tmp, end);
+	command = malloc(sizeof(char *) * (i + 1));
+	if (!command)
+		return (NULL);
+	i = 0;
 	while (tmp != end)
 	{
 		if (tmp->type == WORD)
-		{
-			command = ft_free_strjoin(command, tmp->str);
-			command = ft_free_strjoin(command, "\a");
-		}
+			command[i++] = ft_strdup(tmp->str);
 		else if (tmp->token >= GREAT || tmp->token < PIPE)
 		{
 			tmp_file = ft_lstnew_file(tmp->next->str, tmp->token);
@@ -64,6 +77,7 @@ char	*node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
 		}
 		tmp = tmp->next;
 	}
+	command[i] = NULL;
 	return (command);
 }
 
@@ -71,7 +85,6 @@ t_cmds	*create_node(t_token *tmp, t_token *end)
 {
 	t_cmds	*cmds;
 	t_file	*tmp_file;
-	char	*command;
 
 	tmp_file = NULL;
 	cmds = malloc(sizeof(t_cmds));
@@ -82,11 +95,7 @@ t_cmds	*create_node(t_token *tmp, t_token *end)
 		pipe_init(tmp_file, end, cmds, 0);
 	if (tmp && tmp->token == PIPE)
 		(pipe_init(tmp_file, tmp, cmds, 1), tmp = tmp->next);
-	command = node_init(tmp, end, tmp_file, cmds);
-	if (command[0])
-		cmds->cmd = ft_split(command, 7);
-	else
-		cmds->cmd = ft_split("none", 7);
+	cmds->cmd = node_init(tmp, end, tmp_file, cmds);
 	cmds->type = is_builtin(cmds->cmd);
 	cmds->next = NULL;
 	return (cmds);

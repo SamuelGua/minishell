@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/04/26 14:52:09 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/27 12:13:18 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	add_expand(char *str, t_env *env, t_exutils *ex)
 		&& str[ex->i + len + 1] != '\"' && str[ex->i + len + 1] != '$')
 		len++;
 	str[ex->i] = '\0';
-	//printf("len %i\n", len);
 	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
 	while (env && (ft_strncmp(&str[ex->i + 1], env->cle, len) != 0
 			|| len != (int)ft_strlen(env->cle)))
@@ -70,6 +69,8 @@ void	expansion_two(t_exutils *ex, char *str, t_env *env)
 		ex->quoted = is_quoted(ex->quoted, str[ex->i]);
 		if (str[ex->i] == '$' && str[ex->i + 1] == '$' && ex->quoted != S_QUOTE)
 			dollar_dollar(str, env, ex);
+		else if (str[ex->i] == '$' && (str[ex->i + 1] == '\'' || str[ex->i + 1] == '\"') && ex->quoted != NO_QUOTE)
+			ex->i++;
 		else if (str[ex->i] == '$' && check_whitespace(str[ex->i + 1]) != 1
 			&& str[ex->i + 1] != '\0'
 			&& str[ex->i + 1] != '/'

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/26 09:06:30 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/27 12:31:13 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int main(int ac, char **av, char **envp)
 	// 	return (printf("Erreur malloc\n"), 2);
 	while (1)
 	{
-		prompt = readline("minishell > ");
+		prompt = readline("\002\033[1;35mminishell > \033[0m\002");
 		if (!prompt)
 		{
 			ft_free_env(env);

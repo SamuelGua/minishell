@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/26 15:51:38 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/27 12:39:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ typedef struct s_cmds
 	char **cmd; // {"ls", "-al", "Makefile", NULL}
 	struct s_file *file; // file avec redirection > >> << < |
 	int		type; // 0 built-in | 1 cmds
-	int		nb_pipe; 
+	int		nb_pipe; // faire un liste size sera peut etre mieux
 	struct s_cmds *next;
 } t_cmds;
 
