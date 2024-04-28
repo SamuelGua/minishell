@@ -18,7 +18,7 @@ int	cd_home(t_env *env)
 {
 	char	*error;
 
-	while (env && ft_strncmp(env->cle, "HOME", 5) != 0)
+	while (env && ft_strcmp(env->cle, "HOME") != 0)
 		env = env->next;
 	if (!env)
 		return (printf("bash: cd: HOME not set\n"));

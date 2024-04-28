@@ -14,19 +14,21 @@
 
 int	is_builtin(char **str)
 {
-	if (ft_strncmp(*str, "echo", (int)ft_strlen(*str)) == 0)
+	if (!str[0])
+		return (2);
+	if (ft_strcmp(*str, "echo") == 0)
 		return (1);
-	else if (ft_strncmp(*str, "cd", (int)ft_strlen(*str)) == 0)
+	else if (ft_strcmp(*str, "cd") == 0)
 		return (1);
-	else if (ft_strncmp(*str, "env", (int)ft_strlen(*str)) == 0)
+	else if (ft_strcmp(*str, "env") == 0)
 		return (1);
-	else if (ft_strncmp(*str, "exit", (int)ft_strlen(*str)) == 0)
+	else if (ft_strcmp(*str, "exit") == 0)
 		return (1);
-	else if (ft_strncmp(*str, "export", (int)ft_strlen(*str)) == 0)
+	else if (ft_strcmp(*str, "export") == 0)
 		return (1);
-	else if (ft_strncmp(*str, "pwd", (int)ft_strlen(*str)) == 0)
+	else if (ft_strcmp(*str, "pwd") == 0)
 		return (1);
-	else if (ft_strncmp(*str, "unset", (int)ft_strlen(*str)) == 0)
+	else if (ft_strcmp(*str, "unset") == 0)
 		return (1);
 	return (0);
 }
@@ -74,6 +76,9 @@ int	good_operator(t_token *token)
 // error sortie 2 ou 1 || ft_putstr
 int	is_valid_token(t_token *token)
 {
+	t_token *tmp;
+
+	tmp = token;
 	if (token->token == PIPE)
 	{
 		printf("minishell: syntax error near unexpected token");
@@ -86,7 +91,7 @@ int	is_valid_token(t_token *token)
 		{
 			printf("minishell: syntax error near unexpected token");
 			printf(" « %s »\n", token->str);
-			return (free_token(token), 2);
+			return (free_token(tmp), 2);
 		}
 		token = token->next;
 	}

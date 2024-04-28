@@ -19,12 +19,14 @@ void	print_lst_cmd(t_cmds *cmd)
 	i = -1;
 	if (cmd->type == 0)
 		printf("commandes\n");
-	else
+	else if (cmd->type == 1)
 		printf("built-in\n");
+	else 
+		printf("none cmds\n");
 	while (cmd->cmd[++i])
 		printf("cmd[%d] = %s\n", i, cmd->cmd[i]);
 	if (cmd->file)
-		printf("\033[1;31mFile out [ \033[0m");
+		printf("\033[1;31mFile [ \033[0m");
 	while (cmd->file)
 	{
 		printf("file = %s ** redirec = %d\t", cmd->file->file, cmd->file->redirec);
@@ -121,8 +123,10 @@ t_cmds	*build_cmd(t_token *token, t_env *env)
 	t_cmds	*cmds_tmp;
 	t_token	*end;
 	t_cmds	*cmds;
+	t_token	*tmp;
 
 	cmds = NULL;
+	tmp = token;
 	clean_token(token, env);
 	while (token)
 	{
@@ -134,5 +138,6 @@ t_cmds	*build_cmd(t_token *token, t_env *env)
 		ft_lstadd_back_cmd(&cmds, cmds_tmp);
 		token = end;
 	}
+	free_token(tmp);
 	return (cmds);
 }

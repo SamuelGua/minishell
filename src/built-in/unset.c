@@ -18,7 +18,7 @@ static int	is_head(t_env **env, char *str)
 {
 	t_env	*tmp;
 
-	if (ft_strncmp((*env)->cle, str, ft_strlen(str)) == 0)
+	if (ft_strcmp((*env)->cle, str) == 0)
 	{
 		tmp = (*env);
 		*env = (*env)->next;
@@ -32,7 +32,7 @@ static int	is_body(t_env *env, char *str)
 {
 	t_env	*tmp;
 
-	if (ft_strncmp(env->next->cle, str, ft_strlen(str)) == 0)
+	if (ft_strcmp(env->next->cle, str) == 0)
 	{
 		tmp = env->next;
 		env->next = tmp->next;

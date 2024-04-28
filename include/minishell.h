@@ -94,5 +94,16 @@ t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file);
 t_file	*ft_lstnew_file(char *file, int redirec);
 void	ft_lstadd_back_file(t_file **lst, t_file *node);
 
+typedef struct s_exec
+{
+	struct	s_env		*env;
+	struct	s_export	*export;
+	struct	s_cmds		*cmds;
+	int					nb_pipe;
+	int					pipe[2];
+} t_exec;
+
+void execution(t_exec *exec);
+
 
 #endif

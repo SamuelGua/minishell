@@ -47,7 +47,7 @@ static	void	insert_export(t_export **list, t_export *node)
 		*list = node;
 		return ;
 	}
-	if (ft_strncmp((*list)->cle, node->cle, 100) > 0)
+	if (ft_strcmp((*list)->cle, node->cle) > 0)
 		insert_export(&(*list)->left, node);
 	else
 		insert_export(&(*list)->right, node);

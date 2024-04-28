@@ -49,7 +49,7 @@ void	dollar_dollar(char *str, t_env *env, t_exutils *ex)
 	sys = "SYSTEMD_EXEC_PID";
 	str[ex->i] = '\0';
 	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
-	while (env && (ft_strncmp(sys, env->cle, 16) != 0
+	while (env && (ft_strcmp(sys, env->cle) != 0
 			|| 16 != (int)ft_strlen(env->cle)))
 		env = env->next;
 	if (env)
