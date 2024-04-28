@@ -15,25 +15,26 @@
 void	print_lst_cmd(t_cmds *cmd)
 {
 	int	i;
+	t_cmds *tmp = cmd;
 
 	i = -1;
-	if (cmd->type == 0)
+	if (tmp->type == 0)
 		printf("commandes\n");
-	else if (cmd->type == 1)
+	else if (tmp->type == 1)
 		printf("built-in\n");
 	else 
-		printf("none cmds\n");
-	while (cmd->cmd[++i])
-		printf("cmd[%d] = %s\n", i, cmd->cmd[i]);
-	if (cmd->file)
+		printf("none tmps\n");
+	while (tmp->cmd[++i])
+		printf("cmd[%d] = %s\n", i, tmp->cmd[i]);
+	if (tmp->file)
 		printf("\033[1;31mFile [ \033[0m");
-	while (cmd->file)
+	while (tmp->file)
 	{
-		printf("file = %s ** redirec = %d\t", cmd->file->file, cmd->file->redirec);
-		if (cmd->file->redirec == PIPE)
-			printf("{%d}", cmd->file->pipe);
-		cmd->file = cmd->file->next;
-		if (!cmd->file)
+		printf("file = %s ** redirec = %d\t", tmp->file->file, tmp->file->redirec);
+		if (tmp->file->redirec == PIPE)
+			printf("{%d}", tmp->file->pipe);
+		tmp->file = tmp->file->next;
+		if (!tmp->file)
 			printf("\033[1;31m]\n\033[0m");
 	}
 }
@@ -134,7 +135,6 @@ t_cmds	*build_cmd(t_token *token, t_env *env)
 		while (end && end->token != PIPE)
 			end = end->next;
 		cmds_tmp = create_node(token, end);
-		print_lst_cmd(cmds_tmp);
 		ft_lstadd_back_cmd(&cmds, cmds_tmp);
 		token = end;
 	}

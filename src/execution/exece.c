@@ -29,13 +29,15 @@ int	wait_childs(int pid)
 
 int	nb_pipe(t_cmds *cmds)
 {
-	int i;
+	int	i;
+	t_cmds *tmp;
 
+	tmp = cmds;
 	i = 0;
-	while (cmds)
+	while (tmp)
 	{
 		i++;
-		cmds = cmds->next;
+		tmp = tmp->next;
 	}
 	return (i);
 }
@@ -92,7 +94,7 @@ char *valid_cmd(t_cmds *cmd, char **path)
 int redirection(t_exec *exec)
 {
 	int	i;
-	
+
 	while (exec->cmds->file->next)
 	{
 		if (exec->cmds->file->redirec == GREAT
@@ -124,12 +126,6 @@ void execution(t_exec *exec)
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);
-	t_cmds *cmds = exec->cmds;
-	while (cmds)
-	{
-		cmds->cmd[0] = valid_cmd(cmds, path);
-		cmds = cmds->next;
-	}
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
@@ -146,6 +142,8 @@ void execution(t_exec *exec)
 		if (pid == 0)
 			child_process(exec, path);
 		exec->cmds = exec->cmds->next;
+		close(exec->pipe[0]);
+		close(exec->pipe[1]);
 	}
 	wait_childs(pid);
 }
