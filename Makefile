@@ -26,7 +26,7 @@ MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
 MINISHELL		= main.c init_env.c\
 
 EXECUTION_PATH	= $(EXECUTION:%=src/execution/%)
-EXECUTION		= exece.c\
+EXECUTION		= exece.c redir.c\
 
 BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
 BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c\

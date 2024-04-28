@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+
+
+int	wait_childs(int pid)
+{
+	int	wstatus;
+	int	code;
+
+	while (errno != ECHILD)
+		if (wait(&wstatus) == pid && WIFEXITED(wstatus))
+			code = WEXITSTATUS(wstatus);
+	if (pid == -1)
+		return (127);
+	return (code);
+}
+
 int	nb_pipe(t_cmds *cmds)
 {
 	int i;
@@ -22,7 +37,7 @@ int	nb_pipe(t_cmds *cmds)
 		i++;
 		cmds = cmds->next;
 	}
-	return (i -1);
+	return (i);
 }
 
 char	**find_path(t_env *env)
@@ -74,9 +89,38 @@ char *valid_cmd(t_cmds *cmd, char **path)
 	return (free(cmd->cmd[0]), new);
 }
 
+int redirection(t_exec *exec)
+{
+	int	i;
+	
+	while (exec->cmds->file->next)
+	{
+		if (exec->cmds->file->redirec == GREAT
+			|| exec->cmds->file->redirec == DGREAT)
+			i = fd_out(exec->cmds->file);
+		else if (exec->cmds->file->redirec == LESS)
+			i = fd_in(exec->cmds->file);
+		else if (exec->cmds->file->redirec == PIPE)
+			i = fd_pipe(exec->cmds->file, exec);
+		exec->cmds->file = exec->cmds->file->next;
+	}
+	return (i);
+}
+
+void child_process(t_exec *exec, char **path)
+{
+	if (redirection(exec))
+		exit(1);
+	exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
+	if (!exec->cmds->cmd)
+		exit (127);
+	execve(exec->cmds->cmd[0], exec->cmds->cmd, NULL);
+}
+
 void execution(t_exec *exec)
 {
 	char **path;
+	int 	pid;
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);
@@ -84,8 +128,24 @@ void execution(t_exec *exec)
 	while (cmds)
 	{
 		cmds->cmd[0] = valid_cmd(cmds, path);
-		printf("cmd = %s\n", cmds->cmd[0]);
 		cmds = cmds->next;
 	}
-
+	while (exec->nb_pipe--)
+	{
+		if (pipe(exec->pipe) == -1)
+		{
+			perror("PIPE ERROR");
+			return ;
+		}
+		pid = fork();
+		if (pid < -1)
+		{
+			perror("FORK ERROR");
+			return ;
+		}
+		if (pid == 0)
+			child_process(exec, path);
+		exec->cmds = exec->cmds->next;
+	}
+	wait_childs(pid);
 }

@@ -25,9 +25,10 @@
 # include <dirent.h>
 # include <string.h>
 # include <termios.h>
-# include <readline/readline.h>	
-# include <readline/history.h>	
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <curses.h>
+# include <errno.h>
 
 // Structure env et export
 typedef struct s_env
@@ -84,7 +85,6 @@ typedef struct s_cmds
 	char			**cmd; // {"ls", "-al", "Makefile", NULL}
 	struct s_file	*file; // file avec redirection > >> << < |
 	int				type; // 0 built-in | 1 cmds
-	int				nb_pipe; // faire un liste size sera peut etre mieux
 	struct s_cmds 	*next;
 } t_cmds;
 
@@ -104,6 +104,10 @@ typedef struct s_exec
 } t_exec;
 
 void execution(t_exec *exec);
+int fd_out(t_file *file);
+int fd_in(t_file *file);
+int fd_pipe(t_file *file, t_exec *exec);
+
 
 
 #endif
