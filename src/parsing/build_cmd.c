@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 17:25:30 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/29 10:37:32 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ t_cmds	*create_node(t_token *tmp, t_token *end)
 		return (NULL);
 	cmds->file = NULL;
 	if (end && end->token == PIPE)
-		pipe_init(tmp_file, end, cmds, 0);
+		pipe_init(tmp_file, end, cmds, 1);
 	if (tmp && tmp->token == PIPE)
-		(pipe_init(tmp_file, tmp, cmds, 1), tmp = tmp->next);
+		(pipe_init(tmp_file, tmp, cmds, 0), tmp = tmp->next);
 	cmds->cmd = node_init(tmp, end, tmp_file, cmds);
 	cmds->type = is_builtin(cmds->cmd);
 	cmds->next = NULL;
@@ -139,5 +139,7 @@ t_cmds	*build_cmd(t_token *token, t_env *env)
 		token = end;
 	}
 	free_token(tmp);
+	printf("file %s\n", cmds->file->file);
+
 	return (cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 18:10:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 18:22:21 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/29 09:42:42 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_file	*ft_lstnew_file(char *file, int redirec)
 		return (free(new), NULL);
 	new->redirec = redirec;
 	new->next = NULL;
+	printf("%s\n", file);
 	return (new);
 }
 

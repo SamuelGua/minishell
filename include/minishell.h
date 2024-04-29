@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 18:06:23 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/29 10:21:08 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct s_exec
 	struct	s_cmds		*cmds;
 	int					nb_pipe;
 	int					pipe[2];
+	int					previous_fd;
 } t_exec;
 
 void execution(t_exec *exec);

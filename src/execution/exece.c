@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 19:21:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/29 13:28:46 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,8 @@ int redirection(t_exec *exec)
 {
 	int	i;
 
-	while (exec->cmds->file->next)
+	i = 0;
+	while (exec->cmds->file && i != -1)
 	{
 		if (exec->cmds->file->redirec == GREAT
 			|| exec->cmds->file->redirec == DGREAT)
@@ -111,7 +112,8 @@ int redirection(t_exec *exec)
 
 void child_process(t_exec *exec, char **path)
 {
-	if (redirection(exec))
+	close(exec->pipe[0]);
+	if (redirection(exec) == -1)
 		exit(1);
 	exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
 	if (!exec->cmds->cmd)
@@ -126,6 +128,7 @@ void execution(t_exec *exec)
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);
+	exec->previous_fd = -1;
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
@@ -134,7 +137,7 @@ void execution(t_exec *exec)
 			return ;
 		}
 		pid = fork();
-		if (pid < -1)
+		if (pid == -1)
 		{
 			perror("FORK ERROR");
 			return ;
@@ -142,8 +145,11 @@ void execution(t_exec *exec)
 		if (pid == 0)
 			child_process(exec, path);
 		exec->cmds = exec->cmds->next;
-		close(exec->pipe[0]);
+		if (exec->previous_fd != -1)
+			close(exec->previous_fd);
+		exec->previous_fd = exec->pipe[0];
 		close(exec->pipe[1]);
 	}
+	close(exec->previous_fd);
 	wait_childs(pid);
 }
