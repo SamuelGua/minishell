@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/04/29 10:37:32 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/29 20:54:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,5 @@ t_cmds	*build_cmd(t_token *token, t_env *env)
 		token = end;
 	}
 	free_token(tmp);
-	printf("file %s\n", cmds->file->file);
-
 	return (cmds);
 }

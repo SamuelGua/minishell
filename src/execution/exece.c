@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/29 13:28:46 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/29 21:52:38 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ char *valid_cmd(t_cmds *cmd, char **path)
 	int i;
 
 	i = 0;
+	if (cmd->cmd[0][0] == '\0')
+		return(cmd->cmd[0]);
 	if (!cmd->cmd)
 		return (printf("no cmd\n"), NULL);
 	new = ft_strdup(cmd->cmd[0]);
@@ -75,16 +77,15 @@ char *valid_cmd(t_cmds *cmd, char **path)
 	while (access(new, X_OK) && path && path[i])
 	{
 		free(new);
-		new = ft_free_strjoin(path[i], cmd->cmd[0]);
+		new = ft_strjoin(path[i], cmd->cmd[0]);
 		if (!new)
 			return (printf("Error malloc\n"), NULL);
 		i++;
 	}
 	if (path)
 		free(path);
-	if (access(new, X_OK))
+	if (access(new, F_OK | X_OK))
 	{
-		free(new);
 		// RETURN NULL ou la commande ?
 		return (printf("bash: %s : command not found\n", cmd->cmd[0]), NULL);
 	}
@@ -119,6 +120,7 @@ void child_process(t_exec *exec, char **path)
 	if (!exec->cmds->cmd)
 		exit (127);
 	execve(exec->cmds->cmd[0], exec->cmds->cmd, NULL);
+	perror("");
 }
 
 void execution(t_exec *exec)
