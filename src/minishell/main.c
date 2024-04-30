@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/29 21:31:00 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/30 05:38:42 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ int main(int ac, char **av, char **envp)
 			free_export(exec.export);
 			return (2);
 		}
-		if (ft_split(prompt, ' ') == NULL)
-			continue;
+		char **lol = ft_split(prompt, ' ');
+		if (lol == NULL)
+			continue ;
 		token = init_token(prompt, token);
 		add_history(prompt);
 		free(prompt);

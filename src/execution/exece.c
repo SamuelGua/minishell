@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/29 21:52:38 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/30 05:34:38 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,11 @@ char *valid_cmd(t_cmds *cmd, char **path)
 			return (printf("Error malloc\n"), NULL);
 		i++;
 	}
-	if (path)
-		free(path);
-	if (access(new, F_OK | X_OK))
+	ft_free(path);
+	if (access(new, X_OK))
 	{
-		// RETURN NULL ou la commande ?
-		return (printf("bash: %s : command not found\n", cmd->cmd[0]), NULL);
+		(ft_putstr_fd("bash: ", 2), ft_putstr_fd(cmd->cmd[0], 2));
+		return (ft_putstr_fd(" : command not found\n", 2), NULL);
 	}
 	return (free(cmd->cmd[0]), new);
 }
@@ -117,10 +116,16 @@ void child_process(t_exec *exec, char **path)
 	if (redirection(exec) == -1)
 		exit(1);
 	exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
-	if (!exec->cmds->cmd)
-		exit (127);
+	if (!exec->cmds->cmd[0])
+	{
+		ft_putstr_fd("wdfwefwe\n", 2);
+		ft_free(exec->cmds->cmd);
+		exit(127);
+	}
 	execve(exec->cmds->cmd[0], exec->cmds->cmd, NULL);
 	perror("");
+	close(exec->pipe[1]);
+	exit(1);
 }
 
 void execution(t_exec *exec)
