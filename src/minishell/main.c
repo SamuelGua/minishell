@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/30 05:38:42 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/30 05:59:41 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int main(int ac, char **av, char **envp)
 
 	exec.env = init_env(envp);
  	exec.export = init_export(exec.env);
+	exec.envp = envp;
 	// if (env == NULL)
 	// 	return (printf("Erreur malloc\n"), 2);
 	while (1)
@@ -55,11 +56,14 @@ int main(int ac, char **av, char **envp)
 		char **lol = ft_split(prompt, ' ');
 		if (lol == NULL)
 			continue ;
+		else
+			ft_free(lol);
 		token = init_token(prompt, token);
 		add_history(prompt);
 		free(prompt);
 		if (is_valid_token(token))
 			continue;
+
 		exec.cmds = build_cmd(token, exec.env);
 		if(exec.cmds->type == 1)
 		{

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/29 23:35:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/04/30 05:50:31 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ typedef struct s_exec
 	struct	s_env		*env;
 	struct	s_export	*export;
 	struct	s_cmds		*cmds;
+	char 				**envp;
 	int					nb_pipe;
 	int					pipe[2];
 	int					previous_fd;
