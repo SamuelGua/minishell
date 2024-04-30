@@ -48,13 +48,13 @@ void	ft_free_env(t_env *env)
 {
 	t_env	*tmp ;
 
-	while (!env)
+	while (env)
 	{
-		tmp = env->next;
-		free(env->next);
-		free(env->params);
-		free(env);
-		env = tmp;
+		tmp = env;
+		env = env->next;
+		free(tmp->cle);
+		free(tmp->params);
+		free(tmp);
 	}
 }
 

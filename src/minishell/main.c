@@ -31,6 +31,47 @@ void builtin(t_cmds *cmd, t_env **env, t_export **export)
 			ft_cd(*env, cmd->cmd);
 }
 
+void ft_free_file(t_file *file)
+{
+	t_file *tmp;
+
+	while(file)
+	{
+		tmp = file;
+		file = file->next;
+		free(tmp);
+	}
+}
+
+void ft_free_cmd(t_cmds *cmd)
+{
+	t_cmds *tmp;
+
+	while (cmd)
+	{
+		tmp = cmd;
+		cmd = cmd->next;
+		ft_free(tmp->cmd);
+		ft_free_file(tmp->file);
+		free(tmp->file);
+		free(tmp);
+	}
+}
+
+void ft_free_exec(t_exec* exec)
+{
+	t_cmds *cmd_tmp;
+
+	free_export(exec->export);
+	ft_free_env(exec->env);
+	while(exec->cmds)
+	{
+		cmd_tmp = exec->cmds;
+		exec->cmds = exec->cmds->next;
+		ft_free_cmd(cmd_tmp);
+	}
+}
+
 int main(int ac, char **av, char **envp)
 {
 	char *prompt;
@@ -65,6 +106,8 @@ int main(int ac, char **av, char **envp)
 			continue;
 
 		exec.cmds = build_cmd(token, exec.env);
+		ft_free_exec(&exec);
+		exit(1);
 		if(exec.cmds->type == 1)
 		{
 			builtin(exec.cmds, &exec.env, &exec.export);

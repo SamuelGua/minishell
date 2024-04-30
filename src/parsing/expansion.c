@@ -96,11 +96,12 @@ char	*expansion(char *str, t_env *env)
 		ex.i++;
 	}
 	if (!str[ex.i])
-		return (str);
+		return (free(ex.new), str);
 	if (str[ex.i] || str[ex.i] == '$')
 	{
 		c = str[ex.i];
 		str[ex.i] = '\0';
+		free(ex.new); // ligne a effacer en cas de bug
 		ex.new = ft_strdup(str);
 		str[ex.i] = c;
 	}
