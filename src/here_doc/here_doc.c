@@ -12,16 +12,22 @@ typedef struct s_here_doc
 int	fill_heredoc(int fd, char *limiter)
 {
 	char	*line;
+	char	*lim;
+
 	while (1)
 	{
-		// ft_putstr
-		ft_putstr_fd("HERE_DOC > ",STDOUT_FILENO);
+		ft_putstr_fd("HERE_DOC {",STDOUT_FILENO);
+		ft_putstr_fd(limiter,STDOUT_FILENO);
+		ft_putstr_fd("} > ",STDOUT_FILENO);
 		line = get_next_line(0);
+		lim = strchr(line,'\n');
+		*lim = '\0';
 		if (!ft_strcmp(line, limiter))
 		{
 			free(line);
 			break ;
 		}
+		*lim = '\n';
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
@@ -34,18 +40,15 @@ int here_doc(t_file *file)
 	int fd;
 	t_here_doc doc;
 
-	i = 0;
-	doc.here_doc = "here_doc";
-	doc.new_file = NULL;
-	if (access(doc.here_doc, F_OK) == -1)
-		
-	while (access(doc.new_file, F_OK) == -1)
+	i = 1;
+	doc.here_doc = "src/here_doc/.tmp_here_doc/here_doc";
+	doc.new_file = ft_strdup(doc.here_doc);
+	while (access(doc.new_file, F_OK) == 0)
 	{
 		if (doc.new_file)
 			free(doc.new_file);
 		doc.nb_file = ft_itoa(i);
-		doc.new_file = ft_strjoin(doc.here_doc, doc.nb_file);
-		printf("%s\n", doc.new_file);
+		doc.new_file = ft_strjoin(doc.here_doc, doc.nb_file);;
 		free(doc.nb_file);
 		i++;
 	}
@@ -53,7 +56,9 @@ int here_doc(t_file *file)
 	free(doc.new_file);
 	if (fd < 0)
 		return (-1);
+
 	fill_heredoc(fd, file->file);
 	close(fd);
 	return (0);
 }
+

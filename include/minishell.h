@@ -120,7 +120,7 @@ void ft_free_cmd(t_cmds *cmd);
 void ft_free_file(t_file *file);
 
 
-int here_doc(t_file *file);
+int		here_doc(t_file *file);
 void	print_lst_cmd(t_cmds *cmd);
 
 #endif

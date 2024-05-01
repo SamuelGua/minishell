@@ -61,8 +61,10 @@ int cmds_size(t_token *tmp, t_token *end)
 char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
 {
 	char	**command;
-	int i;
+	int		i;
+	int 	nb_here;
 	
+	nb_here = 0;
 	i = cmds_size(tmp, end);
 	command = malloc(sizeof(char *) * (i + 1));
 	if (!command)
@@ -72,10 +74,15 @@ char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
 	{
 		if (tmp->type == WORD)
 			command[i++] = ft_strdup(tmp->str);
-		else if (tmp->token >= GREAT || tmp->token < PIPE)
+		else if (tmp->token >= GREAT && tmp->token < PIPE) // || OU &&
 		{
 			tmp_file = ft_lstnew_file(tmp->next->str, tmp->token);
 			ft_lstadd_back_file(&cmds->file, tmp_file);
+			if (tmp->token == HERE_DOC)
+			{
+				tmp_file->n_heredoc = nb_here;
+				nb_here++;
+			}
 			tmp = tmp->next;
 		}
 		tmp = tmp->next;

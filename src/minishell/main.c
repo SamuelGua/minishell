@@ -66,6 +66,7 @@ int main(int ac, char **av, char **envp)
 
 		exec.cmds = build_cmd(token, exec.env);
 		here_doc(exec.cmds->file);
+		printf("Nous avons exit coco\n");
 		exit(1);
 		execution(&exec);
 	}
