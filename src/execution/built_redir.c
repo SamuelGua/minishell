@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 
-int built_out(t_file *file, int out2)
+int built_out(t_file *file)
 {
 	int fd;
 
@@ -11,24 +11,24 @@ int built_out(t_file *file, int out2)
 		fd = open(file->file, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1)
 		return (perror(file->file), 1);
-	dup2(fd, out2);
+	dup2(fd, STDOUT_FILENO);
 	close(fd);
 	return (0);
 }
 
-int built_in(t_file *file, int in2)
+int built_in(t_file *file)
 {
 	int fd;
 
 	fd = open(file->file, O_RDONLY);
 	if (fd == -1)
 		return (perror(file->file), 1);
-	dup2(fd, in2);
+	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (0);
 }
 
-int built_redir(t_exec *exec, int out2, int in2)
+int built_redir(t_exec *exec)
 {
 	int	i;
 
@@ -37,9 +37,9 @@ int built_redir(t_exec *exec, int out2, int in2)
 	{
 		if (exec->cmds->file->redirec == GREAT
 			|| exec->cmds->file->redirec == DGREAT)
-			i = built_out(exec->cmds->file, out2);
+			i = built_out(exec->cmds->file);
 		else if (exec->cmds->file->redirec == LESS)
-			i = built_in(exec->cmds->file, in2);
+			i = built_in(exec->cmds->file);
 		exec->cmds->file = exec->cmds->file->next;
 	}
 	return (i);

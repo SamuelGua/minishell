@@ -6,30 +6,12 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/30 05:59:41 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/01 15:11:35 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-// void builtin(t_cmds *cmd, t_env **env, t_export **export)
-// {
-// 		if (ft_strcmp(cmd->cmd[0], "env") == 0)
-// 			ft_env(*env, cmd->cmd);
-// 		else if (ft_strcmp(cmd->cmd[0], "unset") == 0)
-// 			ft_unset(export, env, cmd->cmd);
-// 		else if (ft_strcmp(cmd->cmd[0], "echo") == 0)
-// 			ft_echo(cmd->cmd++);
-// 		else if (ft_strcmp(cmd->cmd[0], "export") == 0)
-// 			ft_export(export, env, cmd->cmd, 0);
-// 		else if (ft_strcmp(cmd->cmd[0], "pwd") == 0)	
-// 			ft_pwd();
-// 		else if (ft_strcmp(cmd->cmd[0], "exit") == 0)	
-// 			ft_exit(*env, *export, cmd->cmd);
-// 		else if (ft_strcmp(cmd->cmd[0], "cd") == 0)		
-// 			ft_cd(*env, cmd->cmd);
-// }
 void builtin(t_exec *exec)
 {
 		if (ft_strcmp(exec->cmds->cmd[0], "env") == 0)
@@ -48,46 +30,7 @@ void builtin(t_exec *exec)
 			ft_cd(exec->env, exec->cmds->cmd);
 }
 
-void ft_free_file(t_file *file)
-{
-	t_file *tmp;
 
-	while(file)
-	{
-		tmp = file;
-		file = file->next;
-		free(tmp);
-	}
-}
-
-void ft_free_cmd(t_cmds *cmd)
-{
-	t_cmds *tmp;
-
-	while (cmd)
-	{
-		tmp = cmd;
-		cmd = cmd->next;
-		ft_free(tmp->cmd);
-		ft_free_file(tmp->file);
-		free(tmp->file);
-		free(tmp);
-	}
-}
-
-void ft_free_exec(t_exec* exec)
-{
-	t_cmds *cmd_tmp;
-
-	free_export(exec->export);
-	ft_free_env(exec->env);
-	while(exec->cmds)
-	{
-		cmd_tmp = exec->cmds;
-		exec->cmds = exec->cmds->next;
-		ft_free_cmd(cmd_tmp);
-	}
-}
 
 int main(int ac, char **av, char **envp)
 {
@@ -99,7 +42,6 @@ int main(int ac, char **av, char **envp)
 
 	exec.env = init_env(envp);
  	exec.export = init_export(exec.env);
-	exec.envp = envp;
 	// if (env == NULL)
 	// 	return (printf("Erreur malloc\n"), 2);
 	while (1)
@@ -123,6 +65,8 @@ int main(int ac, char **av, char **envp)
 			continue;
 
 		exec.cmds = build_cmd(token, exec.env);
+		here_doc(exec.cmds->file);
+		exit(1);
 		execution(&exec);
 	}
 	return (0);
