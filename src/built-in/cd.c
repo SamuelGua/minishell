@@ -55,5 +55,4 @@ void	ft_cd(t_env *env, char **str)
 		perror(error);
 		free(error);
 	}
-	ft_free(str);
 }

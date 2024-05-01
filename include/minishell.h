@@ -111,6 +111,8 @@ int fd_out(t_file *file);
 int fd_in(t_file *file);
 int fd_pipe(t_file *file, t_exec *exec);
 
+int built_redir(t_exec *exec);
+void builtin(t_exec *exec);
 
 void	print_lst_cmd(t_cmds *cmd);
 

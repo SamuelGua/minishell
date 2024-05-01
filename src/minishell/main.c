@@ -13,22 +13,39 @@
 #include "minishell.h"
 
 
-void builtin(t_cmds *cmd, t_env **env, t_export **export)
+// void builtin(t_cmds *cmd, t_env **env, t_export **export)
+// {
+// 		if (ft_strcmp(cmd->cmd[0], "env") == 0)
+// 			ft_env(*env, cmd->cmd);
+// 		else if (ft_strcmp(cmd->cmd[0], "unset") == 0)
+// 			ft_unset(export, env, cmd->cmd);
+// 		else if (ft_strcmp(cmd->cmd[0], "echo") == 0)
+// 			ft_echo(cmd->cmd++);
+// 		else if (ft_strcmp(cmd->cmd[0], "export") == 0)
+// 			ft_export(export, env, cmd->cmd, 0);
+// 		else if (ft_strcmp(cmd->cmd[0], "pwd") == 0)	
+// 			ft_pwd();
+// 		else if (ft_strcmp(cmd->cmd[0], "exit") == 0)	
+// 			ft_exit(*env, *export, cmd->cmd);
+// 		else if (ft_strcmp(cmd->cmd[0], "cd") == 0)		
+// 			ft_cd(*env, cmd->cmd);
+// }
+void builtin(t_exec *exec)
 {
-		if (ft_strcmp(cmd->cmd[0], "env") == 0)
-			ft_env(*env, cmd->cmd);
-		else if (ft_strcmp(cmd->cmd[0], "unset") == 0)
-			ft_unset(export, env, cmd->cmd);
-		else if (ft_strcmp(cmd->cmd[0], "echo") == 0)
-			ft_echo(cmd->cmd++);
-		else if (ft_strcmp(cmd->cmd[0], "export") == 0)
-			ft_export(export, env, cmd->cmd, 0);
-		else if (ft_strcmp(cmd->cmd[0], "pwd") == 0)	
+		if (ft_strcmp(exec->cmds->cmd[0], "env") == 0)
+			ft_env(exec->env, exec->cmds->cmd);
+		else if (ft_strcmp(exec->cmds->cmd[0], "unset") == 0)
+			ft_unset(&exec->export, &exec->env, exec->cmds->cmd);
+		else if (ft_strcmp(exec->cmds->cmd[0], "echo") == 0)
+			ft_echo(exec->cmds->cmd);
+		else if (ft_strcmp(exec->cmds->cmd[0], "export") == 0)
+			ft_export(&exec->export, &exec->env, exec->cmds->cmd, 0);
+		else if (ft_strcmp(exec->cmds->cmd[0], "pwd") == 0)	
 			ft_pwd();
-		else if (ft_strcmp(cmd->cmd[0], "exit") == 0)	
-			ft_exit(*env, *export, cmd->cmd);
-		else if (ft_strcmp(cmd->cmd[0], "cd") == 0)		
-			ft_cd(*env, cmd->cmd);
+		else if (ft_strcmp(exec->cmds->cmd[0], "exit") == 0)	
+			ft_exit(exec->env, exec->export, exec->cmds->cmd);
+		else if (ft_strcmp(exec->cmds->cmd[0], "cd") == 0)		
+			ft_cd(exec->env, exec->cmds->cmd);
 }
 
 void ft_free_file(t_file *file)
@@ -106,13 +123,6 @@ int main(int ac, char **av, char **envp)
 			continue;
 
 		exec.cmds = build_cmd(token, exec.env);
-		ft_free_exec(&exec);
-		exit(1);
-		if(exec.cmds->type == 1)
-		{
-			builtin(exec.cmds, &exec.env, &exec.export);
-			continue;
-		}
 		execution(&exec);
 	}
 	return (0);

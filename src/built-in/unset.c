@@ -64,7 +64,6 @@ void	ft_unset(t_export **export, t_env **env, char **str)
 		}
 		i++;
 	}
-	ft_free(str);
 	free_export(*export);
 	*export = init_export(*env);
 }

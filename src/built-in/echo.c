@@ -85,10 +85,8 @@ void	ft_echo(char **str)
 	if (dash_n(str[1]))
 	{
 		print_echo(test);
-		ft_free(str);
 		return ;
 	}
 	print_echo(test);
 	printf("\n");
-	ft_free(str);
 }

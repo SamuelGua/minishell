@@ -89,12 +89,9 @@ void	ft_export(t_export **export, t_env **env, char **str, int i)
 			str[i][j] = '\0';
 			tmp = ft_lstnew_env(str[i], &str[i][j + 1]);
 			if (!tmp)
-			{
-				ft_free(str);
 				return ;
-			}
 			ft_lstadd_back_env(env, tmp);
 		}
 	}
-	(ft_free(str), free_export(*export), *export = init_export(*env));
+	(free_export(*export), *export = init_export(*env));
 }

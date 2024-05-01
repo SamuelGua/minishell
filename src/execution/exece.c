@@ -135,6 +135,15 @@ void execution(t_exec *exec)
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);
+	if (is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
+	{
+		int in = dup(STDIN_FILENO);
+		int out = dup(STDOUT_FILENO);
+		built_redir(exec);
+		builtin(exec);
+		//freecmds
+		return ;
+	}
 	exec->previous_fd = -1;
 	while (exec->nb_pipe--)
 	{
