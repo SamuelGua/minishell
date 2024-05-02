@@ -66,14 +66,16 @@ void run_here_doc(t_exec *exec)
 {
 	t_cmds *tmp;
 
+	t_file *tmp_file;
 	tmp = exec->cmds;
 	while (tmp)
 	{
-		while (tmp->file)
+		tmp_file = exec->cmds->file;
+		while (tmp_file)
 		{
-			if (tmp->file->redirec == HERE_DOC)
-				here_doc(tmp->file);
-			tmp->file = tmp->file->next;
+			if (tmp_file->redirec == HERE_DOC)
+				here_doc(tmp_file);
+			tmp_file = tmp_file->next;
 		}
 		tmp = tmp->next;
 	}

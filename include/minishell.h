@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 10:38:16 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 11:33:45 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ void ft_free_cmd(t_cmds *cmd);
 void ft_free_file(t_file *file);
 
 
-int		here_doc(t_file *file);
 void run_here_doc(t_exec *exec);
 void	print_lst_cmd(t_cmds *cmd);
 

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 10:06:34 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 11:51:48 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,23 @@ typedef struct s_build_cmd
 	int		nb_here_doc;
 } t_build_cmd;
 
+void print_file(t_file **file)
+{
+	t_file *tmp = (*file);
+	if (tmp->file)
+		printf("\033[1;31mFile [ \033[0m");
+	while (tmp)
+	{
+		printf("file = %s ** redirec = %d\t", tmp->file, tmp->redirec);
+		if (tmp->redirec == HERE_DOC)
+			printf("{%d}", tmp->n_heredoc);
+		else if (tmp->redirec == PIPE)
+			printf("{%d}", tmp->pipe);
+		tmp = tmp->next;
+		if (!tmp)
+			printf("\033[1;31m]\n\033[0m");
+	}
+}
 
 void	print_lst_cmd(t_cmds *cmd)
 {
@@ -36,20 +53,9 @@ void	print_lst_cmd(t_cmds *cmd)
 		printf("none tmps\n");
 	while (tmp->cmd[++i])
 		printf("cmd[%d] = %s\n", i, tmp->cmd[i]);
-	if (tmp->file)
-		printf("\033[1;31mFile [ \033[0m");
-	while (tmp->file)
-	{
-		printf("file = %s ** redirec = %d\t", tmp->file->file, tmp->file->redirec);
-		if (tmp->file->redirec == HERE_DOC)
-			printf("{%d}", tmp->file->n_heredoc);
-		else if (tmp->file->redirec == PIPE)
-			printf("{%d}", tmp->file->pipe);
-		tmp->file = tmp->file->next;
-		if (!tmp->file)
-			printf("\033[1;31m]\n\033[0m");
-	}
+	print_file(&cmd->file);
 }
+
 
 void	pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds, int i)
 {
