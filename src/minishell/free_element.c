@@ -8,6 +8,7 @@ void ft_free_file(t_file *file)
 	{
 		tmp = file;
 		file = file->next;
+		free(tmp->file);
 		free(tmp);
 	}
 }
@@ -22,7 +23,6 @@ void ft_free_cmd(t_cmds *cmd)
 		cmd = cmd->next;
 		ft_free(tmp->cmd);
 		ft_free_file(tmp->file);
-		free(tmp->file);
 		free(tmp);
 	}
 }

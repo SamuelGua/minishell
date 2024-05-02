@@ -6,11 +6,21 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/01 11:23:17 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 10:06:34 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+typedef struct s_build_cmd
+{
+	t_cmds	*cmds_tmp;
+	t_token	*end;
+	t_cmds	*cmds;
+	t_token	*tmp;
+	int		nb_here_doc;
+} t_build_cmd;
+
 
 void	print_lst_cmd(t_cmds *cmd)
 {
@@ -31,7 +41,9 @@ void	print_lst_cmd(t_cmds *cmd)
 	while (tmp->file)
 	{
 		printf("file = %s ** redirec = %d\t", tmp->file->file, tmp->file->redirec);
-		if (tmp->file->redirec == PIPE)
+		if (tmp->file->redirec == HERE_DOC)
+			printf("{%d}", tmp->file->n_heredoc);
+		else if (tmp->file->redirec == PIPE)
 			printf("{%d}", tmp->file->pipe);
 		tmp->file = tmp->file->next;
 		if (!tmp->file)
@@ -128,23 +140,26 @@ void	clean_token(t_token *token, t_env *env)
 
 t_cmds	*build_cmd(t_token *token, t_env *env)
 {
-	t_cmds	*cmds_tmp;
-	t_token	*end;
-	t_cmds	*cmds;
-	t_token	*tmp;
+	// t_cmds	*cmds_tmp;
+	// t_token	*end;
+	// t_cmds	*cmds;
+	// t_token	*tmp;
+	// int		nb_here_doc;
 
-	cmds = NULL;
-	tmp = token;
+	t_build_cmd utils;
+	utils.cmds = NULL;
+	utils.tmp = token;
+	utils.nb_here_doc = 0;
 	clean_token(token, env);
 	while (token)
 	{
-		end = token->next;
-		while (end && end->token != PIPE)
-			end = end->next;
-		cmds_tmp = create_node(token, end);
-		ft_lstadd_back_cmd(&cmds, cmds_tmp);
-		token = end;
+		utils.end = token->next;
+		while (utils.end && utils.end->token != PIPE)
+			utils.end = utils.end->next;
+		utils.cmds_tmp = create_node(token, utils.end);
+		ft_lstadd_back_cmd(&utils.cmds, utils.cmds_tmp);
+		token = utils.end;
 	}
-	free_token(tmp);
-	return (cmds);
+	free_token(utils.tmp);
+	return (utils.cmds);
 }

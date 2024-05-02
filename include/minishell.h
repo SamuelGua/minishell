@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/01 15:04:48 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 10:38:16 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ char		*delete_quote(char *str);
 
 typedef struct s_file
 {
-	char	*file;
-	int		redirec;
-	int		n_heredoc;
-	int 	pipe; // 0 in && 1 out
+	char			*file;
+	int				redirec;
+	int				n_heredoc;
+	int 			pipe; // 0 in && 1 out
 	struct s_file *next;
 } t_file;
 
@@ -121,6 +121,7 @@ void ft_free_file(t_file *file);
 
 
 int		here_doc(t_file *file);
+void run_here_doc(t_exec *exec);
 void	print_lst_cmd(t_cmds *cmd);
 
 #endif
