@@ -134,12 +134,6 @@ char **build_envp(t_env *env)
 	return (env_double);
 }
 
-void	controle_c(int signal)
-{
-	(void)signal;
-	printf("\n");
-}
-
 
 void child_process(t_exec *exec, char **path)
 {
@@ -173,10 +167,16 @@ void execution(t_exec *exec)
 	int 	pid;
 
 	struct sigaction signal;
-	signal.sa_handler = controle_c;
+	signal.sa_handler = c_quite_exec;
 	signal.sa_flags = 0;
 	sigemptyset(&signal.sa_mask);
 	sigaction(SIGINT, &signal, NULL);
+
+	struct sigaction slash_signal;
+	slash_signal.sa_handler = slash_exec;
+	slash_signal.sa_flags = 0;
+	sigemptyset(&slash_signal.sa_mask);
+	sigaction(SIGQUIT, &slash_signal, NULL);
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);

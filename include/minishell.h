@@ -108,22 +108,32 @@ typedef struct s_exec
 } t_exec;
 
 
-void execution(t_exec *exec);
-int fd_out(t_file *file);
-int fd_in(t_file *file);
-int fd_pipe(t_file *file, t_exec *exec);
+void	execution(t_exec *exec);
+int		fd_out(t_file *file);
+int		fd_in(t_file *file);
+int		fd_pipe(t_file *file, t_exec *exec);
 
-int built_redir(t_exec *exec);
-void builtin(t_exec *exec);
+int		built_redir(t_exec *exec);
+void	builtin(t_exec *exec);
 
-void ft_free_exec(t_exec* exec);
-void ft_free_cmd(t_cmds *cmd);
-void ft_free_file(t_file *file);
+void	ft_free_exec(t_exec* exec);
+void	ft_free_cmd(t_cmds *cmd);
+void	ft_free_file(t_file *file);
 
 int		redirection(t_exec *exec);
 void	run_here_doc(t_exec *exec);
 void	clean_dir_temp(void);
 int		find_here_doc(t_file *file);
 void	print_lst_cmd(t_cmds *cmd);
+
+
+//signaux
+void	c_new_prompt(int signal);
+void	c_quite_exec(int signal);
+void	d_quite(int signal);
+void	slash_dump(int signal);
+void	slash_exec(int signal);
+
+
 
 #endif

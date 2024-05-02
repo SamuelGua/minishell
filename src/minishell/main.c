@@ -30,19 +30,6 @@ void builtin(t_exec *exec)
 			ft_cd(exec->env, exec->cmds->cmd);
 }
 
-
-void print_b(int signal)
-{
-	if (signal == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	return ;
-}
-
 int main(int ac, char **av, char **envp)
 {
 	char *prompt;
@@ -55,22 +42,36 @@ int main(int ac, char **av, char **envp)
  	exec.export = init_export(exec.env);
 	// if (env == NULL)
 	// 	return (printf("Erreur malloc\n"), 2);
-	struct sigaction signal;
-	signal.sa_handler = print_b;
-	signal.sa_flags = 0;
-	sigemptyset(&signal.sa_mask);
-	sigaction(SIGINT, &signal, NULL);
-	
-	//sigaction(2);
+
+
+	struct sigaction c_signal;
+	c_signal.sa_handler = c_new_prompt;
+	c_signal.sa_flags = 0;
+	sigemptyset(&c_signal.sa_mask);
+
+	// struct sigaction d_signal;
+	// d_signal.sa_handler = ;
+	// d_signal.sa_flags = 0;
+	// sigemptyset(&d_signal.sa_mask);
+
+	struct sigaction slash_signal;
+	slash_signal.sa_handler = slash_dump;
+	slash_signal.sa_flags = 0;
+	sigemptyset(&slash_signal.sa_mask);
+
+
 	while (1)
 	{
+		sigaction(SIGINT, &c_signal, NULL);
+		// sigaction(SIGQUIT, &d_signal, NULL);
+		sigaction(SIGQUIT, &slash_signal, NULL);
 		prompt = readline("\002\033[1;35mminishell > \033[0m\002");
-		// if (!prompt)
-		// {
-		// 	ft_free_env(exec.env);
-		// 	free_export(exec.export);
-		// 	return (2);
-		// }
+		if (!prompt)
+		{
+			ft_free_env(exec.env);
+			free_export(exec.export);
+			return (2);
+		}
 		char **lol = ft_split(prompt, ' ');
 		if (lol == NULL)
 			continue ;

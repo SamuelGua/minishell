@@ -22,6 +22,8 @@ int	fill_heredoc(int fd, char *limiter)
 		ft_putstr_fd(limiter,STDOUT_FILENO);
 		ft_putstr_fd("} > ",STDOUT_FILENO);
 		line = get_next_line(0);
+		if (!line)
+			return (666);
 		lim = strchr(line,'\n');
 		*lim = '\0';
 		if (!ft_strcmp(line, limiter))
@@ -104,6 +106,7 @@ int find_here_doc(t_file *file)
 	ft_putstr_fd("\nTout est bon normalement\n", 2);
 	return (0);
 }
+
 void clean_dir_temp(void)
 {
 	char *path = PATH_HERE;

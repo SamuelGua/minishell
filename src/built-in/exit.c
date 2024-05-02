@@ -120,5 +120,8 @@ int	ft_exit(t_env *env, t_export *export, char **str)
 	printf("exit\n");
 	free_env_export(env, export);
 	ft_free(str);
-	exit(ft_atoll(str[1]));
+	if (str[1])
+		exit(ft_atoll(str[1]));
+	else
+		exit(1);
 }
