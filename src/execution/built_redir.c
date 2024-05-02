@@ -40,6 +40,7 @@ int built_redir(t_exec *exec)
 			i = built_out(exec->cmds->file);
 		else if (exec->cmds->file->redirec == LESS)
 			i = built_in(exec->cmds->file);
+			
 		exec->cmds->file = exec->cmds->file->next;
 	}
 	return (i);

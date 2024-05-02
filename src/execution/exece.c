@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/01 11:41:47 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 13:53:54 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int redirection(t_exec *exec)
 			i = fd_in(exec->cmds->file);
 		else if (exec->cmds->file->redirec == PIPE)
 			i = fd_pipe(exec->cmds->file, exec);
+		else if (exec->cmds->file->redirec == HERE_DOC)
+			i = find_here_doc(exec->cmds->file);
 		exec->cmds->file = exec->cmds->file->next;
 	}
 	return (i);
@@ -161,11 +163,13 @@ void execution(t_exec *exec)
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);
+	run_here_doc(exec);
 	if (is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 	{
 		int dup_in = dup(STDIN_FILENO);
 		int dup_out = dup(STDOUT_FILENO);
-		built_redir(exec);
+		//built_redir(exec);
+		redirection(exec);
 		builtin(exec);
 		dup2(dup_out, STDOUT_FILENO);
 		dup2(dup_in, STDIN_FILENO);
