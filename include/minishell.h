@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 14:16:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 17:38:46 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <bits/sigaction.h>
 # include <sys/stat.h>
 # include <dirent.h>
 # include <string.h>

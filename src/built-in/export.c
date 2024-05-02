@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 18:51:31 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 16:56:53 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,16 @@ static int	is_existing(t_env *env, char *str)
 	while (str[j] != '=' && str[j])
 		j++;
 	// if (!str[j])
-	// 	return (1);
-	j++;
-	while (env && ft_strncmp(env->cle, str, j - 1) != 0)
+	//	return (1);
+	str[j] = '\0';
+	while (env && ft_strcmp(env->cle, str) != 0)
 		env = env->next;
+	str[j] = '=';
 //	printf("export %s\n", env->cle);
 	if (!env)
 		return (1);
 	free(env->params);
-	env->params = ft_strdup(&str[j]);
+	env->params = ft_strdup(&str[j++]);
 	return (0);
 }
 

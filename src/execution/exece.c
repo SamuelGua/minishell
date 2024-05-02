@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 14:15:51 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 18:26:46 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,12 +134,20 @@ char **build_envp(t_env *env)
 	return (env_double);
 }
 
+void	controle_c(int signal)
+{
+	ft_putstr_fd("okfwkofkwofkw", 2);
+	exit(signal);
+}
+
+
 void child_process(t_exec *exec, char **path)
 {
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
 		exit(1);
-	exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
+	if (exec->cmds->cmd[0])
+		exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
 	ft_free(path);
 	if (!exec->cmds->cmd[0])
 	{
@@ -156,6 +164,7 @@ void child_process(t_exec *exec, char **path)
 	exit(1);
 }
 
+
 void execution(t_exec *exec)
 {
 	char **path;
@@ -164,7 +173,7 @@ void execution(t_exec *exec)
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);
 	run_here_doc(exec);
-	if (is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
+	if (exec->cmds->cmd[0] && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 	{
 		int dup_in = dup(STDIN_FILENO);
 		int dup_out = dup(STDOUT_FILENO);
