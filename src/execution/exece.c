@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 18:26:46 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 18:37:50 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,13 +136,15 @@ char **build_envp(t_env *env)
 
 void	controle_c(int signal)
 {
-	ft_putstr_fd("okfwkofkwofkw", 2);
-	exit(signal);
+	(void)signal;
+	printf("\n");
 }
 
 
 void child_process(t_exec *exec, char **path)
 {
+
+
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
 		exit(1);
@@ -169,6 +171,12 @@ void execution(t_exec *exec)
 {
 	char **path;
 	int 	pid;
+
+	struct sigaction signal;
+	signal.sa_handler = controle_c;
+	signal.sa_flags = 0;
+	sigemptyset(&signal.sa_mask);
+	sigaction(SIGINT, &signal, NULL);
 
 	path = find_path(exec->env);
 	exec->nb_pipe = nb_pipe(exec->cmds);

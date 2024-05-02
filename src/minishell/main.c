@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 18:30:33 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 18:33:24 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int main(int ac, char **av, char **envp)
 	// 	return (printf("Erreur malloc\n"), 2);
 	struct sigaction signal;
 	signal.sa_handler = print_b;
-	signal.sa_flags = SA_RESTART;
+	signal.sa_flags = 0;
 	sigemptyset(&signal.sa_mask);
 	sigaction(SIGINT, &signal, NULL);
 	
