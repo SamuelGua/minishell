@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 13:53:54 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 14:15:51 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,4 +200,5 @@ void execution(t_exec *exec)
 	}
 	close(exec->previous_fd);
 	wait_childs(pid);
+	clean_dir_temp();
 }

@@ -72,7 +72,7 @@ void run_here_doc(t_exec *exec)
 	tmp = exec->cmds;
 	while (tmp)
 	{
-		tmp_file = exec->cmds->file;
+		tmp_file = tmp->file;
 		while (tmp_file)
 		{
 			if (tmp_file->redirec == HERE_DOC)
@@ -96,11 +96,12 @@ int find_here_doc(t_file *file)
 		here_doc = ft_strjoin(here_doc, nb_file);
 		free(nb_file);
 	}
-	fd = open(here_doc, O_WRONLY, 0644);
+	fd = open(here_doc, O_RDONLY, 0644);
 	if (fd == -1)
 		return (perror("here_doc"), -1);
 	if (dup2(fd, STDIN_FILENO) == -1 && !close(fd))
 		return (perror("dup2"), -1);
+	ft_putstr_fd("\nTout est bon normalement\n", 2);
 	return (0);
 }
 void clean_dir_temp(void)
@@ -110,7 +111,7 @@ void clean_dir_temp(void)
 	char *path_bis = ft_strdup(path);
 	char *nb_file;
 	int i = 1;
-	while (access(path_bis, F_OK))
+	while (access(path_bis, F_OK) == 0)
 	{
 		unlink(path_bis);
 		free(path_bis);
@@ -119,4 +120,5 @@ void clean_dir_temp(void)
 		free(nb_file);
 		i++;
 	}
+	free(path_bis);
 }

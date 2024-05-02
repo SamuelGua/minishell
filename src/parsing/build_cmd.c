@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 11:51:48 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 15:30:01 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,11 @@ int cmds_size(t_token *tmp, t_token *end)
 	return (i);
 }
 
-char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
+char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds, t_build_cmd *utils)
 {
 	char	**command;
 	int		i;
-	int 	nb_here;
 	
-	nb_here = 0;
 	i = cmds_size(tmp, end);
 	command = malloc(sizeof(char *) * (i + 1));
 	if (!command)
@@ -98,8 +96,8 @@ char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
 			ft_lstadd_back_file(&cmds->file, tmp_file);
 			if (tmp->token == HERE_DOC)
 			{
-				tmp_file->n_heredoc = nb_here;
-				nb_here++;
+				tmp_file->n_heredoc = utils->nb_here_doc;
+				utils->nb_here_doc++;
 			}
 			tmp = tmp->next;
 		}
@@ -109,7 +107,7 @@ char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds)
 	return (command);
 }
 
-t_cmds	*create_node(t_token *tmp, t_token *end)
+t_cmds	*create_node(t_token *tmp, t_token *end, t_build_cmd *utils)
 {
 	t_cmds	*cmds;
 	t_file	*tmp_file;
@@ -123,7 +121,7 @@ t_cmds	*create_node(t_token *tmp, t_token *end)
 		pipe_init(tmp_file, end, cmds, 1);
 	if (tmp && tmp->token == PIPE)
 		(pipe_init(tmp_file, tmp, cmds, 0), tmp = tmp->next);
-	cmds->cmd = node_init(tmp, end, tmp_file, cmds);
+	cmds->cmd = node_init(tmp, end, tmp_file, cmds, utils);
 	cmds->type = is_builtin(cmds->cmd);
 	cmds->next = NULL;
 	return (cmds);
@@ -146,13 +144,9 @@ void	clean_token(t_token *token, t_env *env)
 
 t_cmds	*build_cmd(t_token *token, t_env *env)
 {
-	// t_cmds	*cmds_tmp;
-	// t_token	*end;
-	// t_cmds	*cmds;
-	// t_token	*tmp;
-	// int		nb_here_doc;
 
 	t_build_cmd utils;
+
 	utils.cmds = NULL;
 	utils.tmp = token;
 	utils.nb_here_doc = 0;
@@ -162,7 +156,7 @@ t_cmds	*build_cmd(t_token *token, t_env *env)
 		utils.end = token->next;
 		while (utils.end && utils.end->token != PIPE)
 			utils.end = utils.end->next;
-		utils.cmds_tmp = create_node(token, utils.end);
+		utils.cmds_tmp = create_node(token, utils.end, &utils);
 		ft_lstadd_back_cmd(&utils.cmds, utils.cmds_tmp);
 		token = utils.end;
 	}

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 14:02:37 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/02 14:32:06 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,12 @@ int main(int ac, char **av, char **envp)
 			continue;
 
 		exec.cmds = build_cmd(token, exec.env);
-		run_here_doc(&exec);
-		print_lst_cmd(exec.cmds);
-		ft_free_exec(&exec);
-		clean_dir_temp();
-		printf("Nous avons exit coco\n");
-		exit(1);
+		//print_lst_cmd(exec.cmds);
+
 		execution(&exec);
+		printf("Nous avons exit coco\n");
+		ft_free_exec(&exec);
+		exit(1);
 	}
 	return (0);
 }
