@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 19:27:18 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 20:40:10 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds, t_b
 		else if (tmp->token >= GREAT && tmp->token < PIPE) // || OU &&
 		{
 			tmp_file = ft_lstnew_file(tmp->next->str, tmp->token);
+			if (!tmp_file)
+				return (NULL);
 			ft_lstadd_back_file(&cmds->file, tmp_file);
 			if (tmp->token == HERE_DOC)
 			{

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 19:38:43 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 22:01:34 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,16 +158,19 @@ char **build_envp(t_env *env)
 
 void child_process(t_exec *exec, char **path)
 {
-
-
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
 		exit(1);
 	if (is_builtin(exec->cmds->cmd))
 	{
 		builtin(exec);
+		if (path)
+			ft_free(path);
+		ft_free_env(exec->env);
+		free_export(exec->export);
+		ft_free_cmd(exec->cmds);
 		//ft_free_exec(exec);
-		exit(1);
+		exit(0);
 	}
 	if (exec->cmds->cmd[0])
 		exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
@@ -193,7 +196,9 @@ void execution(t_exec *exec)
 {
 	char **path;
 	int 	pid;
+	t_cmds	*tmp_cmd;
 
+	tmp_cmd = exec->cmds;
 	struct sigaction signal;
 	signal.sa_handler = c_quite_exec;
 	signal.sa_flags = 0;
@@ -220,6 +225,7 @@ void execution(t_exec *exec)
 		ft_free_cmd(exec->cmds);
 		return ;
 	}
+	//================================================================================//
 	exec->previous_fd = -1;
 	while (exec->nb_pipe--)
 	{
@@ -242,6 +248,8 @@ void execution(t_exec *exec)
 		exec->previous_fd = exec->pipe[0];
 		close(exec->pipe[1]);
 	}
+	//===================================================================================//
+	(ft_free(path), ft_free_cmd(tmp_cmd));
 	close(exec->previous_fd);
 	wait_childs(pid);
 	clean_dir_temp();

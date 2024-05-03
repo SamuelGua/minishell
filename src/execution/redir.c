@@ -31,17 +31,17 @@ int fd_pipe(t_file *file, t_exec *exec)
 {
 	if (file->pipe == 0)
 	{
-		if (dup2(exec->previous_fd, STDIN_FILENO) == -1
-			&& !close(exec->previous_fd))
+		if (dup2(exec->previous_fd, STDIN_FILENO) == -1)
 			return (perror("dup2"), 1);
+		close(exec->previous_fd);
 		if (!exec->cmds->next)
 			close(exec->pipe[1]);
 	}
 	else
 	{
-		if (dup2(exec->pipe[1], STDOUT_FILENO) == -1
-			&& !close(exec->pipe[1]))
+		if (dup2(exec->pipe[1], STDOUT_FILENO) == -1)
 			return (perror("dup2"), 1);
+		close(exec->pipe[1]);
 	}
 	return (0);
 }
