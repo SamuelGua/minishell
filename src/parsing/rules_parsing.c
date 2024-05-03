@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:19:14 by scely             #+#    #+#             */
-/*   Updated: 2024/04/24 15:41:55 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 19:54:27 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	rules_one(t_token **token, t_parsutils *utils, char *prompt)
 			utils->sous_type = UNQUOTED;
 		node = ft_lstnew_token(&prompt[utils->start_token],
 				utils->len, utils->type_token, utils->sous_type);
+		if (!node)
+			return ;
 		ft_lstadd_back_token(token, node);
 		utils->type_token = 0;
 		utils->sous_type = 1;
@@ -67,6 +69,8 @@ void	rules_three(t_token **token, t_parsutils *utils_pars, char *prompt)
 	node = ft_lstnew_token(&prompt[utils_pars->start_token],
 			utils_pars->len, utils_pars->type_token,
 			value_operator(&prompt[utils_pars->start_token]));
+	if (!node)
+		return ;
 	ft_lstadd_back_token(token, node);
 	utils_pars->sous_type = 1;
 	utils_pars->start_token = utils_pars->i - 1;
@@ -91,6 +95,8 @@ void	rules_six(t_token **token, t_parsutils *utils, char *prompt)
 			utils->sous_type = UNQUOTED;
 		node = ft_lstnew_token(&prompt[utils->start_token],
 				utils->len, utils->type_token, utils->sous_type);
+			if (!node)
+				return ;
 		ft_lstadd_back_token(token, node);
 		utils->type_token = 0;
 		utils->sous_type = 1;
@@ -114,6 +120,8 @@ void	rules_seven(t_token **token, t_parsutils *utils, char *prompt)
 		utils->sous_type = UNQUOTED;
 	node = ft_lstnew_token(&prompt[utils->start_token], utils->len,
 			utils->type_token, utils->sous_type);
+	if (!node)
+		return ;
 	ft_lstadd_back_token(token, node);
 	utils->sous_type = 1;
 	utils->type_token = 0;

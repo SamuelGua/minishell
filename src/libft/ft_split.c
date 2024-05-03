@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:42:55 by scely             #+#    #+#             */
-/*   Updated: 2023/11/16 13:01:32 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 19:46:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static char	**ft_malloc(char const *s, char c, int i)
 		{
 			k = ft_strlen_split(&s[i], c);
 			dest[j++] = malloc(sizeof(char) * k + 1);
-			if (!dest)
+			if (!dest[0] || (i != 0 && !dest[j - 1]))
 				return (NULL);
 			dest[j - 1][k] = '\0';
 			i += k;
@@ -76,7 +76,7 @@ char	**ft_split(char const *s, char c)
 	int		k;
 	int		j;
 
-	if (s == NULL)
+	if (!s)
 		return (NULL);
 	new = ft_malloc(s, c, count_words(s, c));
 	if (!new || count_words(s, c) == 0)

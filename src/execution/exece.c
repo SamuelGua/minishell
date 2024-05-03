@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 17:49:40 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 19:38:43 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	**find_path(t_env *env)
 	if (!env)
 		return (NULL);
 	path = ft_split(env->params, ':');
-	while (path[i])
+	while (path && path[i])
 	{
 		path[i] = ft_free_strjoin(path[i], "/");
 		i++;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_export.c                                      :+:      :+:    :+:   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 09:40:50 by scely             #+#    #+#             */
-/*   Updated: 2024/04/10 17:12:38 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 19:37:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static	t_export	*ft_lstnew_export(char *cle, char *params)
 	t_export	*new;
 
 	new = malloc(sizeof(t_export));
+	if (!new)
+		return (NULL);
 	new->cle = ft_strdup(cle);
 	if (!new->cle)
 		return (free(new), NULL);

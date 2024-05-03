@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 10:22:41 by scely             #+#    #+#             */
-/*   Updated: 2024/04/22 09:16:45 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 20:28:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_token	*ft_lstnew_token(char *str, int len, int type, int token)
 	if (!node)
 		return (NULL);
 	node->str = malloc(sizeof(char) * len + 1);
+	if (!node->str)
+		return (NULL);
 	ft_strlcpy(node->str, str, len);
 	node->type = type;
 	node->token = token;

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 09:03:00 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 19:27:18 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,8 @@ t_cmds	*create_node(t_token *tmp, t_token *end, t_build_cmd *utils)
 	if (tmp && tmp->token == PIPE)
 		(pipe_init(tmp_file, tmp, cmds, 0), tmp = tmp->next);
 	cmds->cmd = node_init(tmp, end, tmp_file, cmds, utils);
+	if (!cmds->cmd)
+		return (NULL);
 	cmds->type = is_builtin(cmds->cmd);
 	cmds->next = NULL;
 	return (cmds);
