@@ -11,34 +11,49 @@ typedef struct s_here_doc
 
 // fichier cacher les pour mettre les ficher des heredoc
 
-int	fill_heredoc(int fd, char *limiter)
+int check_quote_here(char *limiter)
+{
+	if (*limiter == '\'')
+		return (S_QUOTE);
+	else if (*limiter == '\"')
+		return (D_QUOTE);
+	return (NO_QUOTE);
+}
+
+int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 {
 	char	*line;
+	char	*c = NULL;
 	char	*lim;
-
+	int		type_quote;
+	
+	type_quote = check_quote_here(limiter);
+	lim = delete_quote(limiter);
 	while (1)
 	{
 		ft_putstr_fd("HERE_DOC {",STDOUT_FILENO);
-		ft_putstr_fd(limiter,STDOUT_FILENO);
+		ft_putstr_fd(lim,STDOUT_FILENO);
 		ft_putstr_fd("} > ",STDOUT_FILENO);
 		line = get_next_line(0);
 		if (!line)
 			return (666);
-		lim = strchr(line,'\n');
-		*lim = '\0';
-		if (!ft_strcmp(line, limiter))
+		c = strchr(line,'\n');
+		*c = '\0';
+		if (!ft_strcmp(line, lim))
 		{
 			free(line);
 			break ;
 		}
-		*lim = '\n';
+		*c = '\n';
+		if (type_quote == NO_QUOTE)
+			line = expansion(line, exec->env);
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
 	return (0);
 }
 
-int here_doc(t_file *file)
+int here_doc(t_file *file, t_exec *exec)
 {
 	int	i;
 	int fd;
@@ -61,7 +76,7 @@ int here_doc(t_file *file)
 	if (fd < 0)
 		return (-1);
 
-	fill_heredoc(fd, file->file);
+	fill_heredoc(fd, file->file, exec);
 	close(fd);
 	return (0);
 }
@@ -78,7 +93,7 @@ void run_here_doc(t_exec *exec)
 		while (tmp_file)
 		{
 			if (tmp_file->redirec == HERE_DOC)
-				here_doc(tmp_file);
+				here_doc(tmp_file, exec);
 			tmp_file = tmp_file->next;
 		}
 		tmp = tmp->next;
