@@ -26,16 +26,16 @@ MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
 MINISHELL		= main.c init_env.c free_element.c\
 
 SIGNAL_PATH		= $(SIGNAL:%=src/signal/%)
-SIGNAL			= signals.c
+SIGNAL			= ctrl_c.c ctrl_d.c ctrl_slash.c\
 
 HERE_DOC_PATH	= $(HERE_DOC:%=src/here_doc/%)
 HERE_DOC		= here_doc.c\
 
 EXECUTION_PATH	= $(EXECUTION:%=src/execution/%)
-EXECUTION		= exece.c redir.c built_redir.c\
+EXECUTION		= exece.c redir.c\
 
 BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
-BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c\
+BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c builtin_utils.c\
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
 PARSING			= token_utils.c token.c parsing.c delete_quote.c rules_parsing.c expansion.c\

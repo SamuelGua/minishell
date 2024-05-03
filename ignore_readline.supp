@@ -10,3 +10,9 @@
 	...
 	fun:add_history
 }
+{
+	ignore_rl_history_leaks
+	Memcheck:Leak
+	...
+	obj:*/bin/*
+}

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 12:13:18 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 17:55:23 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ typedef struct s_expand
 	char	*new;
 	int		l_exp;
 	int		quoted;
+	int		is_here_doc;
 
 }	t_exutils;
 
@@ -67,21 +68,21 @@ void	expansion_two(t_exutils *ex, char *str, t_env *env)
 	while (str[ex->i])
 	{
 		ex->quoted = is_quoted(ex->quoted, str[ex->i]);
-		if (str[ex->i] == '$' && str[ex->i + 1] == '$' && ex->quoted != S_QUOTE)
+		if (str[ex->i] == '$' && str[ex->i + 1] == '$' && (ex->quoted != S_QUOTE || ex->is_here_doc))
 			dollar_dollar(str, env, ex);
 		else if (str[ex->i] == '$' && (str[ex->i + 1] == '\'' || str[ex->i + 1] == '\"') && ex->quoted != NO_QUOTE)
 			ex->i++;
 		else if (str[ex->i] == '$' && check_whitespace(str[ex->i + 1]) != 1
 			&& str[ex->i + 1] != '\0'
 			&& str[ex->i + 1] != '/'
-			&& ex->quoted != S_QUOTE)
+			&& ( ex->quoted != S_QUOTE || ex->is_here_doc))
 			add_expand(str, env, ex);
 		else
 			ex->i++;
 	}
 }
-
-char	*expansion(char *str, t_env *env)
+// ligne ne commentaire peut etre inutile a ne pas effacer pour le moment 
+char	*expansion(char *str, t_env *env, int is_here_doc)
 {
 	t_exutils	ex;
 	char		c;
@@ -89,6 +90,7 @@ char	*expansion(char *str, t_env *env)
 	ex.i = 0;
 	ex.new = ft_calloc(1, 1);
 	ex.quoted = NO_QUOTE;
+	ex.is_here_doc = is_here_doc;
 	while (str[ex.i] && str[ex.i] != '$'
 		&& check_whitespace(str[ex.i + 1]) == 0 && ex.quoted != S_QUOTE)
 	{

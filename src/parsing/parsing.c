@@ -6,32 +6,13 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:18:40 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 19:20:19 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 17:34:50 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_builtin(char **str)
-{
-	if (!str[0])
-		return (2);
-	if (ft_strcmp(*str, "echo") == 0)
-		return (1);
-	else if (ft_strcmp(*str, "cd") == 0)
-		return (1);
-	else if (ft_strcmp(*str, "env") == 0)
-		return (1);
-	else if (ft_strcmp(*str, "exit") == 0)
-		return (1);
-	else if (ft_strcmp(*str, "export") == 0)
-		return (1);
-	else if (ft_strcmp(*str, "pwd") == 0)
-		return (1);
-	else if (ft_strcmp(*str, "unset") == 0)
-		return (1);
-	return (0);
-}
+
 
 // gerer les newline
 int	check_whitespace(char c)

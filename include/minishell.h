@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 17:38:46 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 17:38:53 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,9 @@ void		ft_pwd(void);
 int			ft_exit(t_env *env, t_export *export, char **str);
 void		ft_cd(t_env *env, char **str);
 
+
 // EXPANSION
-char		*expansion(char *str, t_env *env);
+char		*expansion(char *str, t_env *env, int is_here_doc);
 int			is_quoted(int quoted, char c);
 int			is_valid_token(t_token *token);
 char		*delete_quote(char *str);
@@ -98,23 +99,26 @@ void	ft_lstadd_back_file(t_file **lst, t_file *node);
 
 typedef struct s_exec
 {
+	struct	s_token		*token;
 	struct	s_env		*env;
 	struct	s_export	*export;
 	struct	s_cmds		*cmds;
 	char				**exec_envp;
+	char				*prompt;
 	int					nb_pipe;
 	int					pipe[2];
 	int					previous_fd;
+	int					error_code;
 } t_exec;
 
+void		builtin(t_exec *exec);
+int			is_builtin(char **str);
 
 void	execution(t_exec *exec);
+
 int		fd_out(t_file *file);
 int		fd_in(t_file *file);
 int		fd_pipe(t_file *file, t_exec *exec);
-
-int		built_redir(t_exec *exec);
-void	builtin(t_exec *exec);
 
 void	ft_free_exec(t_exec* exec);
 void	ft_free_cmd(t_cmds *cmd);
@@ -128,11 +132,16 @@ void	print_lst_cmd(t_cmds *cmd);
 
 
 //signaux
+void	d_quite(int signal);
+void	sig_c_interactive(struct sigaction *sig_struct);
 void	c_new_prompt(int signal);
 void	c_quite_exec(int signal);
-void	d_quite(int signal);
+void	sig_slash_interactive(struct sigaction *sig_struct);
 void	slash_dump(int signal);
 void	slash_exec(int signal);
+
+
+
 
 
 

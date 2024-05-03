@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 08:56:41 by scely             #+#    #+#             */
-/*   Updated: 2024/04/26 09:17:24 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 09:24:08 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,40 @@
 
 //getenv
 // modifier les environements
-int	cd_home(t_env *env)
+typedef struct s_cdutils
+{
+	t_env *pwd;
+	t_env *oldpwd;
+	char *previous_pwd;
+}	t_cdutils;
+
+t_env *ft_getenv(t_env *env, char *str)
+{
+	while (env)
+	{
+		if (!strcmp(env->cle, str))
+			break;
+		env = env->next;
+	}
+	return (env);
+}
+
+void update_cd(t_cdutils *pwd)
+{
+	if (pwd->oldpwd)
+	{
+		free(pwd->oldpwd->params);
+		pwd->oldpwd->params = ft_strdup(pwd->previous_pwd);
+	}
+	if (pwd->pwd)
+	{
+		free(pwd->pwd->params);
+		pwd->pwd->params = getcwd(NULL, 0);
+	}
+	free(pwd->previous_pwd);
+}
+
+int	cd_home(t_env *env, t_cdutils *pwd)
 {
 	char	*error;
 
@@ -28,6 +61,7 @@ int	cd_home(t_env *env)
 		perror(error);
 		free(error);
 	}
+	update_cd(pwd);
 	return (0);
 }
 
@@ -35,11 +69,15 @@ void	ft_cd(t_env *env, char **str)
 {
 	int		i;
 	char	*error;
+	t_cdutils	pwd;
 
+	pwd.oldpwd = ft_getenv(env, "OLDPWD");
+	pwd.pwd = ft_getenv(env, "PWD");
+	pwd.previous_pwd = getcwd(NULL, 0);
 	i = 1;
 	if (!str[i])
 	{
-		cd_home(env);
+		cd_home(env, &pwd);
 		return ;
 	}
 	while (str[i])
@@ -47,6 +85,7 @@ void	ft_cd(t_env *env, char **str)
 	if (i > 2)
 	{
 		printf("bash: cd: too many arguments\n");
+		free(pwd.previous_pwd);
 		return ;
 	}
 	if (chdir(str[1]))
@@ -54,5 +93,8 @@ void	ft_cd(t_env *env, char **str)
 		error = ft_strjoin("bash: cd: ", str[1]);
 		perror(error);
 		free(error);
+		free(pwd.previous_pwd);
+		return ;
 	}
+	update_cd(&pwd);
 }

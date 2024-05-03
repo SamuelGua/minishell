@@ -7,7 +7,7 @@ typedef struct s_here_doc
 	char *nb_file;
 } t_here_doc;
 
-# define PATH_HERE "src/here_doc/.tmp_here_doc/here_doc";
+# define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
 
 // fichier cacher les pour mettre les ficher des heredoc
 
@@ -45,8 +45,9 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 			break ;
 		}
 		*c = '\n';
+		(void)exec;
 		if (type_quote == NO_QUOTE)
-			line = expansion(line, exec->env);
+			line = expansion(line, exec->env, 1); // 1 pour dans le heredoc
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
@@ -78,6 +79,7 @@ int here_doc(t_file *file, t_exec *exec)
 
 	fill_heredoc(fd, file->file, exec);
 	close(fd);
+	ft_putstr_fd("\n", 2);
 	return (0);
 }
 
@@ -118,7 +120,6 @@ int find_here_doc(t_file *file)
 		return (perror("here_doc"), -1);
 	if (dup2(fd, STDIN_FILENO) == -1 && !close(fd))
 		return (perror("dup2"), -1);
-	ft_putstr_fd("\nTout est bon normalement\n", 2);
 	return (0);
 }
 

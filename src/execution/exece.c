@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 18:37:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 17:49:40 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,25 @@ char *valid_cmd(t_cmds *cmd, char **path)
 	int i;
 
 	i = 0;
+	struct stat fileinfo;
+
+	if (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/')
+	{
+		if (stat(cmd->cmd[0], &fileinfo) == -1)
+        	return (perror("stat") ,NULL);
+		if (S_ISDIR(fileinfo.st_mode))
+		{
+			ft_putstr_fd("bash: ", 2);
+			ft_putstr_fd(cmd->cmd[0], 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			return (NULL);
+		}
+    	else if (access(cmd->cmd[0], X_OK))
+		{
+			perror("");
+			return (NULL);
+		}
+	}
 	if (cmd->cmd[0][0] == '\0')
 		return(cmd->cmd[0]);
 	if (!cmd->cmd)
@@ -92,20 +111,22 @@ char *valid_cmd(t_cmds *cmd, char **path)
 int redirection(t_exec *exec)
 {
 	int	i;
+	t_file *file;
 
+	file = exec->cmds->file;
 	i = 0;
-	while (exec->cmds->file && i != -1)
+	while (file && i != -1)
 	{
-		if (exec->cmds->file->redirec == GREAT
-			|| exec->cmds->file->redirec == DGREAT)
-			i = fd_out(exec->cmds->file);
-		else if (exec->cmds->file->redirec == LESS)
-			i = fd_in(exec->cmds->file);
-		else if (exec->cmds->file->redirec == PIPE)
-			i = fd_pipe(exec->cmds->file, exec);
-		else if (exec->cmds->file->redirec == HERE_DOC)
-			i = find_here_doc(exec->cmds->file);
-		exec->cmds->file = exec->cmds->file->next;
+		if (file->redirec == GREAT
+			|| file->redirec == DGREAT)
+			i = fd_out(file);
+		else if (file->redirec == LESS)
+			i = fd_in(file);
+		else if (file->redirec == PIPE)
+			i = fd_pipe(file, exec);
+		else if (file->redirec == HERE_DOC)
+			i = find_here_doc(file);
+		file = file->next;
 	}
 	return (i);
 }
@@ -142,9 +163,16 @@ void child_process(t_exec *exec, char **path)
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
 		exit(1);
+	if (is_builtin(exec->cmds->cmd))
+	{
+		builtin(exec);
+		//ft_free_exec(exec);
+		exit(1);
+	}
 	if (exec->cmds->cmd[0])
 		exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
-	ft_free(path);
+	if (path)
+		ft_free(path);
 	if (!exec->cmds->cmd[0])
 	{
 		// ne fonctionne pas pour plusieurs arguments dans le tableau
@@ -184,8 +212,7 @@ void execution(t_exec *exec)
 	if (exec->cmds->cmd[0] && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 	{
 		int dup_in = dup(STDIN_FILENO);
-		int dup_out = dup(STDOUT_FILENO);
-		//built_redir(exec);
+		int dup_out = dup(STDOUT_FILENO);;
 		redirection(exec);
 		builtin(exec);
 		dup2(dup_out, STDOUT_FILENO);
