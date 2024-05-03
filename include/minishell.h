@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 17:38:53 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 23:20:40 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void		ft_free_env(t_env *env);
 
 // init export
 t_export	*init_export(t_env *env);
-void		free_export(t_export *export);
+void		ft_free_export(t_export *export);
 
 //// BUILT-IIN
 void		ft_unset(t_export **export, t_env **env, char **str);
@@ -115,10 +115,15 @@ void		builtin(t_exec *exec);
 int			is_builtin(char **str);
 
 void	execution(t_exec *exec);
+char	**find_path(t_env *env);
+int		nb_pipe(t_cmds *cmds);
+int		wait_childs(int pid);
 
 int		fd_out(t_file *file);
 int		fd_in(t_file *file);
 int		fd_pipe(t_file *file, t_exec *exec);
+int		redirection(t_exec *exec);
+
 
 void	ft_free_exec(t_exec* exec);
 void	ft_free_cmd(t_cmds *cmd);

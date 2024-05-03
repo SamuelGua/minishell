@@ -10,8 +10,9 @@ int fd_out(t_file *file)
 		fd = open(file->file, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1)
 		return (perror(file->file), 1);
-	if (dup2(fd, STDOUT_FILENO) == -1 && !close(fd))
+	if (dup2(fd, STDOUT_FILENO) == -1)
 		return (perror("dup2"), 1);
+	close(fd);
 	return (0);
 }
 int fd_in(t_file *file)
@@ -44,4 +45,27 @@ int fd_pipe(t_file *file, t_exec *exec)
 		close(exec->pipe[1]);
 	}
 	return (0);
+}
+
+int redirection(t_exec *exec)
+{
+	int	i;
+	t_file *file;
+
+	file = exec->cmds->file;
+	i = 0;
+	while (file && i != -1)
+	{
+		if (file->redirec == GREAT
+			|| file->redirec == DGREAT)
+			i = fd_out(file);
+		else if (file->redirec == LESS)
+			i = fd_in(file);
+		else if (file->redirec == PIPE)
+			i = fd_pipe(file, exec);
+		else if (file->redirec == HERE_DOC)
+			i = find_here_doc(file);
+		file = file->next;
+	}
+	return (i);
 }

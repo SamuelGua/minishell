@@ -15,28 +15,25 @@ void ft_free_file(t_file *file)
 
 void ft_free_cmd(t_cmds *cmd)
 {
-	t_cmds *tmp;
-
-	while (cmd)
-	{
-		tmp = cmd;
-		cmd = cmd->next;
-		ft_free(tmp->cmd);
-		ft_free_file(tmp->file);
-		free(tmp);
-	}
+	ft_free(cmd->cmd);
+	ft_free_file(cmd->file);
+	free(cmd);
 }
 
 void ft_free_exec(t_exec* exec)
 {
-	t_cmds *cmd_tmp;
+	t_cmds *tmp_cmd;
 
-	free_export(exec->export);
+
+	ft_free_export(exec->export);
 	ft_free_env(exec->env);
-	while(exec->cmds)
+	exec->export = NULL;
+	exec->env = NULL;
+	while (exec->cmds)
 	{
-		cmd_tmp = exec->cmds;
+		tmp_cmd = exec->cmds;
 		exec->cmds = exec->cmds->next;
-		ft_free_cmd(cmd_tmp);
+		ft_free_cmd(tmp_cmd);
 	}
+	exec->cmds = NULL;
 }

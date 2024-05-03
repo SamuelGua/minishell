@@ -6,13 +6,11 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 19:50:25 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 00:05:15 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int main(int ac, char **av, char **envp)
 {
@@ -36,7 +34,7 @@ int main(int ac, char **av, char **envp)
 
 		exec.prompt = readline("\002\033[1;35mminishell > \033[0m\002");
 		if (!exec.prompt)
-			return (ft_free_env(exec.env), free_export(exec.export), 2);
+			return (ft_free_env(exec.env), ft_free_export(exec.export), 2);
 
 		exec.token = init_token(exec.prompt, exec.token);
 		if (!exec.token)
@@ -47,13 +45,11 @@ int main(int ac, char **av, char **envp)
 		(add_history(exec.prompt), free(exec.prompt));
 		if (is_valid_token(exec.token))
 			continue;
-		// free_token(exec.token);
-		// ft_free_env(exec.env);
-		// free_export(exec.export);
-		// exit(1);
 		exec.cmds = build_cmd(exec.token, exec.env);
 		if (!exec.cmds)
 			return (0);
+		// ft_free_exec(&exec);
+		// exit(1);
 		execution(&exec);
 	}
 	return (0);

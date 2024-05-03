@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/05/02 16:56:53 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 23:21:30 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,5 @@ void	ft_export(t_export **export, t_env **env, char **str, int i)
 			ft_lstadd_back_env(env, tmp);
 		}
 	}
-	(free_export(*export), *export = init_export(*env));
+	(ft_free_export(*export), *export = init_export(*env));
 }

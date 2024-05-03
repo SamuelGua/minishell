@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/04/17 08:56:28 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 23:20:45 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@
 //       commade qui a rate, je dois retourner se nombre
 void	free_env_export(t_env *env, t_export *export)
 {
-	free_export(export);
+	ft_free_export(export);
 	ft_free_env(env);
 }
 

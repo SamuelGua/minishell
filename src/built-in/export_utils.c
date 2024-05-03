@@ -6,18 +6,18 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/09 09:40:50 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 19:37:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/03 23:21:25 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_export(t_export *export)
+void	ft_free_export(t_export *export)
 {
 	if (export)
 	{
-		free_export(export->left);
-		free_export(export->right);
+		ft_free_export(export->left);
+		ft_free_export(export->right);
 		free(export->cle);
 		free(export->params);
 		free(export);
@@ -67,7 +67,7 @@ t_export	*init_export(t_env *env)
 	{
 		tmp = ft_lstnew_export(env->cle, env->params);
 		if (!tmp)
-			return (free_export(export), NULL);
+			return (ft_free_export(export), NULL);
 		insert_export(&export, tmp);
 		env = env->next;
 	}

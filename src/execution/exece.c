@@ -6,60 +6,20 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 22:01:34 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 01:09:00 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	wait_childs(int pid)
+void 	print_message(char *str1, char *str2, char *str3, int fd)
 {
-	int	wstatus;
-	int	code;
-
-	while (errno != ECHILD)
-		if (wait(&wstatus) == pid && WIFEXITED(wstatus))
-			code = WEXITSTATUS(wstatus);
-	if (pid == -1)
-		return (127);
-	return (code);
+	ft_putstr_fd(str1, fd);
+	ft_putstr_fd(str2, fd);
+	ft_putstr_fd(str3, fd);
 }
 
-int	nb_pipe(t_cmds *cmds)
-{
-	int	i;
-	t_cmds *tmp;
-
-	tmp = cmds;
-	i = 0;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return (i);
-}
-
-char	**find_path(t_env *env)
-{
-	char **path;
-	int i;
-
-	i = 0;
-	while (env && ft_strcmp(env->cle, "PATH") != 0)
-		env = env->next;
-	if (!env)
-		return (NULL);
-	path = ft_split(env->params, ':');
-	while (path && path[i])
-	{
-		path[i] = ft_free_strjoin(path[i], "/");
-		i++;
-	}
-	return (path);
-}
-
-char *valid_cmd(t_cmds *cmd, char **path)
+int	valid_cmd(t_exec *exec, char **path)
 {
 	char *new;
 	int i;
@@ -67,69 +27,56 @@ char *valid_cmd(t_cmds *cmd, char **path)
 	i = 0;
 	struct stat fileinfo;
 
-	if (cmd->cmd[0][0] == '.' && cmd->cmd[0][1] == '/')
+	if (exec->cmds->cmd[0][0] == '\0')
+		return(1);
+	if (exec->cmds->cmd[0][0] == '.' && exec->cmds->cmd[0][1] == '/')
 	{
-		if (stat(cmd->cmd[0], &fileinfo) == -1)
-        	return (perror("stat") ,NULL);
+		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
+        	return (perror("stat"), 1);
+			// return (1);
+
 		if (S_ISDIR(fileinfo.st_mode))
 		{
-			ft_putstr_fd("bash: ", 2);
-			ft_putstr_fd(cmd->cmd[0], 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			return (NULL);
+			print_message("minishell: ", exec->cmds->cmd[0], ": Is a directory\n", 2);
+			return (1);
+			// return (1);
 		}
-    	else if (access(cmd->cmd[0], X_OK))
+    	else if (access(exec->cmds->cmd[0], X_OK))
 		{
 			perror("");
-			return (NULL);
+			return (1);
+			// return (1);
 		}
 	}
-	if (cmd->cmd[0][0] == '\0')
-		return(cmd->cmd[0]);
-	if (!cmd->cmd)
-		return (printf("no cmd\n"), NULL);
-	new = ft_strdup(cmd->cmd[0]);
+	new = ft_strdup(exec->cmds->cmd[0]);
 	if (!new)
-		return (printf("Error malloc\n"), NULL);
+		return (printf("Error malloc\n"), 2);
+			// return (1);
+
 	while (access(new, X_OK) && path && path[i])
 	{
 		free(new);
-		new = ft_strjoin(path[i], cmd->cmd[0]);
+		new = ft_strjoin(path[i], exec->cmds->cmd[0]);
 		if (!new)
-			return (free(cmd->cmd[0]), printf("Error malloc\n"), NULL);
+			return (printf("Error malloc\n"), 2);
+			// return (1);
+
 		i++;
 	}
 	if (access(new, X_OK))
 	{
-		(ft_putstr_fd("bash: ", 2), ft_putstr_fd(cmd->cmd[0], 2), free(new));
-		free(cmd->cmd[0]);
-		return (ft_putstr_fd(" : command not found\n", 2), NULL);
+		print_message("minishell: ", exec->cmds->cmd[0], " : command not found\n", 2);
+		return (free(new), 127);
+			// return (1);
+
 	}
-	return (free(cmd->cmd[0]), new);
+	free(exec->cmds->cmd[0]);
+	exec->cmds->cmd[0] = new;
+	return (0);
+	// change variable
 }
 
-int redirection(t_exec *exec)
-{
-	int	i;
-	t_file *file;
 
-	file = exec->cmds->file;
-	i = 0;
-	while (file && i != -1)
-	{
-		if (file->redirec == GREAT
-			|| file->redirec == DGREAT)
-			i = fd_out(file);
-		else if (file->redirec == LESS)
-			i = fd_in(file);
-		else if (file->redirec == PIPE)
-			i = fd_pipe(file, exec);
-		else if (file->redirec == HERE_DOC)
-			i = find_here_doc(file);
-		file = file->next;
-	}
-	return (i);
-}
 
 char **build_envp(t_env *env)
 {
@@ -161,32 +108,35 @@ void child_process(t_exec *exec, char **path)
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
 		exit(1);
-	if (is_builtin(exec->cmds->cmd))
+	if (exec->cmds->cmd[0] && is_builtin(exec->cmds->cmd))
 	{
 		builtin(exec);
 		if (path)
 			ft_free(path);
-		ft_free_env(exec->env);
-		free_export(exec->export);
-		ft_free_cmd(exec->cmds);
-		//ft_free_exec(exec);
+		close(exec->pipe[1]);
+		ft_free_exec(exec);
 		exit(0);
 	}
 	if (exec->cmds->cmd[0])
-		exec->cmds->cmd[0] = valid_cmd(exec->cmds, path);
+		if (valid_cmd(exec, path))
+		{
+			ft_free(path);
+			close(exec->pipe[1]);
+			ft_free_exec(exec);
+			exit (127);
+		}
 	if (path)
 		ft_free(path);
 	if (!exec->cmds->cmd[0])
 	{
-		// ne fonctionne pas pour plusieurs arguments dans le tableau
-		ft_free_cmd(exec->cmds);
+		ft_free_exec(exec);
 		close(exec->pipe[1]);
 		exit(127);
 	}
 	exec->exec_envp = build_envp(exec->env);
 	execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
-	ft_free(exec->exec_envp);
 	perror("");
+	ft_free_exec(exec);
 	close(exec->pipe[1]);
 	exit(1);
 }
@@ -222,11 +172,14 @@ void execution(t_exec *exec)
 		builtin(exec);
 		dup2(dup_out, STDOUT_FILENO);
 		dup2(dup_in, STDIN_FILENO);
+		close(dup_out);
+		close(dup_in);
 		ft_free_cmd(exec->cmds);
 		return ;
 	}
 	//================================================================================//
 	exec->previous_fd = -1;
+	int i = exec->nb_pipe;
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
@@ -234,6 +187,8 @@ void execution(t_exec *exec)
 			perror("PIPE ERROR");
 			return ;
 		}
+		if (i == 1)
+			close(exec->pipe[1]);
 		pid = fork();
 		if (pid == -1)
 		{
@@ -242,14 +197,16 @@ void execution(t_exec *exec)
 		}
 		if (pid == 0)
 			child_process(exec, path);
+		tmp_cmd = exec->cmds;
 		exec->cmds = exec->cmds->next;
+		ft_free_cmd(tmp_cmd);
 		if (exec->previous_fd != -1)
 			close(exec->previous_fd);
 		exec->previous_fd = exec->pipe[0];
 		close(exec->pipe[1]);
 	}
 	//===================================================================================//
-	(ft_free(path), ft_free_cmd(tmp_cmd));
+	ft_free(path);
 	close(exec->previous_fd);
 	wait_childs(pid);
 	clean_dir_temp();
