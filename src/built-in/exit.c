@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 23:20:45 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:38:43 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,47 +15,14 @@
 // retour d'erreur minishell ou bash
 
 // ====>>>>
-// exit 45fre
-// exit
-// bash: exit: 45fre: numeric argument required
-// echo $? 2
-// sort du bash 
-
-// ====>>>>
 // bash-5.1$ exit 
 // exit
 // echo $? 0
 // sort du bash
 
-// ====>>>>
-// bash-5.1$ exit 255 255
-// exit
-// bash: exit: too many arguments
-
-// sort du bash
-
-// ====>>>>
-// bash-5.1$ exit efef fefe 
-// exit
-// echo $?
-// sort du bash
-
-// ====>>>>
-// bash-5.1$ exit [0 - 255]
-// exit
-// echo $? [0 - 255]
-
-// ====>>>>
-// bash-5.1$ exit +920368547758072
-//
 
 // si je fait exit sans arguments qui precede un 
 //       commade qui a rate, je dois retourner se nombre
-void	free_env_export(t_env *env, t_export *export)
-{
-	ft_free_export(export);
-	ft_free_env(env);
-}
 
 static long long int	ft_atoll(char *str)
 {
@@ -76,7 +43,7 @@ static long long int	ft_atoll(char *str)
 	return (nbrs);
 }
 
-static int	size_nbrs(t_env *env, t_export *export, char *str)
+static int	size_nbrs(t_exec *exec, char *str)
 {
 	int	i;
 	int	j;
@@ -93,24 +60,24 @@ static int	size_nbrs(t_env *env, t_export *export, char *str)
 	{
 		printf("exit\n");
 		printf("minishell: exit: %s: numeric argument required\n", str);
-		free_env_export(env, export);
+		ft_free_exec(exec);
 		exit (2);
 	}
 	return (1);
 }
 
-int	ft_exit(t_env *env, t_export *export, char **str)
+int	ft_exit(t_exec *exec)
 {
 	int	i;
 
 	i = 1;
-	if (str[0] == NULL)
+	if (exec->cmds->cmd[0] == NULL)
 	{
-		free_env_export(env, export);
+		ft_free_exec(exec);
 		printf("exit\n");
 		exit(0);
 	}
-	while (str[i] && size_nbrs(env, export, str[i]))
+	while (exec->cmds->cmd[i] && size_nbrs(exec, exec->cmds->cmd[i]))
 		i++;
 	if (i > 1)
 	{
@@ -118,10 +85,12 @@ int	ft_exit(t_env *env, t_export *export, char **str)
 		return (printf("minishell: exit: too many arguments\n"), 1);
 	}
 	printf("exit\n");
-	free_env_export(env, export);
-	ft_free(str);
-	if (str[1])
-		exit(ft_atoll(str[1]));
+	if(exec->cmds->cmd[1])
+		i = ft_atoll(exec->cmds->cmd[1]);
+	ft_free_exec(exec);
+	// revoir la condition (exit 0 , exit ) pas le meme retour en fonction du dernier code erreur
+	if (i)
+		exit(i);
 	else
-		exit(1);
+		exit(0); // dernier code status
 }

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 16:48:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 23:21:34 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:45:29 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	is_body(t_env *env, char *str)
 	return (0);
 }
 
-void	ft_unset(t_export **export, t_env **env, char **str)
+int	ft_unset(t_export **export, t_env **env, char **str)
 {
 	t_env	*tmp;
 	t_env	*env_temp;
@@ -66,4 +66,5 @@ void	ft_unset(t_export **export, t_env **env, char **str)
 	}
 	ft_free_export(*export);
 	*export = init_export(*env);
+	return (0);
 }

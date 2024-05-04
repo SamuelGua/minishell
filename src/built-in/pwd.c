@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:33:59 by scely             #+#    #+#             */
-/*   Updated: 2024/04/12 17:53:17 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:44:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #define PWD_ERROR  "pwd: error retrieving current directory: " 
 #define PWD_ERROR2 "getcwd: cannot access parent directories"
 
-void	ft_pwd(void)
+int	ft_pwd(void)
 {
 	char	*path_name;
 
@@ -23,7 +23,7 @@ void	ft_pwd(void)
 	if (!path_name)
 	{
 		perror(PWD_ERROR PWD_ERROR2);
-		return ;
+		return (1);
 	}
 	printf("%s\n", path_name);
 }

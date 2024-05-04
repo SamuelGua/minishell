@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 23:20:40 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 05:12:05 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,33 +47,6 @@ typedef struct s_export
 	struct s_export	*right;
 }	t_export;
 
-//// INITIALISATION
-// init env
-t_env		*ft_lstnew_env(char *str1, char *str2);
-void		ft_lstadd_back_env(t_env **lst, t_env *node);
-t_env		*init_env(char **envp);
-void		ft_free_env(t_env *env);
-
-// init export
-t_export	*init_export(t_env *env);
-void		ft_free_export(t_export *export);
-
-//// BUILT-IIN
-void		ft_unset(t_export **export, t_env **env, char **str);
-void		ft_env(t_env *env, char **str);
-void		ft_echo(char **str); // retirer le $
-void		ft_export(t_export **export, t_env **env, char **str, int i);
-void		ft_pwd(void);
-int			ft_exit(t_env *env, t_export *export, char **str);
-void		ft_cd(t_env *env, char **str);
-
-
-// EXPANSION
-char		*expansion(char *str, t_env *env, int is_here_doc);
-int			is_quoted(int quoted, char c);
-int			is_valid_token(t_token *token);
-char		*delete_quote(char *str);
-
 typedef struct s_file
 {
 	char			*file;
@@ -91,12 +64,6 @@ typedef struct s_cmds
 	struct s_cmds 	*next;
 } t_cmds;
 
-t_cmds *build_cmd(t_token *token, t_env *env);
-void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
-t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file);
-t_file	*ft_lstnew_file(char *file, int redirec);
-void	ft_lstadd_back_file(t_file **lst, t_file *node);
-
 typedef struct s_exec
 {
 	struct	s_token		*token;
@@ -111,10 +78,47 @@ typedef struct s_exec
 	int					error_code;
 } t_exec;
 
+
+
+//// INITIALISATION
+// init env
+t_env		*ft_lstnew_env(char *str1, char *str2);
+void		ft_lstadd_back_env(t_env **lst, t_env *node);
+t_env		*init_env(char **envp);
+void		ft_free_env(t_env *env);
+
+// init export
+t_export	*init_export(t_env *env);
+void		ft_free_export(t_export *export);
+
+//// BUILT-IIN
+void		ft_unset(t_export **export, t_env **env, char **str);
+int			ft_env(t_env *env, char **str);
+int			ft_echo(char **str); // retirer le $
+int			ft_export(t_export **export, t_env **env, char **str, int i);
+void		ft_pwd(void);
+int			ft_exit(t_exec *exec);
+int			ft_cd(t_env *env, char **str);
+
+
+// EXPANSION
+char		*expansion(char *str, t_env *env, int is_here_doc);
+int			is_quoted(int quoted, char c);
+int			is_valid_token(t_token *token);
+char		*delete_quote(char *str);
+
+
+t_cmds *build_cmd(t_token *token, t_env *env);
+void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
+t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file);
+t_file	*ft_lstnew_file(char *file, int redirec);
+void	ft_lstadd_back_file(t_file **lst, t_file *node);
+
+
 void		builtin(t_exec *exec);
 int			is_builtin(char **str);
 
-void	execution(t_exec *exec);
+int		execution(t_exec *exec);
 char	**find_path(t_env *env);
 int		nb_pipe(t_cmds *cmds);
 int		wait_childs(int pid);

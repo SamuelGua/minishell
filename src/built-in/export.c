@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 23:21:30 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:49:41 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,16 @@ static int	is_existing(t_env *env, char *str)
 	j = 0;
 	while (str[j] != '=' && str[j])
 		j++;
-	// if (!str[j])
-	//	return (1);
+	if (!str[j])
+		return (1);
 	str[j] = '\0';
 	while (env && ft_strcmp(env->cle, str) != 0)
 		env = env->next;
 	str[j] = '=';
-//	printf("export %s\n", env->cle);
 	if (!env)
 		return (1);
 	free(env->params);
-	env->params = ft_strdup(&str[j++]);
+	env->params = ft_strdup(&str[++j]);
 	return (0);
 }
 
@@ -68,31 +67,37 @@ int	is_valid(char *str)
 		}
 		i++;
 	}
+	if (!str[i] || str[i + 1] == '\0')
+		return (0);
 	return (1);
 }
 
-void	ft_export(t_export **export, t_env **env, char **str, int i)
+int	ft_export(t_export **export, t_env **env, char **str, int i)
 {
 	t_env	*tmp;
 	int		j;
 
 	if (!str[1] && print_list(*export))
-		return ;
+		return (0);
 	while (str[++i])
 	{
 		if (str[i] && is_valid(str[i]) && is_existing(*env, str[i]))
 		{
 			j = 0;
-			while (str[i][j] != '=' && str[i][j])
+			while (str[i][j] && str[i][j] != '=')
 				j++;
 			if (!str[i][j])
-				break ;
+				continue;
 			str[i][j] = '\0';
 			tmp = ft_lstnew_env(str[i], &str[i][j + 1]);
 			if (!tmp)
-				return ;
+				return (2);
 			ft_lstadd_back_env(env, tmp);
+			(ft_free_export(*export), *export = init_export(*env));
+			return (1);
+			
 		}
 	}
 	(ft_free_export(*export), *export = init_export(*env));
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:33:25 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 17:34:59 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:32:34 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void builtin(t_exec *exec)
 		else if (ft_strcmp(exec->cmds->cmd[0], "pwd") == 0)	
 			ft_pwd();
 		else if (ft_strcmp(exec->cmds->cmd[0], "exit") == 0)	
-			ft_exit(exec->env, exec->export, exec->cmds->cmd);
+			ft_exit(exec);
 		else if (ft_strcmp(exec->cmds->cmd[0], "cd") == 0)		
 			ft_cd(exec->env, exec->cmds->cmd);
 }

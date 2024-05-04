@@ -9,7 +9,7 @@ int fd_out(t_file *file)
 	else
 		fd = open(file->file, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1)
-		return (perror(file->file), 1);
+		return (perror(file->file), fd);
 	if (dup2(fd, STDOUT_FILENO) == -1)
 		return (perror("dup2"), 1);
 	close(fd);
@@ -23,7 +23,7 @@ int fd_in(t_file *file)
 	if (fd == -1)
 		return (perror(file->file), 1);
 	if (dup2(fd, STDIN_FILENO) == -1)
-		return (perror("dup2"), 1);
+		return (perror("dup2"), fd);
 	close(fd);
 	return (0);
 }
@@ -33,7 +33,7 @@ int fd_pipe(t_file *file, t_exec *exec)
 	if (file->pipe == 0)
 	{
 		if (dup2(exec->previous_fd, STDIN_FILENO) == -1)
-			return (perror("dup2"), 1);
+			return (perror("dup2"), -1);
 		close(exec->previous_fd);
 		if (!exec->cmds->next)
 			close(exec->pipe[1]);
@@ -41,7 +41,7 @@ int fd_pipe(t_file *file, t_exec *exec)
 	else
 	{
 		if (dup2(exec->pipe[1], STDOUT_FILENO) == -1)
-			return (perror("dup2"), 1);
+			return (perror("dup2"), -1);
 		close(exec->pipe[1]);
 	}
 	return (0);

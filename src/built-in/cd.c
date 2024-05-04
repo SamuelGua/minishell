@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 08:56:41 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 09:24:08 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:09:03 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void update_cd(t_cdutils *pwd)
 		free(pwd->pwd->params);
 		pwd->pwd->params = getcwd(NULL, 0);
 	}
-	free(pwd->previous_pwd);
+	if (pwd->previous_pwd)
+		free(pwd->previous_pwd);
 }
 
 int	cd_home(t_env *env, t_cdutils *pwd)
@@ -54,18 +55,19 @@ int	cd_home(t_env *env, t_cdutils *pwd)
 	while (env && ft_strcmp(env->cle, "HOME") != 0)
 		env = env->next;
 	if (!env)
-		return (printf("bash: cd: HOME not set\n"));
+		return (printf("minishell: cd: HOME not set\n"), 1);
 	if (chdir(env->params))
 	{
-		error = ft_strjoin("bash: cd: ", env->params);
+		error = ft_strjoin("minishell: cd: ", env->params);
 		perror(error);
 		free(error);
+		return (1);
 	}
 	update_cd(pwd);
 	return (0);
 }
 
-void	ft_cd(t_env *env, char **str)
+int ft_cd(t_env *env, char **str)
 {
 	int		i;
 	char	*error;
@@ -76,25 +78,20 @@ void	ft_cd(t_env *env, char **str)
 	pwd.previous_pwd = getcwd(NULL, 0);
 	i = 1;
 	if (!str[i])
-	{
-		cd_home(env, &pwd);
-		return ;
-	}
+		return (cd_home(env, &pwd));
 	while (str[i])
 		i++;
 	if (i > 2)
 	{
 		printf("bash: cd: too many arguments\n");
-		free(pwd.previous_pwd);
-		return ;
+		return (free(pwd.previous_pwd), 1 );
 	}
 	if (chdir(str[1]))
 	{
 		error = ft_strjoin("bash: cd: ", str[1]);
-		perror(error);
-		free(error);
-		free(pwd.previous_pwd);
-		return ;
+		(perror(error), free(error), free(pwd.previous_pwd));
+		return (1);
 	}
 	update_cd(&pwd);
+	return (0);
 }

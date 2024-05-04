@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 19:06:27 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/04 04:34:26 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,21 +72,22 @@ int	dash_n(char *str)
 	return (1);
 }
 
-void	ft_echo(char **str)
+int	ft_echo(char **str)
 {
 	char	**test;
 
 	if (str[1] == NULL)
 	{
 		printf("\n");
-		return ;
+		return (0);
 	}
 	test = check_flag(str);
 	if (dash_n(str[1]))
 	{
 		print_echo(test);
-		return ;
+		return (0);
 	}
 	print_echo(test);
 	printf("\n");
+	return (0);
 }
