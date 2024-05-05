@@ -37,7 +37,7 @@ int main(int ac, char **av, char **envp)
 		sigaction(SIGINT, &c_signal, NULL);
 		// sigaction(SIGQUIT, &d_signal, NULL);
 		sigaction(SIGQUIT, &slash_signal, NULL);
-		exec.prompt = readline("\002minishell > \002");
+		exec.prompt = readline("minishell > ");
 		if (!exec.prompt)
 			return (ft_free_env(exec.env), ft_free_export(exec.export), 2);
 		exec.token = init_token(exec.prompt, exec.token);

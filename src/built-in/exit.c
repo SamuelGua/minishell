@@ -47,8 +47,8 @@ static int	size_nbrs(t_exec *exec, char *str)
 	if (ft_isdigit(str[i + j]) == 0 || i >= 19)
 	{
 		printf("exit\n");
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(str, 2);
+		// ft_putstr_fd("minishell: exit: ", 2);
+		// ft_putstr_fd(str, 2);
 		ft_putstr_fd(" numeric argument required\n", 2);
 		ft_free_exec(exec);
 		exit (2);
@@ -68,7 +68,8 @@ int	ft_exit(t_exec *exec)
 		if (i >= 2)
 		{
 			printf("exit\n");
-			return (ft_putstr_fd("minishell: exit: hello: numeric argument required", 2), 1);
+			print_message(NULL,  NULL, " too many arguments", 2);
+			return (1);
 		}
 		i++;
 	}
