@@ -80,7 +80,9 @@ int check_erros(t_exec *exec, char **path)
 		i = 0;
 	}
 	else if (check_isfile(exec))
-		return (127);
+		i = 126;
+	else if (valid_cmd(exec, path) || !exec->cmds->cmd[0])
+		i = 127;
 	return (i);
 }
 
@@ -97,23 +99,8 @@ void child_process(t_exec *exec, char **path)
 			ft_free(path);
 		exit(i);
 	}
-
-	if (valid_cmd(exec, path))
-	{
-		if (path)
-			ft_free(path);
-		close(exec->pipe[1]);
-		ft_free_exec(exec);
-		exit (127);
-	}
 	if (path)
 		ft_free(path);
-	if (!exec->cmds->cmd[0])
-	{
-		ft_free_exec(exec);
-		close(exec->pipe[1]);
-		exit(127);
-	}
 	exec->exec_envp = build_envp(exec->env);
 	execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
 	ft_free(exec->exec_envp);
@@ -123,6 +110,27 @@ void child_process(t_exec *exec, char **path)
 	exit(1);
 }
 
+int exec_sbuiltin(t_exec *exec)
+{	
+	int	j;
+	int	dup_in;
+	int	dup_out;
+
+	dup_in = dup(STDIN_FILENO);
+	dup_out = dup(STDOUT_FILENO);
+	j = redirection (exec);
+	if (j >= 0)
+		j = builtin(exec);
+	dup2(dup_out, STDOUT_FILENO);
+	dup2(dup_in, STDIN_FILENO);
+	close(dup_out);
+	close(dup_in);
+	ft_free_cmd(exec->cmds);
+	if (j < 0)
+		j *= -1;
+	clean_dir_temp();
+	return (j);
+}
 
 int execution(t_exec *exec)
 {
@@ -145,26 +153,10 @@ int execution(t_exec *exec)
 	sigaction(SIGQUIT, &slash_signal, NULL);
 
 	exec->nb_pipe = nb_pipe(exec->cmds);
-	run_here_doc(exec);
-
-	//================================================================================//
 	j = 0;
-	if (exec->cmds->cmd[0] && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
-	{
-		int dup_in = dup(STDIN_FILENO);
-		int dup_out = dup(STDOUT_FILENO);
-		j = redirection (exec);
-		if (j >= 0)
-			j = builtin(exec);
-		dup2(dup_out, STDOUT_FILENO);
-		dup2(dup_in, STDIN_FILENO);
-		close(dup_out);
-		close(dup_in);
-		ft_free_cmd(exec->cmds);
-		if (j < 0)
-			j *= -1;
-		return (j);
-	}
+	//================================================================================//
+	if (run_here_doc(exec) == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
+		return (exec_sbuiltin(exec));
 	//================================================================================//
 	
 	//================================================================================//
@@ -194,6 +186,6 @@ int execution(t_exec *exec)
 	if (path)
 		ft_free(path);
 	close(exec->previous_fd);
-	clean_dir_temp();
-	return (wait_childs(pid));
+	j = wait_childs(pid);
+	return (clean_dir_temp(), j);
 }

@@ -7,7 +7,7 @@ typedef struct s_here_doc
 	char *nb_file;
 } t_here_doc;
 
-# define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
+# define PATH_HERE "src/here_doc/.tmp_here_doc/here_doc";
 
 // fichier cacher les pour mettre les ficher des heredoc
 
@@ -31,9 +31,7 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	lim = delete_quote(limiter);
 	while (1)
 	{
-		ft_putstr_fd("HERE_DOC {",STDOUT_FILENO);
-		ft_putstr_fd(lim,STDOUT_FILENO);
-		ft_putstr_fd("} > ",STDOUT_FILENO);
+		print_message("HERE_DOC {", lim, "} > ", 1);
 		line = get_next_line(0);
 		if (!line)
 			return (666);
@@ -79,11 +77,10 @@ int here_doc(t_file *file, t_exec *exec)
 
 	fill_heredoc(fd, file->file, exec);
 	close(fd);
-	ft_putstr_fd("\n", 2);
 	return (0);
 }
 
-void run_here_doc(t_exec *exec)
+int run_here_doc(t_exec *exec)
 {
 	t_cmds *tmp;
 
@@ -100,7 +97,9 @@ void run_here_doc(t_exec *exec)
 		}
 		tmp = tmp->next;
 	}
+	return (0);
 }
+
 
 int find_here_doc(t_file *file)
 {
@@ -117,9 +116,10 @@ int find_here_doc(t_file *file)
 	}
 	fd = open(here_doc, O_RDONLY, 0644);
 	if (fd == -1)
-		return (perror("here_doc"), -1);
-	if (dup2(fd, STDIN_FILENO) == -1 && !close(fd))
+		return (perror("error here_doc"), -1);
+	if (dup2(fd, STDIN_FILENO) == -1)
 		return (perror("dup2"), -1);
+	close(fd);
 	return (0);
 }
 

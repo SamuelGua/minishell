@@ -28,9 +28,11 @@ static void	print_echo(char **str)
 	i = 0;
 	while (str[i])
 	{	
-		printf("%s", str[i]);
+		ft_putstr_fd(str[i], 1);
+		// printf("%s", str[i]);
 		if (str[i + 1])
-			printf(" ");
+			ft_putstr_fd(" ", 1);
+			// printf(" ");
 		i++;
 	}
 }
@@ -78,7 +80,7 @@ int	ft_echo(char **str)
 
 	if (str[1] == NULL)
 	{
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 		return (0);
 	}
 	test = check_flag(str);
@@ -88,6 +90,6 @@ int	ft_echo(char **str)
 		return (0);
 	}
 	print_echo(test);
-	printf("\n");
+	ft_putstr_fd("\n", 1);
 	return (0);
 }

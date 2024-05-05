@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-// Doit on recreer la varaibles _  qui comporte le dernier executable
-// Peut-on tout unset
 static int	is_head(t_env **env, char *str)
 {
 	t_env	*tmp;

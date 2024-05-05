@@ -138,7 +138,7 @@ void	ft_free_cmd(t_cmds *cmd);
 void	ft_free_file(t_file *file);
 
 int		redirection(t_exec *exec);
-void	run_here_doc(t_exec *exec);
+int		run_here_doc(t_exec *exec);
 void	clean_dir_temp(void);
 int		find_here_doc(t_file *file);
 void	print_lst_cmd(t_cmds *cmd);

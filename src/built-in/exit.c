@@ -62,11 +62,7 @@ int	ft_exit(t_exec *exec)
 
 	i = 1;
 	if (exec->cmds->cmd[1] == NULL)
-	{
-		ft_free_exec(exec);
-		printf("exit\n");
-		exit(exec->error_code);
-	}
+		(ft_free_exec(exec), printf("exit\n"), exit(exec->error_code));
 	while (exec->cmds->cmd[i])
 	{
 		if (i >= 2)

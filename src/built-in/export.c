@@ -102,6 +102,6 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 			(ft_free_export(*export), *export = init_export(*env));			
 		}
 	}
-	(ft_free_export(*export), *export = init_export(*env));
+	// (ft_free_export(*export), *export = init_export(*env));
 	return (0);
 }

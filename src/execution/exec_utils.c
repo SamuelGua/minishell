@@ -59,13 +59,6 @@ char	**find_path(t_env *env)
 	return (path);
 }
 
-void 	print_message(char *str1, char *str2, char *str3, int fd)
-{
-	ft_putstr_fd(str1, fd);
-	ft_putstr_fd(str2, fd);
-	ft_putstr_fd(str3, fd);
-}
-
 char **build_envp(t_env *env)
 {
 	t_env	*tmp;
