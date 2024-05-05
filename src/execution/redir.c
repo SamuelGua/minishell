@@ -21,9 +21,9 @@ int fd_in(t_file *file)
 
 	fd = open(file->file, O_RDONLY);
 	if (fd == -1)
-		return (perror(file->file), 1);
+		return (perror(file->file), -1);
 	if (dup2(fd, STDIN_FILENO) == -1)
-		return (perror("dup2"), fd);
+		return (perror("dup2"), -1);
 	close(fd);
 	return (0);
 }

@@ -26,4 +26,5 @@ int	ft_pwd(void)
 		return (1);
 	}
 	printf("%s\n", path_name);
+	return (0);
 }

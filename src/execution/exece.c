@@ -64,8 +64,6 @@ int	valid_cmd(t_exec *exec, char **path)
 	return (0);
 }
 
-
-
 char **build_envp(t_env *env)
 {
 	t_env	*tmp;
@@ -133,6 +131,7 @@ void child_process(t_exec *exec, char **path)
 
 int execution(t_exec *exec)
 {
+	int j;
 	char **path;
 	int 	pid;
 	t_cmds	*tmp_cmd;
@@ -154,19 +153,22 @@ int execution(t_exec *exec)
 	run_here_doc(exec);
 
 	//================================================================================//
-
+	j = 0;
 	if (exec->cmds->cmd[0] && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 	{
 		int dup_in = dup(STDIN_FILENO);
 		int dup_out = dup(STDOUT_FILENO);
-		if (redirection(exec) >= 0)
-			builtin(exec);
+		j = redirection (exec);
+		if (j >= 0)
+			j = builtin(exec);
 		dup2(dup_out, STDOUT_FILENO);
 		dup2(dup_in, STDIN_FILENO);
 		close(dup_out);
 		close(dup_in);
 		ft_free_cmd(exec->cmds);
-		return ;
+		if (j < 0)
+			j *= -1;
+		return (j);
 	}
 	//================================================================================//
 	
@@ -177,18 +179,12 @@ int execution(t_exec *exec)
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
-		{
-			perror("PIPE ERROR");
-			return ;
-		}
+			return (perror("PIPE ERROR"), 1);
 		if (i == 1)
 			close(exec->pipe[1]);
 		pid = fork();
 		if (pid == -1)
-		{
-			perror("FORK ERROR");
-			return ;
-		}
+			return (perror("FORK ERROR"), 1);
 		if (pid == 0)
 			child_process(exec, path);
 		tmp_cmd = exec->cmds;

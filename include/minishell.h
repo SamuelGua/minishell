@@ -92,30 +92,30 @@ t_export	*init_export(t_env *env);
 void		ft_free_export(t_export *export);
 
 //// BUILT-IIN
-void		ft_unset(t_export **export, t_env **env, char **str);
+int			ft_unset(t_export **export, t_env **env, char **str);
 int			ft_env(t_env *env, char **str);
 int			ft_echo(char **str); // retirer le $
 int			ft_export(t_export **export, t_env **env, char **str, int i);
-void		ft_pwd(void);
+int			ft_pwd(void);
 int			ft_exit(t_exec *exec);
 int			ft_cd(t_env *env, char **str);
 
 
 // EXPANSION
-char		*expansion(char *str, t_env *env, int is_here_doc);
+char		*expansion(char *str, t_exec *exec, int is_here_doc);
 int			is_quoted(int quoted, char c);
 int			is_valid_token(t_token *token);
 char		*delete_quote(char *str);
 
 
-t_cmds *build_cmd(t_token *token, t_env *env);
+t_cmds *build_cmd(t_exec *exec);
 void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
 t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file);
 t_file	*ft_lstnew_file(char *file, int redirec);
 void	ft_lstadd_back_file(t_file **lst, t_file *node);
 
 
-void		builtin(t_exec *exec);
+int			builtin(t_exec *exec);
 int			is_builtin(char **str);
 
 int		execution(t_exec *exec);

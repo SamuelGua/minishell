@@ -50,17 +50,32 @@ void	dollar_dollar(char *str, t_env *env, t_exutils *ex)
 	sys = "SYSTEMD_EXEC_PID";
 	str[ex->i] = '\0';
 	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
+	str[ex->i] = '$';
 	while (env && (ft_strcmp(sys, env->cle) != 0
 			|| 16 != (int)ft_strlen(env->cle)))
 		env = env->next;
 	if (env)
 		ex->new = ft_free_strjoin(ex->new, env->params);
+	ex->l_exp = ex->i + 1 + 1;
+	ex->i = ex->l_exp;
+	
+}
+
+void dollar_ask(char *str, t_exec *exec, t_exutils *ex)
+{
+	char *nb;
+
+	nb = ft_itoa(exec->error_code);
+	str[ex->i] = '\0';
+	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
 	str[ex->i] = '$';
+	ex->new = ft_free_strjoin(ex->new, nb);
+	free(nb);
 	ex->l_exp = ex->i + 1 + 1;
 	ex->i = ex->l_exp;
 }
 
-void	expansion_two(t_exutils *ex, char *str, t_env *env)
+void	expansion_two(t_exutils *ex, char *str, t_exec *exec)
 {
 	while (str[ex->i] && check_whitespace(str[ex->i]))
 		ex->i++;
@@ -69,20 +84,22 @@ void	expansion_two(t_exutils *ex, char *str, t_env *env)
 	{
 		ex->quoted = is_quoted(ex->quoted, str[ex->i]);
 		if (str[ex->i] == '$' && str[ex->i + 1] == '$' && (ex->quoted != S_QUOTE || ex->is_here_doc))
-			dollar_dollar(str, env, ex);
+			dollar_dollar(str, exec->env, ex);
+		else if (str[ex->i] == '$' && str[ex->i + 1] == '?' && (ex->quoted != S_QUOTE || ex->is_here_doc))
+			dollar_ask(str, exec, ex);
 		else if (str[ex->i] == '$' && (str[ex->i + 1] == '\'' || str[ex->i + 1] == '\"') && ex->quoted != NO_QUOTE)
 			ex->i++;
 		else if (str[ex->i] == '$' && check_whitespace(str[ex->i + 1]) != 1
 			&& str[ex->i + 1] != '\0'
 			&& str[ex->i + 1] != '/'
 			&& ( ex->quoted != S_QUOTE || ex->is_here_doc))
-			add_expand(str, env, ex);
+			add_expand(str, exec->env, ex);
 		else
 			ex->i++;
 	}
 }
 // ligne ne commentaire peut etre inutile a ne pas effacer pour le moment 
-char	*expansion(char *str, t_env *env, int is_here_doc)
+char	*expansion(char *str,t_exec *exec, int is_here_doc)
 {
 	t_exutils	ex;
 	char		c;
@@ -107,7 +124,7 @@ char	*expansion(char *str, t_env *env, int is_here_doc)
 		ex.new = ft_strdup(str);
 		str[ex.i] = c;
 	}
-	expansion_two(&ex, str, env);
+	expansion_two(&ex, str, exec);
 	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
 	return (ex.new);
 }

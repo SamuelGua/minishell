@@ -47,7 +47,7 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 		*c = '\n';
 		(void)exec;
 		if (type_quote == NO_QUOTE)
-			line = expansion(line, exec->env, 1); // 1 pour dans le heredoc
+			line = expansion(line, exec, 1); // 1 pour dans le heredoc
 		ft_putstr_fd(line, fd);
 		free(line);
 	}

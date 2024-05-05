@@ -50,7 +50,7 @@ int	ft_unset(t_export **export, t_env **env, char **str)
 
 	i = 1;
 	if (str == NULL)
-		return ;
+		return (0);
 	while (str[i])
 	{
 		is_head(env, str[i]);

@@ -131,40 +131,43 @@ t_cmds	*create_node(t_token *tmp, t_token *end, t_build_cmd *utils)
 	return (cmds);
 }
 
-void	clean_token(t_token *token, t_env *env)
+void	clean_token(t_exec *exec)
 {
 	t_token	*tmp;
+	t_token *head;
 
-	tmp = token;
-	while (token)
+	head = exec->token;
+	tmp = exec->token;
+	while (exec->token)
 	{
 		if (tmp->token != HERE_DOC)
 		{
-			token->str = expansion(token->str, env, 0); // 0 pour pas dans le here_doc || 1 pour dans le here_doc
-			token->str = delete_quote(token->str);
+			exec->token->str = expansion(exec->token->str, exec, 0); // 0 pour pas dans le here_doc || 1 pour dans le here_doc
+			exec->token->str = delete_quote(exec->token->str);
 		}
-		tmp = token;
-		token = token->next;
+		tmp = exec->token;
+		exec->token = exec->token->next;
 	}
+	exec->token = head;
 }
 
-t_cmds	*build_cmd(t_token *token, t_env *env)
+t_cmds	*build_cmd(t_exec *exec)
 {
 
 	t_build_cmd utils;
 
 	utils.cmds = NULL;
-	utils.tmp = token;
+	utils.tmp = exec->token;
 	utils.nb_here_doc = 0;
-	clean_token(token, env);
-	while (token)
+	clean_token(exec);
+	while (exec->token)
 	{
-		utils.end = token->next;
+		utils.end = exec->token->next;
 		while (utils.end && utils.end->token != PIPE)
 			utils.end = utils.end->next;
-		utils.cmds_tmp = create_node(token, utils.end, &utils);
+		utils.cmds_tmp = create_node(exec->token, utils.end, &utils);
 		ft_lstadd_back_cmd(&utils.cmds, utils.cmds_tmp);
-		token = utils.end;
+		exec->token = utils.end;
 	}
 	free_token(utils.tmp);
 	return (utils.cmds);
