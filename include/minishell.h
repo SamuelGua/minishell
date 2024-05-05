@@ -122,6 +122,10 @@ int		execution(t_exec *exec);
 char	**find_path(t_env *env);
 int		nb_pipe(t_cmds *cmds);
 int		wait_childs(int pid);
+void 	print_message(char *str1, char *str2, char *str3, int fd);
+char	**build_envp(t_env *env);
+
+
 
 int		fd_out(t_file *file);
 int		fd_in(t_file *file);

@@ -12,18 +12,6 @@
 
 #include "minishell.h"
 
-// retour d'erreur minishell ou bash
-
-// ====>>>>
-// bash-5.1$ exit 
-// exit
-// echo $? 0
-// sort du bash
-
-
-// si je fait exit sans arguments qui precede un 
-//       commade qui a rate, je dois retourner se nombre
-
 static long long int	ft_atoll(char *str)
 {
 	int				i;
@@ -59,7 +47,9 @@ static int	size_nbrs(t_exec *exec, char *str)
 	if (ft_isdigit(str[i + j]) == 0 || i >= 19)
 	{
 		printf("exit\n");
-		printf("minishell: exit: %s: numeric argument required\n", str);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(" numeric argument required\n", 2);
 		ft_free_exec(exec);
 		exit (2);
 	}
@@ -71,26 +61,29 @@ int	ft_exit(t_exec *exec)
 	int	i;
 
 	i = 1;
-	if (exec->cmds->cmd[0] == NULL)
+	if (exec->cmds->cmd[1] == NULL)
 	{
 		ft_free_exec(exec);
 		printf("exit\n");
-		exit(0);
+		exit(exec->error_code);
 	}
-	while (exec->cmds->cmd[i] && size_nbrs(exec, exec->cmds->cmd[i]))
-		i++;
-	if (i > 1)
+	while (exec->cmds->cmd[i])
 	{
-		printf("exit\n");
-		return (printf("minishell: exit: too many arguments\n"), 1);
+		if (i >= 2)
+		{
+			printf("exit\n");
+			return (ft_putstr_fd("minishell: exit: hello: numeric argument required", 2), 1);
+		}
+		i++;
 	}
+	i = 0;
+	while (exec->cmds->cmd[++i])
+		size_nbrs(exec, exec->cmds->cmd[i]);
 	printf("exit\n");
 	if(exec->cmds->cmd[1])
 		i = ft_atoll(exec->cmds->cmd[1]);
 	ft_free_exec(exec);
-	// revoir la condition (exit 0 , exit ) pas le meme retour en fonction du dernier code erreur
 	if (i)
 		exit(i);
-	else
-		exit(0); // dernier code status
+	return(666);
 }

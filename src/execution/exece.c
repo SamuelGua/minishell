@@ -12,37 +12,36 @@
 
 #include "minishell.h"
 
-void 	print_message(char *str1, char *str2, char *str3, int fd)
+int check_isfile(t_exec *exec)
 {
-	ft_putstr_fd(str1, fd);
-	ft_putstr_fd(str2, fd);
-	ft_putstr_fd(str3, fd);
+	struct stat fileinfo;
+
+	if (exec->cmds->cmd[0][0] == '\0')
+		return(1);
+	if (ft_strchr(exec->cmds->cmd[0], '/'))
+	{
+		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
+        	return (perror("stat"), 1);
+    	if (access(exec->cmds->cmd[0], X_OK))
+		{
+			perror("");
+			return (1);
+		}
+		else if (S_ISDIR(fileinfo.st_mode))
+		{
+			print_message("minishell: ", exec->cmds->cmd[0], ": Is a directory\n", 2);
+			return (1);
+		}
+	}
+	return (0);
 }
 
 int	valid_cmd(t_exec *exec, char **path)
 {
 	char *new;
 	int i;
-	struct stat fileinfo;
 
 	i = 0;
-	if (exec->cmds->cmd[0][0] == '\0')
-		return(1);
-	if (exec->cmds->cmd[0][0] == '.' && exec->cmds->cmd[0][1] == '/')
-	{
-		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
-        	return (perror("stat"), 1);
-		if (S_ISDIR(fileinfo.st_mode))
-		{
-			print_message("minishell: ", exec->cmds->cmd[0], ": Is a directory\n", 2);
-			return (1);
-		}
-    	else if (access(exec->cmds->cmd[0], X_OK))
-		{
-			perror("");
-			return (1);
-		}
-	}
 	new = ft_strdup(exec->cmds->cmd[0]);
 	if (!new)
 		return (printf("Error malloc\n"), 2);
@@ -64,53 +63,49 @@ int	valid_cmd(t_exec *exec, char **path)
 	return (0);
 }
 
-char **build_envp(t_env *env)
+int check_erros(t_exec *exec, char **path)
 {
-	t_env	*tmp;
-	char	**env_double;
 	int	i;
 
-	tmp = env;
-	i = 0;
-	while (tmp)
-		(i++,tmp = tmp->next);
-	env_double = malloc(sizeof(char *) * (i + 1));
-	env_double[i] = NULL;
-	tmp = env;
-	i = 0;
-	while (tmp)
+	i = -1;
+	(void)path;
+	close(exec->pipe[0]);
+	if (redirection(exec) == -1)
+		i = 1;
+	else if (!exec->cmds->cmd[0])
+		i = 0;
+	else if (is_builtin(exec->cmds->cmd))
 	{
-		env_double[i] = ft_strjoin(tmp->cle, "=");
-		env_double[i] = ft_free_strjoin(env_double[i], tmp->params);
-		tmp = tmp->next;
-		i++;
+		builtin(exec);
+		i = 0;
 	}
-	return (env_double);
+	else if (check_isfile(exec))
+		return (127);
+	return (i);
 }
 
 void child_process(t_exec *exec, char **path)
 {
-	close(exec->pipe[0]);
-	if (redirection(exec) == -1)
-		exit(1);
-	if (exec->cmds->cmd[0] && is_builtin(exec->cmds->cmd))
+	int i;
+
+	i = check_erros(exec, path);
+	if (i != -1)
 	{
-		builtin(exec);
+		close(exec->pipe[1]);
+		ft_free_exec(exec);
+		if (path)
+			ft_free(path);
+		exit(i);
+	}
+
+	if (valid_cmd(exec, path))
+	{
 		if (path)
 			ft_free(path);
 		close(exec->pipe[1]);
 		ft_free_exec(exec);
-		exit(0);
+		exit (127);
 	}
-	if (exec->cmds->cmd[0])
-		if (valid_cmd(exec, path))
-		{
-			if (path)
-				ft_free(path);
-			close(exec->pipe[1]);
-			ft_free_exec(exec);
-			exit (127);
-		}
 	if (path)
 		ft_free(path);
 	if (!exec->cmds->cmd[0])

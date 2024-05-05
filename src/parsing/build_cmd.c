@@ -148,7 +148,10 @@ void	clean_token(t_exec *exec)
 		tmp = exec->token;
 		exec->token = exec->token->next;
 	}
-	exec->token = head;
+	if (!head->str[0])
+		exec->token = head->next;
+	else
+		exec->token = head;
 }
 
 t_cmds	*build_cmd(t_exec *exec)

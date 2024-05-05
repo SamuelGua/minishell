@@ -55,7 +55,7 @@ int	cd_home(t_env *env, t_cdutils *pwd)
 	while (env && ft_strcmp(env->cle, "HOME") != 0)
 		env = env->next;
 	if (!env)
-		return (printf("minishell: cd: HOME not set\n"), 1);
+		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
 	if (chdir(env->params))
 	{
 		error = ft_strjoin("minishell: cd: ", env->params);
@@ -83,7 +83,7 @@ int ft_cd(t_env *env, char **str)
 		i++;
 	if (i > 2)
 	{
-		printf("bash: cd: too many arguments\n");
+		ft_putstr_fd("bash: cd: too many arguments\n", 2);
 		return (free(pwd.previous_pwd), 1 );
 	}
 	if (chdir(str[1]))

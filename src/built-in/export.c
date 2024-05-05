@@ -54,7 +54,9 @@ int	is_valid(char *str)
 	i = 0;
 	if (str[i] != '_' && ft_isalpha(str[i]) == 0)
 	{
-		printf("minishell: export: `%s': not a valid identifier\n", str);
+		ft_putstr_fd("minishell: export: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": not a valid identifier\n", 2);
 		return (0);
 	}
 	i++;
@@ -62,13 +64,15 @@ int	is_valid(char *str)
 	{
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", str);
+			ft_putstr_fd("minishell: export: ", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": not a valid identifier\n", 2);
 			return (0);
 		}
 		i++;
 	}
 	if (!str[i] || str[i + 1] == '\0')
-		return (0);
+		return (1);
 	return (1);
 }
 
@@ -81,7 +85,9 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 		return (0);
 	while (str[++i])
 	{
-		if (str[i] && is_valid(str[i]) && is_existing(*env, str[i]))
+		if (is_valid(str[i]) == 0)
+			return (1);
+		if (is_existing(*env, str[i]))
 		{
 			j = 0;
 			while (str[i][j] && str[i][j] != '=')
@@ -93,9 +99,7 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 			if (!tmp)
 				return (2);
 			ft_lstadd_back_env(env, tmp);
-			(ft_free_export(*export), *export = init_export(*env));
-			return (1);
-			
+			(ft_free_export(*export), *export = init_export(*env));			
 		}
 	}
 	(ft_free_export(*export), *export = init_export(*env));

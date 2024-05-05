@@ -58,3 +58,34 @@ char	**find_path(t_env *env)
 	}
 	return (path);
 }
+
+void 	print_message(char *str1, char *str2, char *str3, int fd)
+{
+	ft_putstr_fd(str1, fd);
+	ft_putstr_fd(str2, fd);
+	ft_putstr_fd(str3, fd);
+}
+
+char **build_envp(t_env *env)
+{
+	t_env	*tmp;
+	char	**env_double;
+	int	i;
+
+	tmp = env;
+	i = 0;
+	while (tmp)
+		(i++,tmp = tmp->next);
+	env_double = malloc(sizeof(char *) * (i + 1));
+	env_double[i] = NULL;
+	tmp = env;
+	i = 0;
+	while (tmp)
+	{
+		env_double[i] = ft_strjoin(tmp->cle, "=");
+		env_double[i] = ft_free_strjoin(env_double[i], tmp->params);
+		tmp = tmp->next;
+		i++;
+	}
+	return (env_double);
+}
