@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:33:59 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:44:21 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 12:24:19 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ int	ft_pwd(void)
 		return (1);
 	}
 	printf("%s\n", path_name);
+	free(path_name);
 	return (0);
 }

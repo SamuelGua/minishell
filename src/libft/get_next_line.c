@@ -1,106 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/07 08:49:47 by scely             #+#    #+#             */
-/*   Updated: 2024/01/10 11:17:04 by scely            ###   ########.fr       */
+/*   Created: 2024/05/06 14:35:24 by scely             #+#    #+#             */
+/*   Updated: 2024/05/06 14:52:39 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_free(char *buffer, char *buf)
+void	ft_strcpy(char *dst, const char *src)
 {
-	char	*temp;
-
-	temp = ft_strjoin(buffer, buf);
-	free(buffer);
-	return (temp);
+	while (*src)
+		*dst++ = *src++;
+	*dst = '\0';
 }
 
-void	read_line(int fd, char **temp, int *lues)
+void	update_line(char *newline, int *to_copy, char *line, char *buf)
 {
-	char	*buffer;
-
-	if (!*temp)
-		*temp = ft_calloc(1, 1);
-	while (*lues >= 1 && ft_strchr(*temp, '\n') == 0)
+	if (newline != NULL)
 	{
-		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buffer)
-			return ;
-		*lues = read(fd, buffer, BUFFER_SIZE);
-		if (((*temp == NULL) && *lues == 0) || *lues == -1)
-		{
-			free(buffer);
-			return ;
-		}
-		buffer[*lues] = '\0';
-		*temp = ft_strjoin_free(*temp, buffer);
-		free(buffer);
+		*to_copy = newline - line + 1;
+		ft_strcpy(buf, newline + 1);
 	}
-}
-
-void	extract_line(char *temp, char **line)
-{
-	int		len;
-
-	len = 0;
-	if (temp == NULL)
-		return ;
-	while (temp[len] && temp[len] != '\n')
-		len++;
-	*line = ft_substr(temp, 0, len + 1);
-	if (*line == NULL)
-		return ;
-}
-
-char	*clean_temp(char *temp)
-{
-	int		i;
-	int		j;
-	char	*c;
-
-	i = 0;
-	while (temp[i] != '\n' && temp[i])
-		i++;
-	if (!temp[i])
+	else
 	{
-		free(temp);
-		return (NULL);
+		*to_copy = ft_strlen(line);
+		buf[0] = '\0';
 	}
-	j = (int)ft_strlen(&temp[i]);
-	c = ft_substr(temp, i + 1, j);
-	if (!c)
-		return (NULL);
-	free(temp);
-	return (c);
 }
 
 char	*get_next_line(int fd)
 {
-	static char		*temp[1024];
-	char			*line;
-	int				lues;
+	static char	buf[BUFFER_SIZE + 1];
+	char		*line;
+	char		*newline;
+	int			countread;
+	int			to_copy;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		return (NULL);
-	lues = 1;
-	read_line(fd, &temp[fd], &lues);
-	if (temp[fd] == NULL)
-		return (NULL);
-	extract_line(temp[fd], &line);
-	if (line == NULL)
-		return (NULL);
-	temp[fd] = clean_temp(temp[fd]);
-	if (line[0] == '\0')
+	to_copy = 0;
+	newline = NULL;
+	line = ft_strdup(buf);
+	countread = 1;
+	while (!ft_strchr(line, '\n') && countread)
 	{
-		free(line);
-		line = NULL;
-		return (NULL);
+		newline = ft_strchr(line, '\n');
+		countread = read(fd, buf, BUFFER_SIZE);
+		buf[countread] = '\0';
+		line = ft_free_strjoin(line, buf);
 	}
+	if (ft_strlen(line) == 0)
+		return (free(line), NULL);
+	update_line(newline, &to_copy, line, buf);
+	line[to_copy] = '\0';
 	return (line);
 }

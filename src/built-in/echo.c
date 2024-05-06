@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:38 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:34:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 19:06:32 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@ static void	print_echo(char **str)
 	while (str[i])
 	{	
 		ft_putstr_fd(str[i], 1);
-		// printf("%s", str[i]);
-		if (str[i + 1])
+		if (str[i + 1] && str[i + 1][0] != '\0')
 			ft_putstr_fd(" ", 1);
-			// printf(" ");
 		i++;
 	}
 }
@@ -76,8 +74,10 @@ int	dash_n(char *str)
 
 int	ft_echo(char **str)
 {
+	int	i;
 	char	**test;
 
+	i = 0;
 	if (str[1] == NULL)
 	{
 		ft_putstr_fd("\n", 1);

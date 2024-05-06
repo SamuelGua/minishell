@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 17:55:23 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 11:35:27 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,6 @@ char	*expansion(char *str,t_exec *exec, int is_here_doc)
 	}
 	expansion_two(&ex, str, exec);
 	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
+	free(str);
 	return (ex.new);
 }

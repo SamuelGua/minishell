@@ -7,7 +7,7 @@ typedef struct s_here_doc
 	char *nb_file;
 } t_here_doc;
 
-# define PATH_HERE "src/here_doc/.tmp_here_doc/here_doc";
+# define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
 
 // fichier cacher les pour mettre les ficher des heredoc
 

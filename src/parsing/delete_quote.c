@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:23:31 by scely             #+#    #+#             */
-/*   Updated: 2024/04/27 14:20:14 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 11:58:48 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ char	*clean_quote(char *str)
 	i = 0;
 	j = 0;
 	new = malloc(sizeof(char) * (ft_strlen(str)) + 1);
+	if (!new)
+		return (NULL);
 	c = '\0';
 	while (str[i])
 	{
@@ -63,6 +65,7 @@ char	*clean_quote(char *str)
 		}
 		new[j] = '\0';
 	}
+	free(str);
 	return (new);
 }
 

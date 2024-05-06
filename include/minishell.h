@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 05:12:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 18:03:45 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ typedef struct s_exec
 } t_exec;
 
 
-
 //// INITIALISATION
 // init env
 t_env		*ft_lstnew_env(char *str1, char *str2);
@@ -97,7 +96,7 @@ int			ft_env(t_env *env, char **str);
 int			ft_echo(char **str); // retirer le $
 int			ft_export(t_export **export, t_env **env, char **str, int i);
 int			ft_pwd(void);
-int			ft_exit(t_exec *exec);
+int			ft_exit(t_exec *exec, int *fd_origin);
 int			ft_cd(t_env *env, char **str);
 
 
@@ -115,7 +114,7 @@ t_file	*ft_lstnew_file(char *file, int redirec);
 void	ft_lstadd_back_file(t_file **lst, t_file *node);
 
 
-int			builtin(t_exec *exec);
+int			builtin(t_exec *exec, int *fd_origin);
 int			is_builtin(char **str);
 
 int		execution(t_exec *exec);
@@ -150,8 +149,9 @@ void	sig_c_interactive(struct sigaction *sig_struct);
 void	c_new_prompt(int signal);
 void	c_quite_exec(int signal);
 void	sig_slash_interactive(struct sigaction *sig_struct);
-void	slash_dump(int signal);
 void	slash_exec(int signal);
+void	sig_slash_exec(struct sigaction *sig_struct);
+
 
 
 

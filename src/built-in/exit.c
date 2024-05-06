@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:38:43 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 13:10:33 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static long long int	ft_atoll(char *str)
 	return (nbrs);
 }
 
-static int	size_nbrs(t_exec *exec, char *str)
+static int	size_nbrs(t_exec *exec, char *str, int *fd_origin)
 {
 	int	i;
 	int	j;
@@ -46,28 +46,32 @@ static int	size_nbrs(t_exec *exec, char *str)
 		i--;
 	if (ft_isdigit(str[i + j]) == 0 || i >= 19)
 	{
-		printf("exit\n");
-		// ft_putstr_fd("minishell: exit: ", 2);
-		// ft_putstr_fd(str, 2);
+		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd(" numeric argument required\n", 2);
 		ft_free_exec(exec);
+		if(fd_origin) 
+			(close(fd_origin[0]), close(fd_origin[1]));
 		exit (2);
 	}
 	return (1);
 }
 
-int	ft_exit(t_exec *exec)
+int	ft_exit(t_exec *exec, int *fd_origin)
 {
 	int	i;
 
 	i = 1;
 	if (exec->cmds->cmd[1] == NULL)
+	{
+		if(fd_origin)
+			(close(fd_origin[1]), close(fd_origin[0]));
 		(ft_free_exec(exec), printf("exit\n"), exit(exec->error_code));
+	}
 	while (exec->cmds->cmd[i])
 	{
 		if (i >= 2)
 		{
-			printf("exit\n");
+			ft_putstr_fd("exit\n", 2);
 			print_message(NULL,  NULL, " too many arguments", 2);
 			return (1);
 		}
@@ -75,12 +79,15 @@ int	ft_exit(t_exec *exec)
 	}
 	i = 0;
 	while (exec->cmds->cmd[++i])
-		size_nbrs(exec, exec->cmds->cmd[i]);
-	printf("exit\n");
+		size_nbrs(exec, exec->cmds->cmd[i], fd_origin);
+	ft_putstr_fd("exit\n", 2);
 	if(exec->cmds->cmd[1])
 		i = ft_atoll(exec->cmds->cmd[1]);
 	ft_free_exec(exec);
+	if(fd_origin)
+		(close(fd_origin[0]), close(fd_origin[1]));
 	if (i)
 		exit(i);
+	exit(0);
 	return(666);
 }

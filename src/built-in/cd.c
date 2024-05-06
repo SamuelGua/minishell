@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 08:56:41 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:09:03 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 18:36:25 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_env *ft_getenv(t_env *env, char *str)
 
 void update_cd(t_cdutils *pwd)
 {
-	if (pwd->oldpwd)
+	if (pwd->oldpwd && pwd->previous_pwd)
 	{
 		free(pwd->oldpwd->params);
 		pwd->oldpwd->params = ft_strdup(pwd->previous_pwd);
@@ -61,6 +61,8 @@ int	cd_home(t_env *env, t_cdutils *pwd)
 		error = ft_strjoin("minishell: cd: ", env->params);
 		perror(error);
 		free(error);
+		if (pwd->previous_pwd)
+			free(pwd->previous_pwd);
 		return (1);
 	}
 	update_cd(pwd);

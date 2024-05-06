@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:50:38 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/06 17:44:15 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ int	valid_cmd(t_exec *exec, char **path)
 	i = 0;
 	new = ft_strdup(exec->cmds->cmd[0]);
 	if (!new)
-		return (printf("Error malloc\n"), 2);
+		return (ft_putstr_fd("Error malloc\n", 2), 2);
 	while (access(new, X_OK) && path && path[i])
 	{
 		free(new);
 		new = ft_strjoin(path[i], exec->cmds->cmd[0]);
 		if (!new)
-			return (printf("Error malloc\n"), 2);
+			return (ft_putstr_fd("Error malloc\n", 2), 2);
 		i++;
 	}
 	if (access(new, X_OK))
@@ -68,7 +68,6 @@ int check_erros(t_exec *exec, char **path)
 	int	i;
 
 	i = -1;
-	(void)path;
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
 		i = 1;
@@ -76,7 +75,9 @@ int check_erros(t_exec *exec, char **path)
 		i = 0;
 	else if (is_builtin(exec->cmds->cmd))
 	{
-		builtin(exec);
+		if (is_builtin(exec->cmds->cmd) == 2 && path) 
+			ft_free(path);;
+		builtin(exec, NULL);
 		i = 0;
 	}
 	else if (check_isfile(exec))
@@ -113,23 +114,35 @@ void child_process(t_exec *exec, char **path)
 int exec_sbuiltin(t_exec *exec)
 {	
 	int	j;
-	int	dup_in;
-	int	dup_out;
+	int fd_orgin[2];
 
-	dup_in = dup(STDIN_FILENO);
-	dup_out = dup(STDOUT_FILENO);
+	fd_orgin[0] = dup(STDIN_FILENO);
+	fd_orgin[1] = dup(STDOUT_FILENO);
 	j = redirection (exec);
-	if (j >= 0)
-		j = builtin(exec);
-	dup2(dup_out, STDOUT_FILENO);
-	dup2(dup_in, STDIN_FILENO);
-	close(dup_out);
-	close(dup_in);
+	if (j >= 0 && exec->cmds->cmd[0])
+		j = builtin(exec, fd_orgin);
+	dup2(fd_orgin[1], STDOUT_FILENO);
+	dup2(fd_orgin[0] , STDIN_FILENO);
+	close(fd_orgin[1]);
+	close(fd_orgin[0] );
 	ft_free_cmd(exec->cmds);
 	if (j < 0)
 		j *= -1;
 	clean_dir_temp();
 	return (j);
+}
+void signal_exec_c(struct sigaction *signal)
+{
+	signal->sa_handler = c_quite_exec;
+	signal->sa_flags = 0;
+	sigemptyset(&signal->sa_mask);
+}
+
+void signal_exec_slash(struct sigaction *signal)
+{
+	signal->sa_handler = slash_exec;
+	signal->sa_flags = 0;
+	sigemptyset(&signal->sa_mask);
 }
 
 int execution(t_exec *exec)
@@ -140,17 +153,12 @@ int execution(t_exec *exec)
 	t_cmds	*tmp_cmd;
 
 	tmp_cmd = exec->cmds;
-	struct sigaction signal;
-	signal.sa_handler = c_quite_exec;
-	signal.sa_flags = 0;
-	sigemptyset(&signal.sa_mask);
-	sigaction(SIGINT, &signal, NULL);
-
+	struct sigaction signal; 
+	signal_exec_c(&signal);
+	
 	struct sigaction slash_signal;
-	slash_signal.sa_handler = slash_exec;
-	slash_signal.sa_flags = 0;
-	sigemptyset(&slash_signal.sa_mask);
-	sigaction(SIGQUIT, &slash_signal, NULL);
+	sig_slash_exec(&slash_signal);
+	sigaction(SIGINT, &signal, NULL);
 
 	exec->nb_pipe = nb_pipe(exec->cmds);
 	j = 0;
@@ -173,7 +181,10 @@ int execution(t_exec *exec)
 		if (pid == -1)
 			return (perror("FORK ERROR"), 1);
 		if (pid == 0)
+		{
+			sigaction(SIGQUIT, &slash_signal, NULL);
 			child_process(exec, path);
+		}
 		tmp_cmd = exec->cmds;
 		exec->cmds = exec->cmds->next;
 		ft_free_cmd(tmp_cmd);
