@@ -18,8 +18,15 @@ int	wait_childs(int pid)
 	int	code;
 
 	while (errno != ECHILD)
-		if (wait(&wstatus) == pid && WIFEXITED(wstatus))
-			code = WEXITSTATUS(wstatus);
+	{
+		if (wait(&wstatus) == pid) 
+		{
+			if (WIFEXITED(wstatus))
+				code = WEXITSTATUS(wstatus);
+			else
+				code = 128 + WTERMSIG(wstatus);
+		}
+	}
 	if (pid == -1)
 		return (127);
 	return (code);

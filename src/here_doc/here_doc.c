@@ -28,7 +28,8 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	int		type_quote;
 	
 	type_quote = check_quote_here(limiter);
-	lim = delete_quote(limiter);
+	lim = ft_strdup(limiter);
+	lim = delete_quote(lim);
 	while (1)
 	{
 		print_message("HERE_DOC {", lim, "} > ", 1);
@@ -49,6 +50,7 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
+	free(lim);
 	return (0);
 }
 

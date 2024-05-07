@@ -131,19 +131,7 @@ int exec_sbuiltin(t_exec *exec)
 	clean_dir_temp();
 	return (j);
 }
-void signal_exec_c(struct sigaction *signal)
-{
-	signal->sa_handler = c_quite_exec;
-	signal->sa_flags = 0;
-	sigemptyset(&signal->sa_mask);
-}
 
-void signal_exec_slash(struct sigaction *signal)
-{
-	signal->sa_handler = slash_exec;
-	signal->sa_flags = 0;
-	sigemptyset(&signal->sa_mask);
-}
 
 int execution(t_exec *exec)
 {
@@ -153,12 +141,6 @@ int execution(t_exec *exec)
 	t_cmds	*tmp_cmd;
 
 	tmp_cmd = exec->cmds;
-	struct sigaction signal; 
-	signal_exec_c(&signal);
-	
-	struct sigaction slash_signal;
-	sig_slash_exec(&slash_signal);
-	sigaction(SIGINT, &signal, NULL);
 
 	exec->nb_pipe = nb_pipe(exec->cmds);
 	j = 0;
@@ -182,7 +164,7 @@ int execution(t_exec *exec)
 			return (perror("FORK ERROR"), 1);
 		if (pid == 0)
 		{
-			sigaction(SIGQUIT, &slash_signal, NULL);
+			signal_exec();
 			child_process(exec, path);
 		}
 		tmp_cmd = exec->cmds;

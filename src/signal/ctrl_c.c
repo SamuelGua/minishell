@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void c_new_prompt(int signal)
+void interactive_c(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -21,30 +21,36 @@ void c_new_prompt(int signal)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	return ;
 }
 
-void sig_c_here_doc(int signal)
+void signal_interactive(void)
 {
-	if (signal == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	return ;
-}
-void	c_quite_exec(int signal)
-{
-	if (signal == SIGINT)
-		printf("\n");
-	return ;
+	struct sigaction c_signal;
+	struct sigaction slash_signal;
+
+	c_signal.sa_handler = interactive_c;
+	c_signal.sa_flags = 0;
+	sigemptyset(&c_signal.sa_mask);
+	sigaction(SIGINT, &c_signal, NULL);
+
+	slash_signal.sa_handler = SIG_IGN;
+	slash_signal.sa_flags = 0;
+	sigemptyset(&slash_signal.sa_mask);
+	sigaction(SIGQUIT, &slash_signal, NULL);
 }
 
-void sig_c_interactive(struct sigaction *sig_struct)
+void signal_exec(void)
 {
-	sig_struct->sa_handler = c_new_prompt;
-	sig_struct->sa_flags = 0;
-	sigemptyset(&sig_struct->sa_mask);
+	struct sigaction c_signal;
+	struct sigaction slash_signal;
+
+	c_signal.sa_handler = SIG_DFL;
+	c_signal.sa_flags = 0;
+	sigemptyset(&c_signal.sa_mask);
+	sigaction(SIGINT, &c_signal, NULL);
+
+	slash_signal.sa_handler = SIG_DFL;
+	slash_signal.sa_flags = 0;
+	sigemptyset(&slash_signal.sa_mask);
+	sigaction(SIGQUIT, &slash_signal, NULL);
 }

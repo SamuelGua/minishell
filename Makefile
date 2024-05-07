@@ -26,7 +26,7 @@ MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
 MINISHELL		= main.c init_env.c free_element.c\
 
 SIGNAL_PATH		= $(SIGNAL:%=src/signal/%)
-SIGNAL			= ctrl_c.c ctrl_d.c ctrl_slash.c\
+SIGNAL			= ctrl_c.c\
 
 HERE_DOC_PATH	= $(HERE_DOC:%=src/here_doc/%)
 HERE_DOC		= here_doc.c\

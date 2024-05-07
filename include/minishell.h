@@ -31,6 +31,7 @@
 # include <curses.h>
 # include <errno.h>
 
+
 // Structure env et export
 typedef struct s_env
 {
@@ -144,13 +145,11 @@ void	print_lst_cmd(t_cmds *cmd);
 
 
 //signaux
-void	d_quite(int signal);
-void	sig_c_interactive(struct sigaction *sig_struct);
-void	c_new_prompt(int signal);
-void	c_quite_exec(int signal);
-void	sig_slash_interactive(struct sigaction *sig_struct);
-void	slash_exec(int signal);
-void	sig_slash_exec(struct sigaction *sig_struct);
+
+void signal_interactive(void);
+void signal_exec(void);
+
+
 
 
 

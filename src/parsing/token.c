@@ -72,7 +72,7 @@ t_token	*init_token(char *prompt, t_token *token)
 		while (utils.type_token == 0 && utils.quoted == NO_QUOTE
 			&& check_whitespace(prompt[utils.i]))
 				utils.i++;
-		if (prompt[utils.i] == '\0')
+		if (prompt[utils.i] == '\0' || prompt[utils.i] == '\n')
 		{
 			rules_one(&token, &utils, prompt);
 			break ;
