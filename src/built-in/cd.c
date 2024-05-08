@@ -55,7 +55,10 @@ int	cd_home(t_env *env, t_cdutils *pwd)
 	while (env && ft_strcmp(env->cle, "HOME") != 0)
 		env = env->next;
 	if (!env)
+	{
+		free(pwd->previous_pwd);
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
+	}
 	if (chdir(env->params))
 	{
 		error = ft_strjoin("minishell: cd: ", env->params);

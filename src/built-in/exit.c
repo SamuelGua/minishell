@@ -31,6 +31,13 @@ static long long int	ft_atoll(char *str)
 	return (nbrs);
 }
 
+static void dflt_fd(int *fd_origin)
+{
+	dup2(fd_origin[1], STDOUT_FILENO);
+	dup2(fd_origin[0] , STDIN_FILENO);
+	close(fd_origin[1]);
+	close(fd_origin[0] );
+}
 static int	size_nbrs(t_exec *exec, char *str, int *fd_origin)
 {
 	int	i;
@@ -42,16 +49,14 @@ static int	size_nbrs(t_exec *exec, char *str, int *fd_origin)
 		j++;
 	while (ft_isdigit(str[i + j]))
 		i++;
-	if (str[i + j] == '\0')
-		i--;
-	if (ft_isdigit(str[i + j]) == 0 || i >= 19)
+
+	if (str[i + j] != '\0' || i >= 19)
 	{
 		ft_putstr_fd("exit\n", 2);
-		ft_putstr_fd(" numeric argument required\n", 2);
+		ft_putstr_fd("numeric argument required\n", 2);
 		ft_free_exec(exec);
-		if(fd_origin) 
-			(close(fd_origin[0]), close(fd_origin[1]));
-		exit (2);
+		dflt_fd(fd_origin);
+		exit(2);
 	}
 	return (1);
 }
@@ -60,32 +65,27 @@ int	ft_exit(t_exec *exec, int *fd_origin)
 {
 	int	i;
 
-	i = 1;
 	if (exec->cmds->cmd[1] == NULL)
 	{
-		if(fd_origin)
-			(close(fd_origin[1]), close(fd_origin[0]));
-		(ft_free_exec(exec), printf("exit\n"), exit(exec->error_code));
-	}
-	while (exec->cmds->cmd[i])
-	{
-		if (i >= 2)
-		{
-			ft_putstr_fd("exit\n", 2);
-			print_message(NULL,  NULL, " too many arguments", 2);
-			return (1);
-		}
-		i++;
+		dflt_fd(fd_origin);
+		(ft_free_exec(exec), ft_putstr_fd("exit\n", 2), exit(exec->error_code));
 	}
 	i = 0;
 	while (exec->cmds->cmd[++i])
+	{
 		size_nbrs(exec, exec->cmds->cmd[i], fd_origin);
+		if (i >= 2)
+		{
+			ft_putstr_fd("exit\n", 2);
+			print_message(NULL, NULL, "too many arguments", 2);
+			return (1);
+		}
+	}
 	ft_putstr_fd("exit\n", 2);
 	if(exec->cmds->cmd[1])
 		i = ft_atoll(exec->cmds->cmd[1]);
 	ft_free_exec(exec);
-	if(fd_origin)
-		(close(fd_origin[0]), close(fd_origin[1]));
+	dflt_fd(fd_origin);
 	if (i)
 		exit(i);
 	exit(0);

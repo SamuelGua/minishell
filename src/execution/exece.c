@@ -17,23 +17,23 @@ int check_isfile(t_exec *exec)
 	struct stat fileinfo;
 
 	if (exec->cmds->cmd[0][0] == '\0')
-		return(1);
+		return(127);
 	if (ft_strchr(exec->cmds->cmd[0], '/'))
 	{
 		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
-        	return (perror("stat"), 1);
+        	return (perror("minishell"), 127);
     	if (access(exec->cmds->cmd[0], X_OK))
 		{
-			perror("");
-			return (1);
+			perror(" ");
+			return (126);
 		}
 		else if (S_ISDIR(fileinfo.st_mode))
 		{
 			print_message("minishell: ", exec->cmds->cmd[0], ": Is a directory\n", 2);
-			return (1);
+			return (126);
 		}
 	}
-	return (0);
+	return (-1);
 }
 
 int	valid_cmd(t_exec *exec, char **path)
@@ -70,20 +70,21 @@ int check_erros(t_exec *exec, char **path)
 	i = -1;
 	close(exec->pipe[0]);
 	if (redirection(exec) == -1)
-		i = 1;
+		return (1);
 	else if (!exec->cmds->cmd[0])
-		i = 0;
+		return (0);
 	else if (is_builtin(exec->cmds->cmd))
 	{
 		if (is_builtin(exec->cmds->cmd) == 2 && path) 
 			ft_free(path);;
 		builtin(exec, NULL);
-		i = 0;
+		return (0);
 	}
-	else if (check_isfile(exec))
-		i = 126;
+	i = check_isfile(exec);
+	if (i > 0)
+		return (i);
 	else if (valid_cmd(exec, path) || !exec->cmds->cmd[0])
-		i = 127;
+		return (127);
 	return (i);
 }
 
@@ -108,7 +109,7 @@ void child_process(t_exec *exec, char **path)
 	perror("");
 	ft_free_exec(exec);
 	close(exec->pipe[1]);
-	exit(1);
+	exit(127);
 }
 
 int exec_sbuiltin(t_exec *exec)
@@ -153,6 +154,7 @@ int execution(t_exec *exec)
 	path = find_path(exec->env);
 	exec->previous_fd = -1;
 	int i = exec->nb_pipe;
+	signal(SIGINT, SIG_IGN);
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
@@ -161,7 +163,22 @@ int execution(t_exec *exec)
 			close(exec->pipe[1]);
 		pid = fork();
 		if (pid == -1)
+		{
+			if (path)
+				ft_free(path);
+			if (exec->previous_fd != -1)
+				close(exec->previous_fd);
+			close(exec->pipe[0]);
+			close(exec->pipe[1]);
+			clean_dir_temp();
+			while (exec->cmds)
+			{
+				tmp_cmd = exec->cmds;
+				exec->cmds = exec->cmds->next;
+				ft_free_cmd(tmp_cmd);
+			}
 			return (perror("FORK ERROR"), 1);
+		}
 		if (pid == 0)
 		{
 			signal_exec();
@@ -180,5 +197,9 @@ int execution(t_exec *exec)
 		ft_free(path);
 	close(exec->previous_fd);
 	j = wait_childs(pid);
+	if (j == 131)
+		ft_putstr_fd("Quit (core dumped)\n",2);
+	else if (j == 130)
+		printf("\n");
 	return (clean_dir_temp(), j);
 }

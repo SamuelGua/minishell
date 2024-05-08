@@ -35,7 +35,13 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 		print_message("HERE_DOC {", lim, "} > ", 1);
 		line = get_next_line(0);
 		if (!line)
+		{
+			ft_putstr_fd(line, fd);
+			free(line);
+			printf("C'est nul, c'est nul\n");
+			free(lim);
 			return (666);
+		}
 		c = strchr(line,'\n');
 		*c = '\0';
 		if (!ft_strcmp(line, lim))

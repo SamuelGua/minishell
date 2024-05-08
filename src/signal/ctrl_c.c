@@ -12,15 +12,21 @@
 
 #include "minishell.h"
 
-void interactive_c(int signal)
+void interactive_c(int signal_code)
 {
-	if (signal == SIGINT)
+	if (signal_code == SIGINT)
 	{
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+}
+
+void	signal_d_exec(int signal_code)
+{
+	(void)signal_code;
+	signal(SIGQUIT, SIG_DFL);
 }
 
 void signal_interactive(void)
@@ -49,7 +55,7 @@ void signal_exec(void)
 	sigemptyset(&c_signal.sa_mask);
 	sigaction(SIGINT, &c_signal, NULL);
 
-	slash_signal.sa_handler = SIG_DFL;
+	slash_signal.sa_handler = signal_d_exec;
 	slash_signal.sa_flags = 0;
 	sigemptyset(&slash_signal.sa_mask);
 	sigaction(SIGQUIT, &slash_signal, NULL);
