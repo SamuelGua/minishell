@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"climits": "c"
+		"climits": "c",
+		"minishell.h": "c"
 	}
 }

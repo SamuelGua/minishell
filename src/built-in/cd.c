@@ -14,25 +14,19 @@
 
 //getenv
 // modifier les environements
-typedef struct s_cdutils
-{
-	t_env *pwd;
-	t_env *oldpwd;
-	char *previous_pwd;
-}	t_cdutils;
 
-t_env *ft_getenv(t_env *env, char *str)
+t_env	*ft_getenv(t_env *env, char *str)
 {
 	while (env)
 	{
 		if (!strcmp(env->cle, str))
-			break;
+			break ;
 		env = env->next;
 	}
 	return (env);
 }
 
-void update_cd(t_cdutils *pwd)
+void	update_cd(t_cdutils *pwd)
 {
 	if (pwd->oldpwd && pwd->previous_pwd)
 	{
@@ -72,10 +66,10 @@ int	cd_home(t_env *env, t_cdutils *pwd)
 	return (0);
 }
 
-int ft_cd(t_env *env, char **str)
+int	ft_cd(t_env *env, char **str)
 {
-	int		i;
-	char	*error;
+	int			i;
+	char		*error;
 	t_cdutils	pwd;
 
 	pwd.oldpwd = ft_getenv(env, "OLDPWD");
@@ -89,7 +83,7 @@ int ft_cd(t_env *env, char **str)
 	if (i > 2)
 	{
 		ft_putstr_fd("bash: cd: too many arguments\n", 2);
-		return (free(pwd.previous_pwd), 1 );
+		return (free(pwd.previous_pwd), 1);
 	}
 	if (chdir(str[1]))
 	{

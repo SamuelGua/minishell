@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_exit_code = 0;
+
 void 	print_message(char *str1, char *str2, char *str3, int fd)
 {
 	ft_putstr_fd(str1, fd);
@@ -29,11 +31,18 @@ int main(int ac, char **av, char **envp)
 	exec.error_code = 0;
 	while (1)
 	{
+		g_exit_code = 0;
 		signal_interactive();
 
 		exec.prompt = readline("minishell > ");
 		if (!exec.prompt)
+		{
+			ft_putstr_fd("exit\n", 1);
 			return (ft_free_env(exec.env), ft_free_export(exec.export), exec.error_code);
+
+		}
+		if (g_exit_code == 130)
+			exec.error_code = g_exit_code;
 		exec.token = init_token(exec.prompt, exec.token);
 		if (!exec.token)
 		{

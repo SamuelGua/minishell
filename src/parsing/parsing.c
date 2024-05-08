@@ -6,15 +6,12 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:18:40 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 17:34:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/08 22:49:17 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
-// gerer les newline
 int	check_whitespace(char c)
 {
 	if (c == 32 || (c >= 9 && c <= 13))
@@ -57,7 +54,7 @@ int	good_operator(t_token *token)
 // error sortie 2 ou 1 || ft_putstr
 int	is_valid_token(t_token *token)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = token;
 	if (token->token == PIPE)

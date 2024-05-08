@@ -52,6 +52,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 
+long long int	ft_atoll(char *str);
+
 typedef struct s_list
 {
 	void				*content;

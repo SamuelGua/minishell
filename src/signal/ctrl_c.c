@@ -16,6 +16,7 @@ void interactive_c(int signal_code)
 {
 	if (signal_code == SIGINT)
 	{
+		g_exit_code = 128 + SIGINT;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);

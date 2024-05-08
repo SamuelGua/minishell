@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_atoll.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/05 12:45:36 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 10:56:48 by scely            ###   ########.fr       */
+/*   Created: 2024/05/08 22:42:35 by scely             #+#    #+#             */
+/*   Updated: 2024/05/08 22:42:39 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	ft_env(t_env *env, char **str)
+long long int	ft_atoll(char *str)
 {
-	if (str[1])
-		return (0);
-	while (env)
+	int				i;
+	long long int	nbrs;
+
+	i = 0;
+	nbrs = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
 	{
-		ft_putstr_fd(env->cle, 1);
-		ft_putstr_fd("=", 1);
-		ft_putstr_fd(env->params, 1);
-		ft_putstr_fd("\n", 1);
-		env = env->next;
+		nbrs = nbrs * 10 + str[i] - '0';
+		i++;
 	}
-	return (0);
+	if (str[0] == '-')
+		nbrs *= -1;
+	return (nbrs);
 }

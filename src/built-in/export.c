@@ -12,9 +12,6 @@
 
 #include "minishell.h"
 
-// doit ton le triee par ordre alphabetique
-// si on export sans la sans la valeur ""
-
 int	print_list(t_export *list)
 {
 	if (list == NULL)
@@ -93,15 +90,14 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 			while (str[i][j] && str[i][j] != '=')
 				j++;
 			if (!str[i][j])
-				continue;
+				continue ;
 			str[i][j] = '\0';
 			tmp = ft_lstnew_env(str[i], &str[i][j + 1]);
 			if (!tmp)
 				return (2);
 			ft_lstadd_back_env(env, tmp);
-			(ft_free_export(*export), *export = init_export(*env));			
+			(ft_free_export(*export), *export = init_export(*env));
 		}
 	}
-	// (ft_free_export(*export), *export = init_export(*env));
 	return (0);
 }

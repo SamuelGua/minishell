@@ -12,22 +12,22 @@
 
 #include "minishell.h"
 
-int builtin(t_exec *exec, int *fd_origin)
+int	builtin(t_exec *exec, int *fd_origin)
 {
-		if (ft_strcmp(exec->cmds->cmd[0], "env") == 0)
-			return (ft_env(exec->env, exec->cmds->cmd));
-		else if (ft_strcmp(exec->cmds->cmd[0], "unset") == 0)
-			return (ft_unset(&exec->export, &exec->env, exec->cmds->cmd));
-		else if (ft_strcmp(exec->cmds->cmd[0], "echo") == 0)
-			return (ft_echo(exec->cmds->cmd));
-		else if (ft_strcmp(exec->cmds->cmd[0], "export") == 0)
-			return (ft_export(&exec->export, &exec->env, exec->cmds->cmd, 0));
-		else if (ft_strcmp(exec->cmds->cmd[0], "pwd") == 0)	
-			return (ft_pwd());
-		else if (ft_strcmp(exec->cmds->cmd[0], "exit") == 0)	
-			return (ft_exit(exec, fd_origin));
-		else if (ft_strcmp(exec->cmds->cmd[0], "cd") == 0)		
-			return (ft_cd(exec->env, exec->cmds->cmd));
+	if (ft_strcmp(exec->cmds->cmd[0], "env") == 0)
+		return (ft_env(exec->env, exec->cmds->cmd));
+	else if (ft_strcmp(exec->cmds->cmd[0], "unset") == 0)
+		return (ft_unset(&exec->export, &exec->env, exec->cmds->cmd));
+	else if (ft_strcmp(exec->cmds->cmd[0], "echo") == 0)
+		return (ft_echo(exec->cmds->cmd));
+	else if (ft_strcmp(exec->cmds->cmd[0], "export") == 0)
+		return (ft_export(&exec->export, &exec->env, exec->cmds->cmd, 0));
+	else if (ft_strcmp(exec->cmds->cmd[0], "pwd") == 0)
+		return (ft_pwd());
+	else if (ft_strcmp(exec->cmds->cmd[0], "exit") == 0)
+		return (ft_exit(exec, fd_origin));
+	else if (ft_strcmp(exec->cmds->cmd[0], "cd") == 0)
+		return (ft_cd(exec->env, exec->cmds->cmd));
 	return (0);
 }
 

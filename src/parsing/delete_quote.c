@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:23:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 11:58:48 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/08 22:51:12 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,7 @@ char	*clean_quote(char *str)
 	while (str[i])
 	{
 		if (c == str[i] || ((str[i] == '\'' || str[i] == '\"') && c == '\0'))
-		{
-			quote_check(&c, str[i]);
-			i++;
-		}
+			(quote_check(&c, str[i]), i++);
 		else
 		{
 			new[j] = str[i];
@@ -65,8 +62,7 @@ char	*clean_quote(char *str)
 		}
 		new[j] = '\0';
 	}
-	free(str);
-	return (new);
+	return (free(str), new);
 }
 
 char	*delete_quote(char *str)

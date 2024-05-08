@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:14:53 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 19:24:55 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/08 22:44:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ t_token	*init_token(char *prompt, t_token *token)
 	{
 		while (utils.type_token == 0 && utils.quoted == NO_QUOTE
 			&& check_whitespace(prompt[utils.i]))
-				utils.i++;
+			utils.i++;
 		if (prompt[utils.i] == '\0' || prompt[utils.i] == '\n')
 		{
 			rules_one(&token, &utils, prompt);
@@ -80,7 +80,7 @@ t_token	*init_token(char *prompt, t_token *token)
 		else if (utils.type_token == OPERATOR
 			&& is_operator(prompt[utils.i], utils.quoted)
 			&& check_operator(&prompt[utils.start_token], utils.len))
-				utils.len++;
+			utils.len++;
 		else if (utils.type_token == OPERATOR
 			&& check_operator(&prompt[utils.start_token], utils.len) == 0)
 			rules_three(&token, &utils, prompt);

@@ -32,6 +32,7 @@
 # define D_QUOTE 2
 # define NO_TOKEN 0
 
+
 typedef struct s_parsing_utils
 {
 	int	i;

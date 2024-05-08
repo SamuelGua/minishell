@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:19:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 19:54:27 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/08 22:45:18 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ void	rules_six(t_token **token, t_parsutils *utils, char *prompt)
 			utils->sous_type = UNQUOTED;
 		node = ft_lstnew_token(&prompt[utils->start_token],
 				utils->len, utils->type_token, utils->sous_type);
-			if (!node)
-				return ;
+		if (!node)
+			return ;
 		ft_lstadd_back_token(token, node);
 		utils->type_token = 0;
 		utils->sous_type = 1;

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 18:03:45 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/08 23:16:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <curses.h>
 # include <errno.h>
 
+extern int	g_exit_code;
 
 // Structure env et export
 typedef struct s_env
@@ -79,6 +80,32 @@ typedef struct s_exec
 	int					error_code;
 } t_exec;
 
+typedef struct s_cdutils
+{
+	t_env	*pwd;
+	t_env	*oldpwd;
+	char	*previous_pwd;
+}	t_cdutils;
+
+typedef struct s_expand
+{
+	int		i;
+	char	*new;
+	int		l_exp;
+	int		quoted;
+	int		is_here_doc;
+
+}	t_exutils;
+
+typedef struct s_build_cmd
+{
+	t_cmds	*cmds_tmp;
+	t_token	*end;
+	t_cmds	*cmds;
+	t_token	*tmp;
+	int		nb_here_doc;
+}	t_build_cmd;
+
 
 //// INITIALISATION
 // init env
@@ -108,11 +135,15 @@ int			is_valid_token(t_token *token);
 char		*delete_quote(char *str);
 
 
+void	pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds, int i);
+char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds, t_build_cmd *utils);
 t_cmds *build_cmd(t_exec *exec);
 void	ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
 t_cmds	*ft_lstnew_cmd(char **cmd, t_file *file);
 t_file	*ft_lstnew_file(char *file, int redirec);
 void	ft_lstadd_back_file(t_file **lst, t_file *node);
+t_cmds	*create_node(t_token *tmp, t_token *end, t_build_cmd *utils);
+
 
 
 int			builtin(t_exec *exec, int *fd_origin);
@@ -141,7 +172,6 @@ int		redirection(t_exec *exec);
 int		run_here_doc(t_exec *exec);
 void	clean_dir_temp(void);
 int		find_here_doc(t_file *file);
-void	print_lst_cmd(t_cmds *cmd);
 
 
 //signaux

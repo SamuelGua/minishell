@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 18:10:46 by scely             #+#    #+#             */
-/*   Updated: 2024/04/29 20:36:13 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/08 23:00:01 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,26 @@ void	ft_lstadd_back_file(t_file **lst, t_file *node)
 	}
 	else
 		*lst = node;
+}
+
+t_cmds	*create_node(t_token *tmp, t_token *end, t_build_cmd *utils)
+{
+	t_cmds	*cmds;
+	t_file	*tmp_file;
+
+	tmp_file = NULL;
+	cmds = malloc(sizeof(t_cmds));
+	if (!cmds)
+		return (NULL);
+	cmds->file = NULL;
+	if (end && end->token == PIPE)
+		pipe_init(tmp_file, end, cmds, 1);
+	if (tmp && tmp->token == PIPE)
+		(pipe_init(tmp_file, tmp, cmds, 0), tmp = tmp->next);
+	cmds->cmd = node_init(tmp, end, tmp_file, cmds, utils);
+	if (!cmds->cmd)
+		return (NULL);
+	cmds->type = is_builtin(cmds->cmd);
+	cmds->next = NULL;
+	return (cmds);
 }
