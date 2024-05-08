@@ -30,6 +30,29 @@ static long long int	ft_atoll(char *str)
 		nbrs *= -1;
 	return (nbrs);
 }
+int check_limit(char *str)
+{
+	int				i;
+	unsigned long long int	nbrs;
+	unsigned long long int	max_64;
+
+	i = 0;
+	nbrs = 0;
+	max_64 = INT64_MAX;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		nbrs = nbrs * 10 + str[i] - '0';
+		i++;
+	}
+	if (nbrs == max_64 + 1 && str[0] == '-')
+		return (0);
+	else if (nbrs > INT64_MAX)
+		return (1);
+	return (0);
+
+}
 
 static void dflt_fd(int *fd_origin)
 {
@@ -50,8 +73,11 @@ static int	size_nbrs(t_exec *exec, char *str, int *fd_origin)
 	while (ft_isdigit(str[i + j]))
 		i++;
 
-	if (str[i + j] != '\0' || i >= 19)
+	if (str[i + j] != '\0' || i > 19 
+		|| check_limit(str))
 	{
+		// printf("%d\n", (int)ft_strlen(str));
+		// printf("%c\n", str[i + j]);
 		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("numeric argument required\n", 2);
 		ft_free_exec(exec);
@@ -63,7 +89,7 @@ static int	size_nbrs(t_exec *exec, char *str, int *fd_origin)
 
 int	ft_exit(t_exec *exec, int *fd_origin)
 {
-	int	i;
+	long long int	i;
 
 	if (exec->cmds->cmd[1] == NULL)
 	{
@@ -73,13 +99,13 @@ int	ft_exit(t_exec *exec, int *fd_origin)
 	i = 0;
 	while (exec->cmds->cmd[++i])
 	{
-		size_nbrs(exec, exec->cmds->cmd[i], fd_origin);
 		if (i >= 2)
 		{
 			ft_putstr_fd("exit\n", 2);
 			print_message(NULL, NULL, "too many arguments", 2);
 			return (1);
 		}
+		size_nbrs(exec, exec->cmds->cmd[i], fd_origin);
 	}
 	ft_putstr_fd("exit\n", 2);
 	if(exec->cmds->cmd[1])
