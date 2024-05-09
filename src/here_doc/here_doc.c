@@ -25,7 +25,6 @@ void	signal_c_heredoc(int signal_code)
 	g_exit_code = 5;
 	(void)signal_code;
 	close(0);
-	ft_putstr_fd("\n", 1);
 }
 
 void	signal_heredoc(void)
@@ -33,7 +32,6 @@ void	signal_heredoc(void)
 	struct sigaction	c_signal;
 
 	c_signal.sa_handler = signal_c_heredoc;
-	// c_signal.sa_handler = SIG_DFL;
 	c_signal.sa_flags = 0;
 	sigemptyset(&c_signal.sa_mask);
 	sigaction(SIGINT, &c_signal, NULL);
@@ -44,21 +42,33 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	char	*line;
 	char	*lim;
 	int		type_quote;
+	int		dup_origin;
 
 	// char	*c = NULL;
 	type_quote = check_quote_here(limiter);
 	lim = ft_strdup(limiter);
 	lim = delete_quote(lim);
+	dup_origin = dup(STDIN_FILENO);
 	signal_heredoc();
 	while (1 && g_exit_code != 5)
 	{
 		// print_message("HERE_DOC {", lim, "} > ", 1);
 		// line = get_next_line(0);
 		line = readline("HERE_DOC > ");
+		if (!line && g_exit_code == 5)
+		{
+			dup2(dup_origin, STDIN_FILENO);
+			close(dup_origin);
+			free(lim);
+			printf("\n");
+			return (130);
+		}
 		if (!line)
 		{
+			dup2(dup_origin, STDIN_FILENO);
+			close(dup_origin);
 			free(line);
-			printf("\nminishell: warning: here-document at line 1 delimited by end-of-file (wanted `%s')\n",
+			printf("minishell: warning: here-document at line 1 delimited by end-of-file (wanted `%s')\n",
 				lim);
 			free(lim);
 			return (1);

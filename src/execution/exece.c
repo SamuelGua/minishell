@@ -6,30 +6,31 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 16:54:10 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 18:25:17 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_isfile(t_exec *exec)
+int	check_isfile(t_exec *exec)
 {
-	struct stat fileinfo;
+	struct stat	fileinfo;
 
 	if (exec->cmds->cmd[0][0] == '\0')
-		return(127);
+		return (127);
 	if (ft_strchr(exec->cmds->cmd[0], '/'))
 	{
 		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
-        	return (perror("minishell"), 127);
-    	if (access(exec->cmds->cmd[0], X_OK))
+			return (perror("minishell"), 127);
+		if (access(exec->cmds->cmd[0], X_OK))
 		{
 			perror(" ");
 			return (126);
 		}
 		else if (S_ISDIR(fileinfo.st_mode))
 		{
-			print_message("minishell: ", exec->cmds->cmd[0], ": Is a directory\n", 2);
+			print_message("minishell: ", exec->cmds->cmd[0],
+				": Is a directory\n", 2);
 			return (126);
 		}
 	}
@@ -38,8 +39,8 @@ int check_isfile(t_exec *exec)
 
 int	valid_cmd(t_exec *exec, char **path)
 {
-	char *new;
-	int i;
+	char	*new;
+	int		i;
 
 	i = 0;
 	new = ft_strdup(exec->cmds->cmd[0]);
@@ -55,7 +56,8 @@ int	valid_cmd(t_exec *exec, char **path)
 	}
 	if (access(new, X_OK))
 	{
-		print_message("minishell: ", exec->cmds->cmd[0], " : command not found\n", 2);
+		print_message("minishell: ", exec->cmds->cmd[0],
+			" : command not found\n", 2);
 		return (free(new), 127);
 	}
 	free(exec->cmds->cmd[0]);
@@ -63,7 +65,7 @@ int	valid_cmd(t_exec *exec, char **path)
 	return (0);
 }
 
-int check_erros(t_exec *exec, char **path)
+int	check_erros(t_exec *exec, char **path)
 {
 	int	i;
 
@@ -75,8 +77,9 @@ int check_erros(t_exec *exec, char **path)
 		return (0);
 	else if (is_builtin(exec->cmds->cmd))
 	{
-		if (is_builtin(exec->cmds->cmd) == 2 && path) 
-			ft_free(path);;
+		if (is_builtin(exec->cmds->cmd) == 2 && path)
+			ft_free(path);
+		;
 		builtin(exec, NULL, 0);
 		return (0);
 	}
@@ -88,9 +91,9 @@ int check_erros(t_exec *exec, char **path)
 	return (i);
 }
 
-void child_process(t_exec *exec, char **path)
+void	child_process(t_exec *exec, char **path)
 {
-	int i;
+	int	i;
 
 	i = check_erros(exec, path);
 	if (i != -1)
@@ -112,20 +115,20 @@ void child_process(t_exec *exec, char **path)
 	exit(127);
 }
 
-int exec_sbuiltin(t_exec *exec)
-{	
+int	exec_sbuiltin(t_exec *exec)
+{
 	int	j;
-	int fd_orgin[2];
+	int	fd_orgin[2];
 
 	fd_orgin[0] = dup(STDIN_FILENO);
 	fd_orgin[1] = dup(STDOUT_FILENO);
-	j = redirection (exec);
+	j = redirection(exec);
 	if (j >= 0 && exec->cmds->cmd[0])
 		j = builtin(exec, fd_orgin, 1);
 	dup2(fd_orgin[1], STDOUT_FILENO);
-	dup2(fd_orgin[0] , STDIN_FILENO);
+	dup2(fd_orgin[0], STDIN_FILENO);
 	close(fd_orgin[1]);
-	close(fd_orgin[0] );
+	close(fd_orgin[0]);
 	ft_free_cmd(exec->cmds);
 	if (j < 0)
 		j *= -1;
@@ -133,20 +136,20 @@ int exec_sbuiltin(t_exec *exec)
 	return (j);
 }
 
-
-int execution(t_exec *exec)
+int	execution(t_exec *exec)
 {
-	int j;
-	char **path;
-	int 	pid;
+	int		j;
+	char	**path;
+	int		pid;
 	t_cmds	*tmp_cmd;
+	int		code_here;
+	int		i;
 
 	tmp_cmd = exec->cmds;
-
 	exec->nb_pipe = nb_pipe(exec->cmds);
 	j = 0;
 	//================================================================================//
-	int code_here = run_here_doc(exec);
+	code_here = run_here_doc(exec);
 	if (code_here == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 		return (exec_sbuiltin(exec));
 	if (code_here == 130)
@@ -161,11 +164,10 @@ int execution(t_exec *exec)
 		return (130);
 	}
 	//================================================================================//
-	
 	//================================================================================//
 	path = find_path(exec->env);
 	exec->previous_fd = -1;
-	int i = exec->nb_pipe;
+	i = exec->nb_pipe;
 	signal(SIGINT, SIG_IGN);
 	while (exec->nb_pipe--)
 	{
@@ -210,7 +212,7 @@ int execution(t_exec *exec)
 	close(exec->previous_fd);
 	j = wait_childs(pid);
 	if (j == 131)
-		ft_putstr_fd("Quit (core dumped)\n",2);
+		ft_putstr_fd("Quit (core dumped)\n", 2);
 	else if (j == 130)
 		printf("\n");
 	return (clean_dir_temp(), j);
