@@ -2,16 +2,16 @@
 
 typedef struct s_here_doc
 {
-	char *here_doc;
-	char *new_file;
-	char *nb_file;
-} t_here_doc;
+	char	*here_doc;
+	char	*new_file;
+	char	*nb_file;
+}			t_here_doc;
 
-# define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
+#define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
 
 // fichier cacher les pour mettre les ficher des heredoc
 
-int check_quote_here(char *limiter)
+int	check_quote_here(char *limiter)
 {
 	if (*limiter == '\'')
 		return (S_QUOTE);
@@ -20,55 +20,59 @@ int check_quote_here(char *limiter)
 	return (NO_QUOTE);
 }
 
-void signal_c_heredoc(int signal_code)
+void	signal_c_heredoc(int signal_code)
 {
 	g_exit_code = 5;
 	(void)signal_code;
+	close(0);
+	ft_putstr_fd("\n", 1);
 }
 
-void signal_heredoc(void)
+void	signal_heredoc(void)
 {
-	struct sigaction c_signal;
+	struct sigaction	c_signal;
+
 	c_signal.sa_handler = signal_c_heredoc;
+	// c_signal.sa_handler = SIG_DFL;
 	c_signal.sa_flags = 0;
 	sigemptyset(&c_signal.sa_mask);
-	sigaction(SIGINT, &c_signal, NULL); 
+	sigaction(SIGINT, &c_signal, NULL);
 }
 
 int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 {
 	char	*line;
-	char	*c = NULL;
 	char	*lim;
 	int		type_quote;
-	
+
+	// char	*c = NULL;
 	type_quote = check_quote_here(limiter);
 	lim = ft_strdup(limiter);
 	lim = delete_quote(lim);
 	signal_heredoc();
 	while (1 && g_exit_code != 5)
 	{
-		print_message("HERE_DOC {", lim, "} > ", 1);
-		line = get_next_line(0);
-		// line = readline("HERE_DOC > ");
+		// print_message("HERE_DOC {", lim, "} > ", 1);
+		// line = get_next_line(0);
+		line = readline("HERE_DOC > ");
 		if (!line)
 		{
 			free(line);
-			printf("\nminishell: warning: here-document at line 1 delimited by end-of-file (wanted `%s')\n", lim);
+			printf("\nminishell: warning: here-document at line 1 delimited by end-of-file (wanted `%s')\n",
+				lim);
 			free(lim);
-			return (1
-			);
+			return (1);
 		}
 		ft_putstr_fd(line, fd);
 		ft_putstr_fd("\n", fd);
-		c = strchr(line,'\n');
-		*c = '\0';
+		// c = strchr(line,'\n');
+		// *c = '\0';
 		if (!ft_strcmp(line, lim))
 		{
 			free(line);
 			break ;
 		}
-		*c = '\n';
+		// *c = '\n';
 		(void)exec;
 		if (type_quote == NO_QUOTE)
 			line = expansion(line, exec, 1); // 1 pour dans le heredoc
@@ -84,11 +88,11 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	return (0);
 }
 
-int here_doc(t_file *file, t_exec *exec)
+int	here_doc(t_file *file, t_exec *exec)
 {
-	int	i;
-	int fd;
-	t_here_doc doc;
+	int			i;
+	int			fd;
+	t_here_doc	doc;
 
 	i = 1;
 	doc.here_doc = PATH_HERE;
@@ -98,7 +102,8 @@ int here_doc(t_file *file, t_exec *exec)
 		if (doc.new_file)
 			free(doc.new_file);
 		doc.nb_file = ft_itoa(i);
-		doc.new_file = ft_strjoin(doc.here_doc, doc.nb_file);;
+		doc.new_file = ft_strjoin(doc.here_doc, doc.nb_file);
+		;
 		free(doc.nb_file);
 		i++;
 	}
@@ -111,11 +116,10 @@ int here_doc(t_file *file, t_exec *exec)
 	return (i);
 }
 
-
-int run_here_doc(t_exec *exec)
+int	run_here_doc(t_exec *exec)
 {
-	t_cmds *tmp;
-	t_file *tmp_file;
+	t_cmds	*tmp;
+	t_file	*tmp_file;
 	int		error_code;
 
 	error_code = 0;
@@ -134,12 +138,11 @@ int run_here_doc(t_exec *exec)
 	return (error_code);
 }
 
-
-int find_here_doc(t_file *file)
+int	find_here_doc(t_file *file)
 {
-	char *here_doc;
-	char *nb_file;
-	int fd;
+	char	*here_doc;
+	char	*nb_file;
+	int		fd;
 
 	here_doc = PATH_HERE;
 	if (file->n_heredoc != 0)
@@ -157,13 +160,16 @@ int find_here_doc(t_file *file)
 	return (0);
 }
 
-void clean_dir_temp(void)
+void	clean_dir_temp(void)
 {
-	char *path = PATH_HERE;
+	char	*path;
+	char	*path_bis;
+	char	*nb_file;
+	int		i;
 
-	char *path_bis = ft_strdup(path);
-	char *nb_file;
-	int i = 1;
+	path = PATH_HERE;
+	path_bis = ft_strdup(path);
+	i = 1;
 	while (access(path_bis, F_OK) == 0)
 	{
 		unlink(path_bis);
