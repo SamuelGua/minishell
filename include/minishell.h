@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/08 23:16:58 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 14:43:01 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int			ft_env(t_env *env, char **str);
 int			ft_echo(char **str); // retirer le $
 int			ft_export(t_export **export, t_env **env, char **str, int i);
 int			ft_pwd(void);
-int			ft_exit(t_exec *exec, int *fd_origin);
+int			ft_exit(t_exec *exec, int *fd_origin, int is_pipe);
 int			ft_cd(t_env *env, char **str);
 
 
@@ -146,7 +146,7 @@ t_cmds	*create_node(t_token *tmp, t_token *end, t_build_cmd *utils);
 
 
 
-int			builtin(t_exec *exec, int *fd_origin);
+int			builtin(t_exec *exec, int *fd_origin, int is_pipe);
 int			is_builtin(char **str);
 
 int		execution(t_exec *exec);

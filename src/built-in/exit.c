@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/08 23:05:59 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 14:17:09 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,12 @@ static int	size_nbrs(t_exec *exec, char *str)
 	return (1);
 }
 
-int	ft_exit(t_exec *exec, int *fd_origin)
+int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 {
 	long long int	i;
 
-	ft_putstr_fd("exit\n", 1);
+	if (is_pipe)
+		ft_putstr_fd("exit\n", 1);
 	dflt_fd(fd_origin);
 	if (exec->cmds->cmd[1] == NULL)
 	{

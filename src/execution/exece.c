@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 17:44:15 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:54:10 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int check_erros(t_exec *exec, char **path)
 	{
 		if (is_builtin(exec->cmds->cmd) == 2 && path) 
 			ft_free(path);;
-		builtin(exec, NULL);
+		builtin(exec, NULL, 0);
 		return (0);
 	}
 	i = check_isfile(exec);
@@ -121,7 +121,7 @@ int exec_sbuiltin(t_exec *exec)
 	fd_orgin[1] = dup(STDOUT_FILENO);
 	j = redirection (exec);
 	if (j >= 0 && exec->cmds->cmd[0])
-		j = builtin(exec, fd_orgin);
+		j = builtin(exec, fd_orgin, 1);
 	dup2(fd_orgin[1], STDOUT_FILENO);
 	dup2(fd_orgin[0] , STDIN_FILENO);
 	close(fd_orgin[1]);
@@ -146,8 +146,20 @@ int execution(t_exec *exec)
 	exec->nb_pipe = nb_pipe(exec->cmds);
 	j = 0;
 	//================================================================================//
-	if (run_here_doc(exec) == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
+	int code_here = run_here_doc(exec);
+	if (code_here == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 		return (exec_sbuiltin(exec));
+	if (code_here == 130)
+	{
+		clean_dir_temp();
+		while (exec->cmds)
+		{
+			tmp_cmd = exec->cmds;
+			exec->cmds = exec->cmds->next;
+			ft_free_cmd(tmp_cmd);
+		}
+		return (130);
+	}
 	//================================================================================//
 	
 	//================================================================================//

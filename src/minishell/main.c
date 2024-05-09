@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 17:37:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:25:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int main(int ac, char **av, char **envp)
 		}
 		exec.error_code	= execution(&exec);
 	}
+	rl_clear_history();
 	return (0);
 }
 

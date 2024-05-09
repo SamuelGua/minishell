@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/05/08 22:56:39 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:36:52 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	expansion_two(t_exutils *ex, char *str, t_exec *exec)
 char	*expansion(char *str, t_exec *exec, int is_here_doc)
 {
 	t_exutils	ex;
+	char		c;
 
 	ex.i = 0;
 	ex.new = ft_calloc(1, 1);
@@ -110,10 +111,10 @@ char	*expansion(char *str, t_exec *exec, int is_here_doc)
 		return (free(ex.new), str);
 	if (str[ex.i] || str[ex.i] == '$')
 	{
+		c = str[ex.i];
 		str[ex.i] = '\0';
-		free(ex.new);
-		ex.new = ft_strdup(str);
-		str[ex.i] = '$';
+		(free(ex.new), ex.new = ft_strdup(str));
+		str[ex.i] = c;
 	}
 	expansion_two(&ex, str, exec);
 	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);

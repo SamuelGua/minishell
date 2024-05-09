@@ -20,6 +20,21 @@ int check_quote_here(char *limiter)
 	return (NO_QUOTE);
 }
 
+void signal_c_heredoc(int signal_code)
+{
+	g_exit_code = 5;
+	(void)signal_code;
+}
+
+void signal_heredoc(void)
+{
+	struct sigaction c_signal;
+	c_signal.sa_handler = signal_c_heredoc;
+	c_signal.sa_flags = 0;
+	sigemptyset(&c_signal.sa_mask);
+	sigaction(SIGINT, &c_signal, NULL); 
+}
+
 int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 {
 	char	*line;
@@ -30,18 +45,22 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	type_quote = check_quote_here(limiter);
 	lim = ft_strdup(limiter);
 	lim = delete_quote(lim);
-	while (1)
+	signal_heredoc();
+	while (1 && g_exit_code != 5)
 	{
 		print_message("HERE_DOC {", lim, "} > ", 1);
 		line = get_next_line(0);
+		// line = readline("HERE_DOC > ");
 		if (!line)
 		{
-			ft_putstr_fd(line, fd);
 			free(line);
-			printf("C'est nul, c'est nul\n");
+			printf("\nminishell: warning: here-document at line 1 delimited by end-of-file (wanted `%s')\n", lim);
 			free(lim);
-			return (666);
+			return (1
+			);
 		}
+		ft_putstr_fd(line, fd);
+		ft_putstr_fd("\n", fd);
 		c = strchr(line,'\n');
 		*c = '\0';
 		if (!ft_strcmp(line, lim))
@@ -57,6 +76,11 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 		free(line);
 	}
 	free(lim);
+	if (g_exit_code == 5)
+	{
+		clean_dir_temp();
+		return (130);
+	}
 	return (0);
 }
 
@@ -82,30 +106,32 @@ int here_doc(t_file *file, t_exec *exec)
 	free(doc.new_file);
 	if (fd < 0)
 		return (-1);
-
-	fill_heredoc(fd, file->file, exec);
+	i = fill_heredoc(fd, file->file, exec);
 	close(fd);
-	return (0);
+	return (i);
 }
+
 
 int run_here_doc(t_exec *exec)
 {
 	t_cmds *tmp;
-
 	t_file *tmp_file;
+	int		error_code;
+
+	error_code = 0;
 	tmp = exec->cmds;
 	while (tmp)
 	{
 		tmp_file = tmp->file;
-		while (tmp_file)
+		while (tmp_file && error_code != 130)
 		{
 			if (tmp_file->redirec == HERE_DOC)
-				here_doc(tmp_file, exec);
+				error_code = here_doc(tmp_file, exec);
 			tmp_file = tmp_file->next;
 		}
 		tmp = tmp->next;
 	}
-	return (0);
+	return (error_code);
 }
 
 

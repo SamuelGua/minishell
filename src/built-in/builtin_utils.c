@@ -6,13 +6,13 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:33:25 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 13:11:10 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 14:23:13 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin(t_exec *exec, int *fd_origin)
+int	builtin(t_exec *exec, int *fd_origin, int is_pipe)
 {
 	if (ft_strcmp(exec->cmds->cmd[0], "env") == 0)
 		return (ft_env(exec->env, exec->cmds->cmd));
@@ -25,7 +25,7 @@ int	builtin(t_exec *exec, int *fd_origin)
 	else if (ft_strcmp(exec->cmds->cmd[0], "pwd") == 0)
 		return (ft_pwd());
 	else if (ft_strcmp(exec->cmds->cmd[0], "exit") == 0)
-		return (ft_exit(exec, fd_origin));
+		return (ft_exit(exec, fd_origin, is_pipe));
 	else if (ft_strcmp(exec->cmds->cmd[0], "cd") == 0)
 		return (ft_cd(exec->env, exec->cmds->cmd));
 	return (0);
