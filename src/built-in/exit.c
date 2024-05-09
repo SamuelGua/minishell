@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 14:17:09 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 22:08:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	size_nbrs(t_exec *exec, char *str)
 		i++;
 	if (str[i + j] != '\0' || i > 19 || check_limit(str))
 	{
-		ft_putstr_fd("numeric argument required\n", 2);
+		ft_putstr_fd("exit: numeric argument required\n", 2);
 		ft_free_exec(exec);
 		exit(2);
 	}
@@ -90,7 +90,7 @@ int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 	{
 		if (i >= 2)
 		{
-			print_message(NULL, NULL, "too many arguments", 2);
+			print_message(NULL, NULL, "exit: too many arguments", 2);
 			return (1);
 		}
 		size_nbrs(exec, exec->cmds->cmd[i]);

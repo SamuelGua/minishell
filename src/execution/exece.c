@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 18:25:17 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 21:57:52 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int	check_erros(t_exec *exec, char **path)
 	{
 		if (is_builtin(exec->cmds->cmd) == 2 && path)
 			ft_free(path);
-		;
 		builtin(exec, NULL, 0);
 		return (0);
 	}
@@ -148,7 +147,6 @@ int	execution(t_exec *exec)
 	tmp_cmd = exec->cmds;
 	exec->nb_pipe = nb_pipe(exec->cmds);
 	j = 0;
-	//================================================================================//
 	code_here = run_here_doc(exec);
 	if (code_here == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 		return (exec_sbuiltin(exec));
@@ -163,8 +161,6 @@ int	execution(t_exec *exec)
 		}
 		return (130);
 	}
-	//================================================================================//
-	//================================================================================//
 	path = find_path(exec->env);
 	exec->previous_fd = -1;
 	i = exec->nb_pipe;
@@ -206,7 +202,6 @@ int	execution(t_exec *exec)
 		exec->previous_fd = exec->pipe[0];
 		close(exec->pipe[1]);
 	}
-	//===================================================================================//
 	if (path)
 		ft_free(path);
 	close(exec->previous_fd);

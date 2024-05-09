@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redir.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/09 21:54:54 by scely             #+#    #+#             */
+/*   Updated: 2024/05/09 21:55:01 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int fd_out(t_file *file)
+int	fd_out(t_file *file)
 {
-	int fd;
+	int	fd;
 
 	if (file->redirec == GREAT)
 		fd = open(file->file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
@@ -15,9 +27,10 @@ int fd_out(t_file *file)
 	close(fd);
 	return (0);
 }
-int fd_in(t_file *file)
+
+int	fd_in(t_file *file)
 {
-	int fd;
+	int	fd;
 
 	fd = open(file->file, O_RDONLY);
 	if (fd == -1)
@@ -28,7 +41,7 @@ int fd_in(t_file *file)
 	return (0);
 }
 
-int fd_pipe(t_file *file, t_exec *exec)
+int	fd_pipe(t_file *file, t_exec *exec)
 {
 	if (file->pipe == 0)
 	{
@@ -47,17 +60,16 @@ int fd_pipe(t_file *file, t_exec *exec)
 	return (0);
 }
 
-int redirection(t_exec *exec)
+int	redirection(t_exec *exec)
 {
-	int	i;
-	t_file *file;
+	int		i;
+	t_file	*file;
 
 	file = exec->cmds->file;
 	i = 0;
 	while (file && i != -1)
 	{
-		if (file->redirec == GREAT
-			|| file->redirec == DGREAT)
+		if (file->redirec == GREAT || file->redirec == DGREAT)
 			i = fd_out(file);
 		else if (file->redirec == LESS)
 			i = fd_in(file);

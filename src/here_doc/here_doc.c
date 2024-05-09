@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/09 21:52:54 by scely             #+#    #+#             */
+/*   Updated: 2024/05/09 21:53:44 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 typedef struct s_here_doc
@@ -10,7 +22,6 @@ typedef struct s_here_doc
 #define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
 
 // fichier cacher les pour mettre les ficher des heredoc
-
 int	check_quote_here(char *limiter)
 {
 	if (*limiter == '\'')
@@ -37,6 +48,7 @@ void	signal_heredoc(void)
 	sigaction(SIGINT, &c_signal, NULL);
 }
 
+// 1 pour dans le heredoc
 int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 {
 	char	*line;
@@ -44,7 +56,6 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	int		type_quote;
 	int		dup_origin;
 
-	// char	*c = NULL;
 	type_quote = check_quote_here(limiter);
 	lim = ft_strdup(limiter);
 	lim = delete_quote(lim);
@@ -52,8 +63,6 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	signal_heredoc();
 	while (1 && g_exit_code != 5)
 	{
-		// print_message("HERE_DOC {", lim, "} > ", 1);
-		// line = get_next_line(0);
 		line = readline("HERE_DOC > ");
 		if (!line && g_exit_code == 5)
 		{
@@ -75,17 +84,14 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 		}
 		ft_putstr_fd(line, fd);
 		ft_putstr_fd("\n", fd);
-		// c = strchr(line,'\n');
-		// *c = '\0';
 		if (!ft_strcmp(line, lim))
 		{
 			free(line);
 			break ;
 		}
-		// *c = '\n';
 		(void)exec;
 		if (type_quote == NO_QUOTE)
-			line = expansion(line, exec, 1); // 1 pour dans le heredoc
+			line = expansion(line, exec, 1);
 		ft_putstr_fd(line, fd);
 		free(line);
 	}

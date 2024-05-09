@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 22:13:55 by scely             #+#    #+#             */
-/*   Updated: 2024/05/03 22:14:54 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 21:56:02 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	wait_childs(int pid)
 
 	while (errno != ECHILD)
 	{
-		if (wait(&wstatus) == pid) 
+		if (wait(&wstatus) == pid)
 		{
 			if (WIFEXITED(wstatus))
 				code = WEXITSTATUS(wstatus);
@@ -34,8 +34,8 @@ int	wait_childs(int pid)
 
 int	nb_pipe(t_cmds *cmds)
 {
-	int	i;
-	t_cmds *tmp;
+	int		i;
+	t_cmds	*tmp;
 
 	tmp = cmds;
 	i = 0;
@@ -49,8 +49,8 @@ int	nb_pipe(t_cmds *cmds)
 
 char	**find_path(t_env *env)
 {
-	char **path;
-	int i;
+	char	**path;
+	int		i;
 
 	i = 0;
 	while (env && ft_strcmp(env->cle, "PATH") != 0)
@@ -66,16 +66,19 @@ char	**find_path(t_env *env)
 	return (path);
 }
 
-char **build_envp(t_env *env)
+char	**build_envp(t_env *env)
 {
 	t_env	*tmp;
 	char	**env_double;
-	int	i;
+	int		i;
 
 	tmp = env;
 	i = 0;
 	while (tmp)
-		(i++,tmp = tmp->next);
+	{
+		i++;
+		tmp = tmp->next;
+	}
 	env_double = malloc(sizeof(char *) * (i + 1));
 	env_double[i] = NULL;
 	tmp = env;

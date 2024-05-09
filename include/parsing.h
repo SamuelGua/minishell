@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:41:51 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 19:27:23 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/09 21:47:01 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 # define S_QUOTE 1
 # define D_QUOTE 2
 # define NO_TOKEN 0
-
 
 typedef struct s_parsing_utils
 {

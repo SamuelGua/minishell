@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_element.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/09 21:59:17 by scely             #+#    #+#             */
+/*   Updated: 2024/05/09 21:59:18 by scely            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void ft_free_file(t_file *file)
+void	ft_free_file(t_file *file)
 {
-	t_file *tmp;
+	t_file	*tmp;
 
-	while(file)
+	while (file)
 	{
 		tmp = file;
 		file = file->next;
@@ -13,17 +25,16 @@ void ft_free_file(t_file *file)
 	}
 }
 
-void ft_free_cmd(t_cmds *cmd)
+void	ft_free_cmd(t_cmds *cmd)
 {
 	ft_free(cmd->cmd);
 	ft_free_file(cmd->file);
 	free(cmd);
 }
 
-void ft_free_exec(t_exec* exec)
+void	ft_free_exec(t_exec *exec)
 {
-	t_cmds *tmp_cmd;
-
+	t_cmds	*tmp_cmd;
 
 	ft_free_export(exec->export);
 	ft_free_env(exec->env);
