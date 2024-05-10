@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/08 23:01:10 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 09:57:19 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,17 @@ void	clean_token(t_exec *exec)
 		if (tmp->token != HERE_DOC)
 		{
 			exec->token->str = expansion(exec->token->str, exec, 0);
+			if (exec->token->str == NULL)
+			{
+				free_token(exec->token);
+				return ;
+			}
 			exec->token->str = delete_quote(exec->token->str);
+			if (exec->token->str == NULL)
+			{
+				free_token(exec->token);
+				return ;
+			}
 		}
 		tmp = exec->token;
 		exec->token = exec->token->next;

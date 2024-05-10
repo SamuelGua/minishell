@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:12:48 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 16:36:52 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 09:20:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	add_expand(char *str, t_env *env, t_exutils *ex)
 	while (env && (ft_strncmp(&str[ex->i + 1], env->cle, len) != 0
 			|| len != (int)ft_strlen(env->cle)))
 		env = env->next;
-	if (env)
+	if (ex->new && env)
 		ex->new = ft_free_strjoin(ex->new, env->params);
+	if (!ex->new)
+		return ;
 	str[ex->i] = '$';
 	ex->l_exp = ex->i + len + 1;
 	ex->i = ex->l_exp;
@@ -44,8 +46,10 @@ void	dollar_dollar(char *str, t_env *env, t_exutils *ex)
 	while (env && (ft_strcmp(sys, env->cle) != 0
 			|| 16 != (int)ft_strlen(env->cle)))
 		env = env->next;
-	if (env)
+	if (ex->new && env)
 		ex->new = ft_free_strjoin(ex->new, env->params);
+	if (!ex->new)
+		return ;
 	ex->l_exp = ex->i + 1 + 1;
 	ex->i = ex->l_exp;
 }
@@ -55,10 +59,25 @@ void	dollar_ask(char *str, t_exec *exec, t_exutils *ex)
 	char	*nb;
 
 	nb = ft_itoa(exec->error_code);
+	if (!nb)
+	{
+		perror("Malloc");
+		return ;
+	}
 	str[ex->i] = '\0';
 	ex->new = ft_free_strjoin(ex->new, &str[ex->l_exp]);
+	if (!ex->new)
+	{
+		(perror("Malloc"), free(nb));
+		return ;
+	}
 	str[ex->i] = '$';
 	ex->new = ft_free_strjoin(ex->new, nb);
+	if (!ex->new)
+	{
+		(perror("Malloc"), free(nb));
+		return ;
+	}
 	free(nb);
 	ex->l_exp = ex->i + 1 + 1;
 	ex->i = ex->l_exp;
@@ -99,6 +118,8 @@ char	*expansion(char *str, t_exec *exec, int is_here_doc)
 
 	ex.i = 0;
 	ex.new = ft_calloc(1, 1);
+	if (!ex.new)
+		return (NULL);
 	ex.quoted = NO_QUOTE;
 	ex.is_here_doc = is_here_doc;
 	while (str[ex.i] && str[ex.i] != '$'
@@ -114,9 +135,13 @@ char	*expansion(char *str, t_exec *exec, int is_here_doc)
 		c = str[ex.i];
 		str[ex.i] = '\0';
 		(free(ex.new), ex.new = ft_strdup(str));
+		if (!ex.new)
+			return (NULL);
 		str[ex.i] = c;
 	}
 	expansion_two(&ex, str, exec);
 	ex.new = ft_free_strjoin(ex.new, &str[ex.l_exp]);
+	if (!ex.new)
+		return (free(str), NULL);
 	return (free(str), ex.new);
 }
