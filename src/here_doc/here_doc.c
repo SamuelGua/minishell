@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 21:52:54 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 08:52:08 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 11:55:12 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,19 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 			free(lim);
 			return (1);
 		}
-		ft_putstr_fd(line, fd);
-		ft_putstr_fd("\n", fd);
 		if (!ft_strcmp(line, lim))
 		{
 			free(line);
 			break ;
 		}
-		(void)exec;
 		if (type_quote == NO_QUOTE)
 			line = expansion(line, exec, 1);
 		ft_putstr_fd(line, fd);
+		ft_putstr_fd("\n", fd);
 		free(line);
 	}
+	dup2(dup_origin, STDIN_FILENO);
+	close(dup_origin);
 	free(lim);
 	if (g_exit_code == 5)
 	{

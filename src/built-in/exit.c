@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 22:08:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 11:49:33 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 	{
 		if (i >= 2)
 		{
-			print_message(NULL, NULL, "exit: too many arguments", 2);
+			print_message(NULL, "minishell ", "exit: too many arguments", 2);
 			return (1);
 		}
 		size_nbrs(exec, exec->cmds->cmd[i]);

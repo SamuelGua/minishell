@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 18:57:36 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 11:57:27 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	print_message(char *str1, char *str2, char *str3, int fd)
 	ft_putstr_fd(str1, fd);
 	ft_putstr_fd(str2, fd);
 	ft_putstr_fd(str3, fd);
+	ft_putstr_fd("\n", fd);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -34,14 +35,14 @@ int	main(int ac, char **av, char **envp)
 		g_exit_code = 0;
 		signal_interactive();
 		exec.prompt = readline("minishell > ");
+		if (g_exit_code == 130)
+			exec.error_code = g_exit_code;
 		if (!exec.prompt)
 		{
 			ft_putstr_fd("exit\n", 1);
 			return (ft_free_env(exec.env), ft_free_export(exec.export),
 				exec.error_code);
 		}
-		if (g_exit_code == 130)
-			exec.error_code = g_exit_code;
 		exec.token = init_token(exec.prompt, exec.token);
 		if (!exec.token)
 		{
