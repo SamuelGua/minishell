@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 21:57:52 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 12:01:11 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ int	check_isfile(t_exec *exec)
 	if (ft_strchr(exec->cmds->cmd[0], '/'))
 	{
 		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
-			return (perror("minishell"), 127);
+		{
+			char *error_message = ft_strjoin("minishell: ", exec->cmds->cmd[0]);
+			return (perror(error_message), free(error_message), 127);
+		}
 		if (access(exec->cmds->cmd[0], X_OK))
 		{
 			perror(" ");
