@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 11:57:27 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 13:29:30 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,44 @@ void	print_message(char *str1, char *str2, char *str3, int fd)
 	ft_putstr_fd("\n", fd);
 }
 
+int	test(t_exec *exec)
+{
+	exec->token = init_token(exec->prompt, exec->token);
+	if (!exec->token)
+	{
+		free(exec->prompt);
+		return (1);
+	}
+	(add_history(exec->prompt), free(exec->prompt));
+	if (is_valid_token(exec->token))
+	{
+		exec->error_code = 2;
+		return (1);
+	}
+	exec->cmds = build_cmd(exec);
+	if (!exec->cmds && errno == ENOMEM)
+		return (2);
+	else if (!exec->cmds)
+	{
+		exec->error_code = 0;
+		return (1);
+	}
+	return (0);
+}
+
+void	init_value(t_exec *exec, char **av, char **envp)
+{
+	(void)av;
+	exec->env = init_env(envp);
+	exec->export = init_export(exec->env);
+	exec->error_code = 0;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_exec	exec;
 
-	((void)ac, (void)av);
-	exec.env = init_env(envp);
-	exec.export = init_export(exec.env);
-	exec.error_code = 0;
+	init_value(&exec, av, envp);
 	while (1)
 	{
 		g_exit_code = 0;
@@ -43,26 +73,11 @@ int	main(int ac, char **av, char **envp)
 			return (ft_free_env(exec.env), ft_free_export(exec.export),
 				exec.error_code);
 		}
-		exec.token = init_token(exec.prompt, exec.token);
-		if (!exec.token)
-		{
-			free(exec.prompt);
+		ac = test(&exec);
+		if (ac == 1)
 			continue ;
-		}
-		(add_history(exec.prompt), free(exec.prompt));
-		if (is_valid_token(exec.token))
-		{
-			exec.error_code = 2;
-			continue ;
-		}
-		exec.cmds = build_cmd(&exec);
-		if (!exec.cmds && errno == ENOMEM)
+		else if (ac == 2)
 			return (2);
-		else if (!exec.cmds)
-		{
-			exec.error_code = 0;
-			continue ;
-		}
 		exec.error_code = execution(&exec);
 	}
 	rl_clear_history();

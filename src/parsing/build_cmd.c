@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 09:57:19 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 13:47:45 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds, t_b
 }
 
 // 0 pour pas dans le here_doc || 1 pour dans le here_doc
-void	clean_token(t_exec *exec)
+int	clean_token(t_exec *exec)
 {
 	t_token	*tmp;
 	t_token	*head;
@@ -79,16 +79,10 @@ void	clean_token(t_exec *exec)
 		{
 			exec->token->str = expansion(exec->token->str, exec, 0);
 			if (exec->token->str == NULL)
-			{
-				free_token(exec->token);
-				return ;
-			}
+				return (1);
 			exec->token->str = delete_quote(exec->token->str);
 			if (exec->token->str == NULL)
-			{
-				free_token(exec->token);
-				return ;
-			}
+				return (1);
 		}
 		tmp = exec->token;
 		exec->token = exec->token->next;
@@ -97,6 +91,7 @@ void	clean_token(t_exec *exec)
 		exec->token = head->next;
 	else
 		exec->token = head;
+	return (0);
 }
 
 t_cmds	*build_cmd(t_exec *exec)
@@ -106,7 +101,8 @@ t_cmds	*build_cmd(t_exec *exec)
 	utils.cmds = NULL;
 	utils.tmp = exec->token;
 	utils.nb_here_doc = 0;
-	clean_token(exec);
+	if (clean_token(exec))
+		return (free_token(utils.tmp), NULL);
 	while (exec->token)
 	{
 		utils.end = exec->token->next;

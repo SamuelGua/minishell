@@ -26,20 +26,21 @@ MINISHELL_PATH	= $(MINISHELL:%=src/minishell/%)
 MINISHELL		= main.c init_env.c free_element.c\
 
 SIGNAL_PATH		= $(SIGNAL:%=src/signal/%)
-SIGNAL			= ctrl_c.c\
+SIGNAL			= sig_exec.c sig_heredoc.c sig_interactive.c\
+\
 
 HERE_DOC_PATH	= $(HERE_DOC:%=src/here_doc/%)
-HERE_DOC		= here_doc.c\
+HERE_DOC		= here_doc.c here_doc_utils.c\
 
 EXECUTION_PATH	= $(EXECUTION:%=src/execution/%)
-EXECUTION		= exece.c redir.c exec_utils.c\
+EXECUTION		= exece.c redir.c exec_utils.c exec_check.c\
 
 BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
 BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c builtin_utils.c\
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
 PARSING			= token_utils.c token.c parsing.c delete_quote.c rules_parsing.c expansion.c\
-					build_cmd.c build_cmd_utils.c\
+					expansion_add.c build_cmd.c build_cmd_utils.c\
 
 INCLUDE			= include/minishell.h include/libft.h include/parsing.h
 				

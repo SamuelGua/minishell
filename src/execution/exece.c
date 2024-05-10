@@ -6,98 +6,17 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 12:01:11 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 13:27:40 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_isfile(t_exec *exec)
-{
-	struct stat	fileinfo;
-
-	if (exec->cmds->cmd[0][0] == '\0')
-		return (127);
-	if (ft_strchr(exec->cmds->cmd[0], '/'))
-	{
-		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
-		{
-			char *error_message = ft_strjoin("minishell: ", exec->cmds->cmd[0]);
-			return (perror(error_message), free(error_message), 127);
-		}
-		if (access(exec->cmds->cmd[0], X_OK))
-		{
-			perror(" ");
-			return (126);
-		}
-		else if (S_ISDIR(fileinfo.st_mode))
-		{
-			print_message("minishell: ", exec->cmds->cmd[0],
-				": Is a directory\n", 2);
-			return (126);
-		}
-	}
-	return (-1);
-}
-
-int	valid_cmd(t_exec *exec, char **path)
-{
-	char	*new;
-	int		i;
-
-	i = 0;
-	new = ft_strdup(exec->cmds->cmd[0]);
-	if (!new)
-		return (ft_putstr_fd("Error malloc\n", 2), 2);
-	while (access(new, X_OK) && path && path[i])
-	{
-		free(new);
-		new = ft_strjoin(path[i], exec->cmds->cmd[0]);
-		if (!new)
-			return (ft_putstr_fd("Error malloc\n", 2), 2);
-		i++;
-	}
-	if (access(new, X_OK))
-	{
-		print_message("minishell: ", exec->cmds->cmd[0],
-			" : command not found\n", 2);
-		return (free(new), 127);
-	}
-	free(exec->cmds->cmd[0]);
-	exec->cmds->cmd[0] = new;
-	return (0);
-}
-
-int	check_erros(t_exec *exec, char **path)
-{
-	int	i;
-
-	i = -1;
-	close(exec->pipe[0]);
-	if (redirection(exec) == -1)
-		return (1);
-	else if (!exec->cmds->cmd[0])
-		return (0);
-	else if (is_builtin(exec->cmds->cmd))
-	{
-		if (is_builtin(exec->cmds->cmd) == 2 && path)
-			ft_free(path);
-		builtin(exec, NULL, 0);
-		return (0);
-	}
-	i = check_isfile(exec);
-	if (i > 0)
-		return (i);
-	else if (valid_cmd(exec, path) || !exec->cmds->cmd[0])
-		return (127);
-	return (i);
-}
-
 void	child_process(t_exec *exec, char **path)
 {
 	int	i;
 
-	i = check_erros(exec, path);
+	i = check_errors(exec, path);
 	if (i != -1)
 	{
 		close(exec->pipe[1]);
@@ -138,9 +57,29 @@ int	exec_sbuiltin(t_exec *exec)
 	return (j);
 }
 
+void error_pf(char **path, t_exec *exec, t_cmds * tmp_cmd, char *str)
+{
+	perror(str);
+	if (path)
+		ft_free(path);
+	if (exec->previous_fd != -1)
+		close(exec->previous_fd);
+	if (close(exec->pipe[0]) != -1)
+		close(exec->pipe[0]);
+	if (close(exec->pipe[1]) != -1)
+		close(exec->pipe[1]);
+	clean_dir_temp();
+	while (exec->cmds)
+	{
+		tmp_cmd = exec->cmds;
+		exec->cmds = exec->cmds->next;
+		ft_free_cmd(tmp_cmd);
+	}
+}
+
+
 int	execution(t_exec *exec)
 {
-	int		j;
 	char	**path;
 	int		pid;
 	t_cmds	*tmp_cmd;
@@ -149,7 +88,6 @@ int	execution(t_exec *exec)
 
 	tmp_cmd = exec->cmds;
 	exec->nb_pipe = nb_pipe(exec->cmds);
-	j = 0;
 	code_here = run_here_doc(exec);
 	if (code_here == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
 		return (exec_sbuiltin(exec));
@@ -168,35 +106,19 @@ int	execution(t_exec *exec)
 	exec->previous_fd = -1;
 	i = exec->nb_pipe;
 	signal(SIGINT, SIG_IGN);
+	exec->pipe[0] = -1;
+	exec->pipe[1] = -1;
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
-			return (perror("PIPE ERROR"), 1);
+			return (error_pf(path, exec, tmp_cmd, "PIPE ERROR"), 1);
 		if (i == 1)
 			close(exec->pipe[1]);
 		pid = fork();
 		if (pid == -1)
-		{
-			if (path)
-				ft_free(path);
-			if (exec->previous_fd != -1)
-				close(exec->previous_fd);
-			close(exec->pipe[0]);
-			close(exec->pipe[1]);
-			clean_dir_temp();
-			while (exec->cmds)
-			{
-				tmp_cmd = exec->cmds;
-				exec->cmds = exec->cmds->next;
-				ft_free_cmd(tmp_cmd);
-			}
-			return (perror("FORK ERROR"), 1);
-		}
+			return (error_pf(path, exec, tmp_cmd, "FORK ERROR"), 1);
 		if (pid == 0)
-		{
-			signal_exec();
-			child_process(exec, path);
-		}
+			(signal_exec(), child_process(exec, path));
 		tmp_cmd = exec->cmds;
 		exec->cmds = exec->cmds->next;
 		ft_free_cmd(tmp_cmd);
@@ -208,10 +130,10 @@ int	execution(t_exec *exec)
 	if (path)
 		ft_free(path);
 	close(exec->previous_fd);
-	j = wait_childs(pid);
-	if (j == 131)
+	i = wait_childs(pid);
+	if (i == 131)
 		ft_putstr_fd("Quit (core dumped)\n", 2);
-	else if (j == 130)
+	else if (i == 130)
 		printf("\n");
-	return (clean_dir_temp(), j);
+	return (clean_dir_temp(), i);
 }

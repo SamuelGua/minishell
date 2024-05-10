@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 22:00:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 14:24:51 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
+
+#define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
 
 extern int			g_exit_code;
 
@@ -108,6 +110,13 @@ typedef struct s_build_cmd
 	int				nb_here_doc;
 }					t_build_cmd;
 
+typedef struct s_here_doc
+{
+	char	*here_doc;
+	char	*new_file;
+	char	*nb_file;
+}			t_here_doc;
+
 //// INITIALISATION
 // init env
 t_env				*ft_lstnew_env(char *str1, char *str2);
@@ -134,6 +143,10 @@ char				*expansion(char *str, t_exec *exec, int is_here_doc);
 int					is_quoted(int quoted, char c);
 int					is_valid_token(t_token *token);
 char				*delete_quote(char *str);
+void	add_expand(char *str, t_env *env, t_exutils *ex);
+void	dollar_dollar(char *str, t_env *env, t_exutils *ex);
+void	dollar_ask(char *str, t_exec *exec, t_exutils *ex);
+
 
 void				pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds,
 						int i);
@@ -146,6 +159,11 @@ t_file				*ft_lstnew_file(char *file, int redirec);
 void				ft_lstadd_back_file(t_file **lst, t_file *node);
 t_cmds				*create_node(t_token *tmp, t_token *end,
 						t_build_cmd *utils);
+//exec
+int	check_isfile(t_exec *exec);
+int	valid_cmd(t_exec *exec, char **path);
+int	check_errors(t_exec *exec, char **path);
+
 
 int					builtin(t_exec *exec, int *fd_origin, int is_pipe);
 int					is_builtin(char **str);
@@ -174,5 +192,13 @@ int					find_here_doc(t_file *file);
 // signaux
 void				signal_interactive(void);
 void				signal_exec(void);
+void				signal_heredoc(void);
+
+int		find_here_doc(t_file *file);
+void	clean_dir_temp(void);
+int		is_limiter(char *line, char *lim);
+int		check_quote_here(char *limiter);
+
+
 
 #endif
