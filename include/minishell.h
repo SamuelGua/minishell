@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/11 11:58:11 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 15:41:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <termios.h>
 # include <unistd.h>
 
-#define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
+# define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
 
 extern int			g_exit_code;
 
@@ -112,10 +112,10 @@ typedef struct s_build_cmd
 
 typedef struct s_here_doc
 {
-	char	*here_doc;
-	char	*new_file;
-	char	*nb_file;
-}			t_here_doc;
+	char			*here_doc;
+	char			*new_file;
+	char			*nb_file;
+}					t_here_doc;
 
 //// INITIALISATION
 // init env
@@ -143,25 +143,24 @@ char				*expansion(char *str, t_exec *exec, int is_here_doc);
 int					is_quoted(int quoted, char c);
 int					is_valid_token(t_token *token);
 char				*delete_quote(char *str);
-void	add_expand(char *str, t_env *env, t_exutils *ex);
-void	dollar_dollar(char *str, t_env *env, t_exutils *ex);
-void	dollar_ask(char *str, t_exec *exec, t_exutils *ex);
-
+void				add_expand(char *str, t_env *env, t_exutils *ex);
+void				dollar_dollar(char *str, t_env *env, t_exutils *ex);
+void				dollar_ask(char *str, t_exec *exec, t_exutils *ex);
 
 void				pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds,
 						int i);
-char				**node_init(t_token *tmp, t_file *tmp_file, t_cmds *cmds, t_build_cmd *utils);
+char				**node_init(t_token *tmp, t_file *tmp_file, t_cmds *cmds,
+						t_build_cmd *utils);
 t_cmds				*build_cmd(t_exec *exec);
 void				ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
 t_cmds				*ft_lstnew_cmd(char **cmd, t_file *file);
 t_file				*ft_lstnew_file(char *file, int redirec);
 void				ft_lstadd_back_file(t_file **lst, t_file *node);
 t_cmds				*create_node(t_token *tmp, t_build_cmd *utils);
-//exec
-int	check_isfile(t_exec *exec);
-int	valid_cmd(t_exec *exec, char **path);
-int	check_errors(t_exec *exec, char **path);
-
+// exec
+int					check_isfile(t_exec *exec);
+int					valid_cmd(t_exec *exec, char **path);
+int					check_errors(t_exec *exec, char **path);
 
 int					builtin(t_exec *exec, int *fd_origin, int is_pipe);
 int					is_builtin(char **str);
@@ -184,7 +183,6 @@ void				ft_free_file(t_file *file);
 int					cmds_size(t_token *tmp, t_token *end);
 void				set_nbs(t_token *tmp, t_file *file, t_build_cmd *utl);
 
-
 int					redirection(t_exec *exec);
 int					run_here_doc(t_exec *exec);
 void				clean_dir_temp(void);
@@ -195,11 +193,16 @@ void				signal_interactive(void);
 void				signal_exec(void);
 void				signal_heredoc(void);
 
-int		find_here_doc(t_file *file);
-void	clean_dir_temp(void);
-int		is_limiter(char *line, char *lim);
-int		check_quote_here(char *limiter);
+int					find_here_doc(t_file *file);
+void				clean_dir_temp(void);
+int					is_limiter(char *line, char *lim);
+int					check_quote_here(char *limiter);
 
-
+int					exec_utils_one(int *code_here, t_exec *exec,
+						t_cmds *tmp_cmd, char ***path);
+void				exec_utils_two(int pid, t_exec *exec, char ***path,
+						t_cmds *tmp_cmd);
+int					exec_utils_three(int pid, char ***path, t_exec *exec);
+void				child_process(t_exec *exec, char **path);
 
 #endif

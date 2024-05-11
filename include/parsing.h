@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:41:51 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 21:47:01 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 15:42:19 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 # define OPERATOR 20
 # define QUOTED 1
 # define UNQUOTED 2
-# define GREAT 3 // >
-# define DGREAT 4 // >>
-# define LESS 5 // <
+# define GREAT 3    // >
+# define DGREAT 4   // >>
+# define LESS 5     // <
 # define HERE_DOC 6 // <<
-# define PIPE 7 // |
+# define PIPE 7     // |
 
 //// PARSING
 # define NO_QUOTE 0
@@ -34,42 +34,47 @@
 
 typedef struct s_parsing_utils
 {
-	int	i;
-	int	quoted;
-	int	len;
-	int	type_token;
-	int	start_token;
-	int	sous_type;
-}	t_parsutils;
+	int				i;
+	int				quoted;
+	int				len;
+	int				type_token;
+	int				start_token;
+	int				sous_type;
+}					t_parsutils;
 
-//
+// token  1 2 3 4 5 6 7
+// type10 20
 typedef struct s_token
 {
 	char			*str;
-	int				token; // 1 2 3 4 5 6 7
-	int				type; // 10 20
+	int				token;
+	int				type;
 	struct s_token	*next;
-}	t_token;
+}					t_token;
 
 // token utils
-t_token	*ft_lstnew_token(char *str, int len, int type, int token);
-void	ft_lstadd_back_token(t_token **token, t_token *node);
-t_token	*init_token(char *prompt, t_token *token);
-void	print_token(t_token *token);
-void	free_token(t_token *token);
+t_token				*ft_lstnew_token(char *str, int len, int type, int token);
+void				ft_lstadd_back_token(t_token **token, t_token *node);
+t_token				*init_token(char *prompt, t_token *token);
+void				print_token(t_token *token);
+void				free_token(t_token *token);
 
 // creat token
-void	value_pars_init(t_parsutils *utils_pars);
-void	rules_one(t_token **token, t_parsutils *utils_pars, char *prompt);
-void	rules_three(t_token **token, t_parsutils *utils_pars, char *prompt);
-void	rules_four(t_parsutils *utils_pars, char *prompt);
-void	rules_six(t_token **token, t_parsutils *utils_pars, char *prompt);
-void	rules_seven(t_token **token, t_parsutils *utils_pars, char *prompt);
+void				value_pars_init(t_parsutils *utils_pars);
+void				rules_one(t_token **token, t_parsutils *utils_pars,
+						char *prompt);
+void				rules_three(t_token **token, t_parsutils *utils_pars,
+						char *prompt);
+void				rules_four(t_parsutils *utils_pars, char *prompt);
+void				rules_six(t_token **token, t_parsutils *utils_pars,
+						char *prompt);
+void				rules_seven(t_token **token, t_parsutils *utils_pars,
+						char *prompt);
 
-int		is_operator(char c, int stats);
-int		check_operator(char *str, int len);
-int		value_operator(char *str);
-int		check_whitespace(char c);
-int		is_builtin(char **str);
+int					is_operator(char c, int stats);
+int					check_operator(char *str, int len);
+int					value_operator(char *str);
+int					check_whitespace(char c);
+int					is_builtin(char **str);
 
 #endif

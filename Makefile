@@ -33,7 +33,7 @@ HERE_DOC_PATH	= $(HERE_DOC:%=src/here_doc/%)
 HERE_DOC		= here_doc.c here_doc_utils.c\
 
 EXECUTION_PATH	= $(EXECUTION:%=src/execution/%)
-EXECUTION		= exece.c redir.c exec_utils.c exec_check.c\
+EXECUTION		= exece.c redir.c exec_utils.c exec_check.c exec_other.c\
 
 BUILT-IN_PATH	= $(BUILT-IN:%=src/built-in/%)
 BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c builtin_utils.c\

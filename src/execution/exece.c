@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/11 15:04:00 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 15:41:37 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,62 +77,33 @@ void	error_pf(char **path, t_exec *exec, t_cmds *tmp_cmd, char *str)
 	}
 }
 
+// pour compter le nombre de pipe que j'ai dans ma commande jai choisi
+// de le stocker dans la variable code_here
 int	execution(t_exec *exec)
 {
 	char	**path;
 	int		pid;
 	t_cmds	*tmp_cmd;
 	int		code_here;
-	int		i;
 
 	tmp_cmd = exec->cmds;
-	exec->nb_pipe = nb_pipe(exec->cmds);
 	code_here = run_here_doc(exec);
-	if (code_here == 0 && is_builtin(exec->cmds->cmd) && exec->nb_pipe == 1)
+	if (code_here == 0 && is_builtin(exec->cmds->cmd)
+		&& nb_pipe(exec->cmds) == 1)
 		return (exec_sbuiltin(exec));
-	if (code_here == 130)
-	{
-		clean_dir_temp();
-		while (exec->cmds)
-		{
-			tmp_cmd = exec->cmds;
-			exec->cmds = exec->cmds->next;
-			ft_free_cmd(tmp_cmd);
-		}
+	if (exec_utils_one(&code_here, exec, tmp_cmd, &path) == 130)
 		return (130);
-	}
-	path = find_path(exec->env);
-	exec->previous_fd = -1;
-	i = exec->nb_pipe;
-	signal(SIGINT, SIG_IGN);
-	exec->pipe[0] = -1;
-	exec->pipe[1] = -1;
+	code_here = exec->nb_pipe;
 	while (exec->nb_pipe--)
 	{
 		if (pipe(exec->pipe) == -1)
 			return (error_pf(path, exec, tmp_cmd, "PIPE ERROR"), 1);
-		if (i == 1)
+		if (code_here == 1)
 			close(exec->pipe[1]);
 		pid = fork();
 		if (pid == -1)
 			return (error_pf(path, exec, tmp_cmd, "FORK ERROR"), 1);
-		if (pid == 0)
-			(signal_exec(), child_process(exec, path));
-		tmp_cmd = exec->cmds;
-		exec->cmds = exec->cmds->next;
-		ft_free_cmd(tmp_cmd);
-		if (exec->previous_fd != -1)
-			close(exec->previous_fd);
-		exec->previous_fd = exec->pipe[0];
-		close(exec->pipe[1]);
+		exec_utils_two(pid, exec, &path, tmp_cmd);
 	}
-	if (path)
-		ft_free(path);
-	close(exec->previous_fd);
-	i = wait_childs(pid);
-	if (i == 131)
-		ft_putstr_fd("Quit (core dumped)\n", 2);
-	else if (i == 130)
-		printf("\n");
-	return (clean_dir_temp(), i);
+	return (exec_utils_three(pid, &path, exec));
 }
