@@ -6,11 +6,22 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 12:47:10 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 13:28:29 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 12:44:16 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	printmsgerr(t_exec *exec)
+{
+	char	*error_message;
+
+	error_message = ft_strjoin("minishell: ", exec->cmds->cmd[0]);
+	if (!error_message)
+		return (perror("minishell: "));
+	perror(error_message);
+	free(error_message);
+}
 
 int	check_isfile(t_exec *exec)
 {
@@ -21,19 +32,12 @@ int	check_isfile(t_exec *exec)
 	if (ft_strchr(exec->cmds->cmd[0], '/'))
 	{
 		if (stat(exec->cmds->cmd[0], &fileinfo) == -1)
-		{
-			char *error_message = ft_strjoin("minishell: ", exec->cmds->cmd[0]);
-			return (perror(error_message), free(error_message), 127);
-		}
+			return (printmsgerr(exec), 127);
 		if (access(exec->cmds->cmd[0], X_OK))
-		{
-			perror(" ");
-			return (126);
-		}
+			return (printmsgerr(exec), 126);
 		else if (S_ISDIR(fileinfo.st_mode))
 		{
-			print_message("minishell: ", exec->cmds->cmd[0],
-				": Is a directory", 2);
+			print_message("mini: ", exec->cmds->cmd[0], ": Is a directory", 2);
 			return (126);
 		}
 	}

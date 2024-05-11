@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 14:24:51 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 11:58:11 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,15 +150,13 @@ void	dollar_ask(char *str, t_exec *exec, t_exutils *ex);
 
 void				pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds,
 						int i);
-char				**node_init(t_token *tmp, t_token *end, t_file *tmp_file,
-						t_cmds *cmds, t_build_cmd *utils);
+char				**node_init(t_token *tmp, t_file *tmp_file, t_cmds *cmds, t_build_cmd *utils);
 t_cmds				*build_cmd(t_exec *exec);
 void				ft_lstadd_back_cmd(t_cmds **lst, t_cmds *node);
 t_cmds				*ft_lstnew_cmd(char **cmd, t_file *file);
 t_file				*ft_lstnew_file(char *file, int redirec);
 void				ft_lstadd_back_file(t_file **lst, t_file *node);
-t_cmds				*create_node(t_token *tmp, t_token *end,
-						t_build_cmd *utils);
+t_cmds				*create_node(t_token *tmp, t_build_cmd *utils);
 //exec
 int	check_isfile(t_exec *exec);
 int	valid_cmd(t_exec *exec, char **path);
@@ -183,6 +181,9 @@ int					redirection(t_exec *exec);
 void				ft_free_exec(t_exec *exec);
 void				ft_free_cmd(t_cmds *cmd);
 void				ft_free_file(t_file *file);
+int					cmds_size(t_token *tmp, t_token *end);
+void				set_nbs(t_token *tmp, t_file *file, t_build_cmd *utl);
+
 
 int					redirection(t_exec *exec);
 int					run_here_doc(t_exec *exec);
