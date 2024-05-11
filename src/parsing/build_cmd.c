@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 11:38:42 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 13:47:45 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 11:57:25 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,44 +19,26 @@ void	pipe_init(t_file *tmp_file, t_token *end, t_cmds *cmds, int i)
 	ft_lstadd_back_file(&cmds->file, tmp_file);
 }
 
-int	cmds_size(t_token *tmp, t_token *end)
-{
-	int	i;
-
-	i = 0;
-	while (tmp != end)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return (i);
-}
-
-char	**node_init(t_token *tmp, t_token *end, t_file *tmp_file, t_cmds *cmds, t_build_cmd *utils)
+char	**node_init(t_token *tmp, t_file *file, t_cmds *cmds, t_build_cmd *utl)
 {
 	char	**command;
 	int		i;
 
-	i = cmds_size(tmp, end);
+	i = cmds_size(tmp, utl->end);
 	command = malloc(sizeof(char *) * (i + 1));
 	if (!command)
 		return (NULL);
 	i = 0;
-	while (tmp != end)
+	while (tmp != utl->end)
 	{
 		if (tmp->type == WORD)
 			command[i++] = ft_strdup(tmp->str);
 		else if (tmp->token >= GREAT && tmp->token < PIPE)
 		{
-			tmp_file = ft_lstnew_file(tmp->next->str, tmp->token);
-			if (!tmp_file)
+			file = ft_lstnew_file(tmp->next->str, tmp->token);
+			if (!file)
 				return (NULL);
-			ft_lstadd_back_file(&cmds->file, tmp_file);
-			if (tmp->token == HERE_DOC)
-			{
-				tmp_file->n_heredoc = utils->nb_here_doc;
-				utils->nb_here_doc++;
-			}
+			(ft_lstadd_back_file(&cmds->file, file), set_nbs(tmp, file, utl));
 			tmp = tmp->next;
 		}
 		tmp = tmp->next;
@@ -108,7 +90,7 @@ t_cmds	*build_cmd(t_exec *exec)
 		utils.end = exec->token->next;
 		while (utils.end && utils.end->token != PIPE)
 			utils.end = utils.end->next;
-		utils.cmds_tmp = create_node(exec->token, utils.end, &utils);
+		utils.cmds_tmp = create_node(exec->token, &utils);
 		ft_lstadd_back_cmd(&utils.cmds, utils.cmds_tmp);
 		exec->token = utils.end;
 	}

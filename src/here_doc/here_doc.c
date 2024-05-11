@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 21:52:54 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 14:30:53 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/10 14:33:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	here_doc_sig(int dup_origin, char *lim, int i)
 	free(lim);
 }
 
-int	init_value_heredoc(int *type_quote, char *limiter, char **lim, int *dup_origin)
+int	init_heredoc(int *type_quote, char *limiter, char **lim, int *dup_origin)
 {
 	*type_quote = check_quote_here(limiter);
 	*lim = ft_strdup(limiter);
@@ -52,7 +52,7 @@ int	fill_heredoc(int fd, char *limiter, t_exec *exec)
 	int		dup_origin;
 
 	lim = NULL;
-	if (init_value_heredoc(&type_quote, limiter, &lim, &dup_origin))
+	if (init_heredoc(&type_quote, limiter, &lim, &dup_origin))
 		return (-1);
 	while (1 && g_exit_code != 5)
 	{
