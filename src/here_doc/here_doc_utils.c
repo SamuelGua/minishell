@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 13:55:56 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 14:25:30 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 17:29:26 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	find_here_doc(t_file *file)
 		free(nb_file);
 	}
 	fd = open(here_doc, O_RDONLY, 0644);
+	if (file->n_heredoc != 0)
+		free(here_doc);
 	if (fd == -1)
 		return (perror("error here_doc"), -1);
 	if (dup2(fd, STDIN_FILENO) == -1)

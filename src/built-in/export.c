@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:49:41 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 17:35:52 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,16 @@
 
 int	print_list(t_export *list)
 {
+	int	i;
+
+	i = 0;
 	if (list == NULL)
 		return (1);
 	if (list->left != NULL)
 		print_list(list->left);
 	printf("export %s=\"%s\"\n", list->cle, list->params);
+	if (i == -1)
+		perror("export :");
 	if (list->right != NULL)
 		print_list(list->right);
 	return (1);

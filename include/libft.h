@@ -6,13 +6,15 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:39:05 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 21:49:39 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 17:21:31 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <errno.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 

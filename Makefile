@@ -77,14 +77,4 @@ re:
 	@$(MAKE) fclean
 	@$(MAKE) all
 
-git: fclean
-	@echo "$(COLOR_GREEN)$(COLOR_BOLD)- Cleaning done$(COLOR_RESET)"
-	@git add .
-	@echo "$(COLOR_GREEN)$(COLOR_BOLD)- All files is adding$(COLOR_RESET)"
-	@git commit -m "git make fast"
-	@echo "$(COLOR_GREEN)$(COLOR_BOLD)- All files is committed$(COLOR_RESET)"
-	@git push
-	@echo "$(COLOR_GREEN)$(COLOR_BOLD)- Save is done$(COLOR_RESET)"
-
-
 .PHONY: all clean fclean re git

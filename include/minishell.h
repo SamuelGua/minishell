@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/11 15:41:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 17:24:58 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <termios.h>
 # include <unistd.h>
 
-# define PATH_HERE "src/here_doc/tmp_here_doc/here_doc";
+# define PATH_HERE "/tmp/here_doc";
 
 extern int			g_exit_code;
 
