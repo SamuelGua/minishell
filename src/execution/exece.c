@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 13:27:40 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/11 15:04:00 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	exec_sbuiltin(t_exec *exec)
 	return (j);
 }
 
-void error_pf(char **path, t_exec *exec, t_cmds * tmp_cmd, char *str)
+void	error_pf(char **path, t_exec *exec, t_cmds *tmp_cmd, char *str)
 {
 	perror(str);
 	if (path)
@@ -76,7 +76,6 @@ void error_pf(char **path, t_exec *exec, t_cmds * tmp_cmd, char *str)
 		ft_free_cmd(tmp_cmd);
 	}
 }
-
 
 int	execution(t_exec *exec)
 {

@@ -40,7 +40,7 @@ BUILT-IN		= unset.c echo.c export.c export_utils.c pwd.c exit.c env.c cd.c built
 
 PARSING_PATH	= $(PARSING:%=src/parsing/%)
 PARSING			= token_utils.c token.c parsing.c delete_quote.c rules_parsing.c expansion.c\
-					expansion_add.c build_cmd.c build_cmd_utils.c\
+					expansion_add.c build_cmd.c build_cmd_utils.c buils_cmd_utils2.c\
 
 INCLUDE			= include/minishell.h include/libft.h include/parsing.h
 				
@@ -62,7 +62,7 @@ $(NAME): $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDE)
 		@$(DIR_DUP)
-		@$(CC) $(CFLAGS) $(CCFLAGS) -c -o $@ $<
+		$(CC) $(CFLAGS) $(CCFLAGS) -c -o $@ $<
 
 
 clean:
