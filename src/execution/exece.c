@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/11 15:41:37 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/12 16:56:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	child_process(t_exec *exec, char **path)
 		ft_free_exec(exec);
 		if (path)
 			ft_free(path);
+		rl_clear_history();
 		exit(i);
 	}
 	if (path)
@@ -33,6 +34,7 @@ void	child_process(t_exec *exec, char **path)
 	perror("");
 	ft_free_exec(exec);
 	close(exec->pipe[1]);
+	rl_clear_history();
 	exit(127);
 }
 

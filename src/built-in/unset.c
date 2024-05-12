@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 16:48:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/04 04:45:29 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/12 16:53:21 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_unset(t_export **export, t_env **env, char **str)
 	int		i;
 
 	i = 1;
-	if (str == NULL)
+	if (!str || !*env)
 		return (0);
 	while (str[i])
 	{

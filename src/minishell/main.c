@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 13:29:30 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/12 16:44:16 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	main(int ac, char **av, char **envp)
 		if (!exec.prompt)
 		{
 			ft_putstr_fd("exit\n", 1);
+			rl_clear_history();
 			return (ft_free_env(exec.env), ft_free_export(exec.export),
 				exec.error_code);
 		}
@@ -77,9 +78,8 @@ int	main(int ac, char **av, char **envp)
 		if (ac == 1)
 			continue ;
 		else if (ac == 2)
-			return (2);
+			return (rl_clear_history(), 2);
 		exec.error_code = execution(&exec);
 	}
-	rl_clear_history();
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/10 13:29:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/12 16:44:40 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static int	size_nbrs(t_exec *exec, char *str)
 	{
 		ft_putstr_fd("exit: numeric argument required\n", 2);
 		ft_free_exec(exec);
+		rl_clear_history();
 		exit(2);
 	}
 	return (1);
@@ -83,6 +84,7 @@ int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 	if (exec->cmds->cmd[1] == NULL)
 	{
 		ft_free_exec(exec);
+		rl_clear_history();
 		exit(exec->error_code);
 	}
 	i = 0;
@@ -96,6 +98,7 @@ int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 		size_nbrs(exec, exec->cmds->cmd[i]);
 	}
 	i = ft_atoll(exec->cmds->cmd[1]);
+	rl_clear_history();
 	ft_free_exec(exec);
 	exit(i);
 }

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 13:55:56 by scely             #+#    #+#             */
-/*   Updated: 2024/05/11 17:29:26 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/12 17:00:12 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,14 @@ int	is_limiter(char *line, char *lim)
 
 int	check_quote_here(char *limiter)
 {
-	if (*limiter == '\'')
-		return (S_QUOTE);
-	else if (*limiter == '\"')
-		return (D_QUOTE);
-	return (NO_QUOTE);
+	int i;
+
+	i = 0;
+	while (limiter[i])
+	{
+		if (limiter[i] == '\'' || limiter[i] == '\"')
+			return (QUOTED);
+		i++;
+	}
+	return (0);
 }
