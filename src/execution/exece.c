@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/12 16:56:07 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/13 19:05:46 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void	child_process(t_exec *exec, char **path)
 	i = check_errors(exec, path);
 	if (i != -1)
 	{
-		close(exec->pipe[1]);
-		ft_free_exec(exec);
+		(close(exec->pipe[1]), ft_free_exec(exec));
 		if (path)
 			ft_free(path);
 		rl_clear_history();
@@ -30,8 +29,15 @@ void	child_process(t_exec *exec, char **path)
 		ft_free(path);
 	exec->exec_envp = build_envp(exec->env);
 	execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
+	if (errno == ENOEXEC)
+	{
+		write(2, "minishell :", (int)ft_strlen(exec->cmds->cmd[0]));
+		write(2, &exec->cmds->cmd[0], (int)ft_strlen(exec->cmds->cmd[0]));
+		write(2, " : commande not found\n", 2);
+	}
+	else
+		perror("");
 	ft_free(exec->exec_envp);
-	perror("");
 	ft_free_exec(exec);
 	close(exec->pipe[1]);
 	rl_clear_history();

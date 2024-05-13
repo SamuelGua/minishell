@@ -6,13 +6,13 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:33:59 by scely             #+#    #+#             */
-/*   Updated: 2024/05/06 12:24:19 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/13 19:34:25 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define PWD_ERROR  "pwd: error retrieving current directory: " 
+#define PWD_ERROR "pwd: error retrieving current directory: "
 #define PWD_ERROR2 "getcwd: cannot access parent directories"
 
 int	ft_pwd(void)

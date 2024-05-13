@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 22:13:55 by scely             #+#    #+#             */
-/*   Updated: 2024/05/09 21:56:02 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/13 13:43:22 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,11 @@ char	**build_envp(t_env *env)
 	while (tmp)
 	{
 		env_double[i] = ft_strjoin(tmp->cle, "=");
+		if (!env_double[i])
+			return (NULL);
 		env_double[i] = ft_free_strjoin(env_double[i], tmp->params);
+		if (!env_double[i])
+			return (NULL);
 		tmp = tmp->next;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 12:57:54 by scely             #+#    #+#             */
-/*   Updated: 2024/04/25 18:22:04 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/13 19:09:34 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_env	*ft_lstnew_env(char *str1, char *str2)
 
 void	ft_free_env(t_env *env)
 {
-	t_env	*tmp ;
+	t_env	*tmp;
 
 	while (env)
 	{
@@ -69,8 +69,6 @@ t_env	*init_env(char **envp)
 	i = -1;
 	save = 0;
 	env = NULL;
-	if (envp == NULL)
-		return (printf("NO environement\n"), NULL);
 	while (envp[++i])
 	{
 		j = 0;

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 15:18:18 by scely             #+#    #+#             */
-/*   Updated: 2024/05/12 16:44:40 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/13 19:27:05 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,13 @@ static int	size_nbrs(t_exec *exec, char *str)
 	return (1);
 }
 
+void	exit_utils(t_exec *exec, int i)
+{
+	rl_clear_history();
+	ft_free_exec(exec);
+	exit(i);
+}
+
 int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 {
 	long long int	i;
@@ -82,23 +89,20 @@ int	ft_exit(t_exec *exec, int *fd_origin, int is_pipe)
 		ft_putstr_fd("exit\n", 1);
 	dflt_fd(fd_origin);
 	if (exec->cmds->cmd[1] == NULL)
-	{
-		ft_free_exec(exec);
-		rl_clear_history();
-		exit(exec->error_code);
-	}
+		exit_utils(exec, exec->error_code);
 	i = 0;
 	while (exec->cmds->cmd[++i])
 	{
 		if (i >= 2)
 		{
 			print_message(NULL, "minishell ", "exit: too many arguments", 2);
-			return (1);
+			if (exec->error_code)
+				return (exec->error_code);
+			else
+				return (1);
 		}
 		size_nbrs(exec, exec->cmds->cmd[i]);
 	}
-	i = ft_atoll(exec->cmds->cmd[1]);
-	rl_clear_history();
-	ft_free_exec(exec);
-	exit(i);
+	exit_utils(exec, ft_atoll(exec->cmds->cmd[1]));
+	return (0);
 }
