@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/12 17:52:14 by scely             #+#    #+#             */
-/*   Updated: 2024/05/12 16:44:16 by scely            ###   ########.fr       */
+/*   Created: 2024/05/15 10:06:59 by scely             #+#    #+#             */
+/*   Updated: 2024/05/15 10:09:39 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int	test(t_exec *exec)
 		free(exec->prompt);
 		return (1);
 	}
-	(add_history(exec->prompt), free(exec->prompt));
+	add_history(exec->prompt);
+	free(exec->prompt);
 	if (is_valid_token(exec->token))
 	{
 		exec->error_code = 2;
@@ -71,8 +72,8 @@ int	main(int ac, char **av, char **envp)
 		{
 			ft_putstr_fd("exit\n", 1);
 			rl_clear_history();
-			return (ft_free_env(exec.env), ft_free_export(exec.export),
-				exec.error_code);
+			(ft_free_env(exec.env), ft_free_export(exec.export));
+			return (exec.error_code);
 		}
 		ac = test(&exec);
 		if (ac == 1)

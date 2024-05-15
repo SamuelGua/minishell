@@ -6,11 +6,29 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/13 19:05:46 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/15 09:50:42 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	error_execve(t_exec *exec, int i)
+{
+	if (errno == ENOEXEC)
+	{
+		write(2, "minishell :", (int)ft_strlen(exec->cmds->cmd[0]));
+		write(2, &exec->cmds->cmd[0], (int)ft_strlen(exec->cmds->cmd[0]));
+		write(2, " : commande not found\n", 2);
+		return (127);
+	}
+	else
+		perror("");
+	ft_free(exec->exec_envp);
+	ft_free_exec(exec);
+	close(exec->pipe[1]);
+	rl_clear_history();
+	return (i);
+}
 
 void	child_process(t_exec *exec, char **path)
 {
@@ -28,20 +46,9 @@ void	child_process(t_exec *exec, char **path)
 	if (path)
 		ft_free(path);
 	exec->exec_envp = build_envp(exec->env);
-	execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
-	if (errno == ENOEXEC)
-	{
-		write(2, "minishell :", (int)ft_strlen(exec->cmds->cmd[0]));
-		write(2, &exec->cmds->cmd[0], (int)ft_strlen(exec->cmds->cmd[0]));
-		write(2, " : commande not found\n", 2);
-	}
-	else
-		perror("");
-	ft_free(exec->exec_envp);
-	ft_free_exec(exec);
-	close(exec->pipe[1]);
-	rl_clear_history();
-	exit(127);
+	i = execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
+	i = error_execve(exec, i);
+	exit(i);
 }
 
 int	exec_sbuiltin(t_exec *exec)
@@ -85,8 +92,6 @@ void	error_pf(char **path, t_exec *exec, t_cmds *tmp_cmd, char *str)
 	}
 }
 
-// pour compter le nombre de pipe que j'ai dans ma commande jai choisi
-// de le stocker dans la variable code_here
 int	execution(t_exec *exec)
 {
 	char	**path;

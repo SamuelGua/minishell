@@ -27,7 +27,7 @@ MINISHELL		= main.c init_env.c free_element.c\
 
 SIGNAL_PATH		= $(SIGNAL:%=src/signal/%)
 SIGNAL			= sig_exec.c sig_heredoc.c sig_interactive.c\
-\
+
 
 HERE_DOC_PATH	= $(HERE_DOC:%=src/here_doc/%)
 HERE_DOC		= here_doc.c here_doc_utils.c\

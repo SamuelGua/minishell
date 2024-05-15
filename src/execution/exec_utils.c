@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 22:13:55 by scely             #+#    #+#             */
-/*   Updated: 2024/05/13 13:43:22 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/15 09:55:16 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,9 @@ char	**find_path(t_env *env)
 	return (path);
 }
 
-char	**build_envp(t_env *env)
+int	size_env(t_env *env)
 {
 	t_env	*tmp;
-	char	**env_double;
 	int		i;
 
 	tmp = env;
@@ -79,7 +78,20 @@ char	**build_envp(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
+	return (i);
+}
+
+char	**build_envp(t_env *env)
+{
+	t_env	*tmp;
+	char	**env_double;
+	int		i;
+
+	tmp = env;
+	i = size_env(env);
 	env_double = malloc(sizeof(char *) * (i + 1));
+	if (!env_double)
+		return (NULL);
 	env_double[i] = NULL;
 	tmp = env;
 	i = 0;
