@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/13 19:34:50 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/15 11:59:44 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "libft.h"
 # include "parsing.h"
-// # include <bits/sigaction.h>
 # include <curses.h>
 # include <dirent.h>
 # include <errno.h>
@@ -29,6 +28,7 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <bits/sigaction.h>
 # include <unistd.h>
 
 # define PATH_HERE "/tmp/here_doc";

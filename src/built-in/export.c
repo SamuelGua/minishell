@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/05/11 17:35:52 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/15 14:12:47 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 	while (str[++i])
 	{
 		if (is_valid(str[i]) == 0)
-			return (1);
-		if (is_existing(*env, str[i]))
+			continue ;
+		else if (is_existing(*env, str[i]))
 		{
 			j = 0;
 			while (str[i][j] && str[i][j] != '=')
