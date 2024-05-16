@@ -6,28 +6,25 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:51:46 by scely             #+#    #+#             */
-/*   Updated: 2024/05/15 14:48:05 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/16 22:54:07 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	error_execve(t_exec *exec, int i)
+int	error_execve(t_exec *exec)
 {
 	if (errno == ENOEXEC)
 	{
 		write(2, "minishell :", (int)ft_strlen(exec->cmds->cmd[0]));
 		write(2, &exec->cmds->cmd[0], (int)ft_strlen(exec->cmds->cmd[0]));
 		write(2, " : commande not found\n", 2);
-		return (127);
 	}
-	else
-		perror("");
 	ft_free(exec->exec_envp);
 	ft_free_exec(exec);
 	close(exec->pipe[1]);
 	rl_clear_history();
-	return (i);
+	return (127);
 }
 
 void	child_process(t_exec *exec, char **path)
@@ -37,18 +34,19 @@ void	child_process(t_exec *exec, char **path)
 	i = check_errors(exec, path);
 	if (i != -1)
 	{
-		(close(exec->pipe[1]), ft_free_exec(exec));
-		if (path)
+		if (path && (!is_builtin(exec->cmds->cmd)
+				|| is_builtin(exec->cmds->cmd) == 3))
 			ft_free(path);
+		(close(exec->pipe[1]), ft_free_exec(exec));
 		rl_clear_history();
 		exit(i);
 	}
 	if (path)
 		ft_free(path);
 	exec->exec_envp = build_envp(exec->env);
-	i = execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
-	i = error_execve(exec, i);
-	exit(i);
+	execve(exec->cmds->cmd[0], exec->cmds->cmd, exec->exec_envp);
+	error_execve(exec);
+	exit(127);
 }
 
 int	exec_sbuiltin(t_exec *exec)

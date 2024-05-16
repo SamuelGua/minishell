@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:37:32 by scely             #+#    #+#             */
-/*   Updated: 2024/05/15 14:12:47 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/16 23:16:03 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,15 @@ static int	is_existing(t_env *env, char *str)
 	return (0);
 }
 
-int	is_valid(char *str)
+int	is_valid(char *str, int *c)
 {
 	int	i;
 
 	i = 0;
 	if (str[i] != '_' && ft_isalpha(str[i]) == 0)
 	{
-		ft_putstr_fd("minishell: export: ", 2);
-		ft_putstr_fd(str, 2);
-		ft_putstr_fd(": not a valid identifier\n", 2);
+		(ft_putstr_fd("minishell: export: ", 2), *c = 1);
+		(ft_putstr_fd(str, 2), ft_putstr_fd(": not a valid identifier\n", 2));
 		return (0);
 	}
 	i++;
@@ -66,7 +65,7 @@ int	is_valid(char *str)
 	{
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
 		{
-			ft_putstr_fd("minishell: export: ", 2);
+			(ft_putstr_fd("minishell: export: ", 2), *c = 1);
 			ft_putstr_fd(str, 2);
 			ft_putstr_fd(": not a valid identifier\n", 2);
 			return (0);
@@ -82,12 +81,14 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 {
 	t_env	*tmp;
 	int		j;
+	int		c;
 
+	c = 0;
 	if (!str[1] && print_list(*export))
 		return (0);
 	while (str[++i])
 	{
-		if (is_valid(str[i]) == 0)
+		if (is_valid(str[i], &c) == 0)
 			continue ;
 		else if (is_existing(*env, str[i]))
 		{
@@ -98,11 +99,9 @@ int	ft_export(t_export **export, t_env **env, char **str, int i)
 				continue ;
 			str[i][j] = '\0';
 			tmp = ft_lstnew_env(str[i], &str[i][j + 1]);
-			if (!tmp)
-				return (2);
 			ft_lstadd_back_env(env, tmp);
 			(ft_free_export(*export), *export = init_export(*env));
 		}
 	}
-	return (0);
+	return (c);
 }

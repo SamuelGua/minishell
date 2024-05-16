@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:33:25 by scely             #+#    #+#             */
-/*   Updated: 2024/05/13 19:35:42 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/16 21:36:43 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	builtin(t_exec *exec, int *fd_origin, int is_pipe)
 int	is_builtin(char **str)
 {
 	if (!str[0])
-		return (2);
+		return (3);
 	if (ft_strcmp(*str, "echo") == 0)
 		return (1);
 	else if (ft_strcmp(*str, "cd") == 0)

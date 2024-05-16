@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 09:07:31 by scely             #+#    #+#             */
-/*   Updated: 2024/05/15 11:59:44 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/16 23:12:23 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@
 # include <string.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-# include <termios.h>
 # include <bits/sigaction.h>
+# include <termios.h>
 # include <unistd.h>
 
-# define PATH_HERE "/tmp/here_doc";
+# define PATH_HERE "/tmp/here_doc"
 
 extern int			g_exit_code;
 

@@ -6,7 +6,7 @@
 /*   By: scely <scely@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 12:47:10 by scely             #+#    #+#             */
-/*   Updated: 2024/05/15 15:00:47 by scely            ###   ########.fr       */
+/*   Updated: 2024/05/16 21:33:22 by scely            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int	check_errors(t_exec *exec, char **path)
 		return (0);
 	else if (is_builtin(exec->cmds->cmd))
 	{
-		// if (is_builtin(exec->cmds->cmd) == 2 && path)
-		//	ft_free(path);
+		if (path)
+			ft_free(path);
 		builtin(exec, NULL, 0);
 		return (0);
 	}
